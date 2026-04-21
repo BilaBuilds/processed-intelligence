@@ -1,0 +1,10 @@
+=== OpenClaw Regs Alert ===
+Run: 2026-04-19_043051
+Total alerts: 1 (1 new)
+
+[NEW] [1] Flood risk and coastal change
+    Authority: HM Government | Region: Unknown | Score: 20
+    Impact: other
+    Effective: TBC
+    URL: https://www.gov.uk/guidance/flood-risk-and-coastal-change
+    Why: matched: drainage

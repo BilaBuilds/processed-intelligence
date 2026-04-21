@@ -1,0 +1,16 @@
+{
+  "product_id": "drainage_regulations",
+  "display_name": "Drainage Regulation Alerts",
+  "run_id": "2026-04-19_043102",
+  "generated_at": "2026-04-19T04:31:08Z",
+  "item_count": 1,
+  "filter_stages": {
+    "initial": 32,
+    "after_include_keywords": 1,
+    "after_exclude_keywords": 1,
+    "after_region": 1,
+    "after_trade_tags": 1,
+    "after_impact_types": 1,
+    "after_min_score": 1
+  }
+}

@@ -1,0 +1,158 @@
+# config/markets/construction.yaml
+# ==================================
+# Market profile for the Construction & Civil Engineering supplier lane.
+# Consumed by the supplier intelligence layer — NOT the core tender pipeline.
+#
+# Version history:
+#   1.0  2026-04-20  Initial profile — civils, drainage, groundworks, public realm
+
+market_id: construction
+version: "1.0"
+display_name: "Construction & Civil Engineering"
+description: >
+  Civil engineering, drainage, groundworks, and public realm works.
+  Typical buyers: local authorities, highways agencies, water companies,
+  National Highways, Transport for London.
+
+# ── Sector classification ─────────────────────────────────────────────────────
+# CPV codes that classify a tender as belonging to this market.
+# Used for hard sector filtering before scoring.
+cpv_codes:
+  - "45200000"   # Civil engineering works
+  - "45230000"   # Construction work for pipelines
+  - "45232400"   # Sewage works construction
+  - "45232410"   # Sewage works construction
+  - "45233000"   # Construction of highways
+  - "45112700"   # Landscaping work
+  - "45111000"   # Demolition / ground clearance
+  - "45112000"   # Excavation and earthmoving
+
+# Keywords in tender title/description that indicate sector relevance.
+# A tender with any 2+ of these is treated as sector-relevant.
+sector_keywords:
+  - civil engineering
+  - civils
+  - highways
+  - roads
+  - drainage
+  - sewerage
+  - groundworks
+  - earthworks
+  - excavation
+  - piling
+  - foundations
+  - public realm
+  - streetworks
+  - infrastructure
+  - flood management
+  - attenuation
+  - surface water
+  - foul sewer
+
+# ── Supplier capability matching ──────────────────────────────────────────────
+# Capability keywords expected in a supplier's capabilities/sectors fields.
+# min_keyword_hits: how many must match for capability_fit > 0
+capability_keywords:
+  tier_1:   # Core — high weight if present
+    - civil engineering
+    - civils
+    - drainage
+    - groundworks
+    - highways
+  tier_2:   # Supporting — moderate weight
+    - earthworks
+    - excavation
+    - piling
+    - foundations
+    - public realm
+    - streetworks
+    - utilities
+    - infrastructure
+  tier_3:   # Broad — low weight
+    - construction
+    - demolition
+    - landscaping
+    - reinstatement
+
+min_keyword_hits: 2
+
+# ── Regional priority tiers ───────────────────────────────────────────────────
+# Slugs must match src/utils/region.py REGION_SLUGS values.
+# A supplier's region_normalised is mapped to a slug and tier-scored.
+regional_priority:
+  tier_1:   # Full regional score
+    - london
+    - south_east
+  tier_2:   # Partial regional score
+    - east_of_england
+    - east_midlands
+    - west_midlands
+  tier_3:   # Low regional score
+    - south_west
+    - yorkshire
+    - north_west
+    - north_east
+    - wales
+    - scotland
+    - northern_ireland
+
+# ── Value band preference ─────────────────────────────────────────────────────
+# Supplier value_min/value_max vs. tender value.
+# sweet_spot: maximum score
+# floor/ceiling: hard exclusion beyond these limits
+value_bands:
+  floor: 50000
+  ceiling: 5000000
+  sweet_spot_min: 100000
+  sweet_spot_max: 2000000
+
+# ── Buyer type preference ─────────────────────────────────────────────────────
+# Exact strings matched against tender buyer_name (case-insensitive substring).
+buyer_types:
+  preferred:
+    - local authority
+    - council
+    - borough
+    - highways
+    - transport for london
+    - national highways
+    - environment agency
+    - water
+    - anglian
+    - thames
+    - severn
+  neutral:
+    - government
+    - ministry
+    - department
+    - agency
+    - university
+    - nhs
+  deprioritise:
+    - private
+
+# ── Scoring weights ───────────────────────────────────────────────────────────
+# Must sum to 1.0
+scoring_weights:
+  capability_fit: 0.40
+  regional_fit: 0.25
+  value_band_fit: 0.20
+  sector_experience: 0.15
+
+min_match_score: 45     # Suppliers below this are excluded from output
+
+# ── Supplier disqualifiers ────────────────────────────────────────────────────
+# If a supplier's flags list contains any of these, they are hard-excluded.
+disqualifier_flags:
+  - suspended
+  - debarred
+  - insolvent
+  - no_public_sector_experience
+  - no_relevant_accreditation
+
+# ── Outreach targeting ────────────────────────────────────────────────────────
+top_n_per_tender: 5     # Max suppliers in target_outreach_list.json per tender
+outreach_priority_thresholds:
+  high: 75
+  medium: 60
+  # below medium = low

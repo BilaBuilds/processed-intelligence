@@ -1,0 +1,153 @@
+# config/markets/social_housing.yaml
+# =====================================
+# Market profile for the Social Housing & Retrofit supplier lane.
+# Consumed by the supplier intelligence layer — NOT the core tender pipeline.
+#
+# Version history:
+#   1.0  2026-04-20  Initial profile — retrofit, planned maintenance, roofing,
+#                    MEP/heating, void & responsive repairs
+
+market_id: social_housing
+version: "1.0"
+display_name: "Social Housing & Retrofit"
+description: >
+  Planned maintenance, retrofit, roofing/cladding, MEP/heating upgrades,
+  and void/responsive repairs for housing associations and local authority
+  housing stock.
+
+# ── Sector classification ─────────────────────────────────────────────────────
+cpv_codes:
+  - "45000000"   # Construction work (broad)
+  - "45211000"   # Construction work for multi-dwelling buildings
+  - "45262700"   # Building alteration work
+  - "45321000"   # Thermal insulation work
+  - "45331000"   # Heating/ventilation/cooling equipment installation
+  - "45332000"   # Plumbing and drain-laying work
+  - "45261000"   # Roof and other special trade construction work
+  - "45421000"   # Joinery work
+  - "50700000"   # Repair and maintenance services of building installations
+
+sector_keywords:
+  - retrofit
+  - decarbonisation
+  - insulation
+  - planned maintenance
+  - decent homes
+  - major works
+  - roofing
+  - cladding
+  - heating
+  - boiler replacement
+  - heat pump
+  - voids
+  - responsive repairs
+  - kitchen replacement
+  - bathroom replacement
+  - window replacement
+  - door replacement
+  - energy efficiency
+  - net zero
+  - mep
+  - mechanical and electrical
+  - rewiring
+
+# ── Supplier capability matching ──────────────────────────────────────────────
+capability_keywords:
+  tier_1:
+    - retrofit
+    - planned maintenance
+    - roofing
+    - heating
+    - boiler replacement
+    - heat pump
+  tier_2:
+    - insulation
+    - cladding
+    - mechanical and electrical
+    - mep
+    - voids
+    - responsive repairs
+    - kitchen
+    - bathroom
+  tier_3:
+    - construction
+    - refurbishment
+    - maintenance
+    - repairs
+    - social housing
+    - housing association
+
+min_keyword_hits: 2
+
+# ── Regional priority tiers ───────────────────────────────────────────────────
+regional_priority:
+  tier_1:
+    - london
+    - south_east
+    - west_midlands
+  tier_2:
+    - north_west
+    - yorkshire
+    - east_of_england
+    - east_midlands
+  tier_3:
+    - south_west
+    - north_east
+    - wales
+    - scotland
+    - northern_ireland
+
+# ── Value band preference ─────────────────────────────────────────────────────
+value_bands:
+  floor: 25000
+  ceiling: 8000000
+  sweet_spot_min: 150000
+  sweet_spot_max: 2000000
+
+# ── Buyer type preference ─────────────────────────────────────────────────────
+buyer_types:
+  preferred:
+    - housing association
+    - housing trust
+    - l&q
+    - peabody
+    - clarion
+    - homes england
+    - council
+    - borough
+    - metropolitan
+    - notting hill genesis
+    - sanctuary
+    - hyde
+  neutral:
+    - government
+    - ministry
+    - department
+    - nhs
+    - university
+  deprioritise:
+    - private
+
+# ── Scoring weights ───────────────────────────────────────────────────────────
+# Must sum to 1.0
+scoring_weights:
+  capability_fit: 0.40
+  regional_fit: 0.20
+  value_band_fit: 0.25
+  sector_experience: 0.15
+
+min_match_score: 40
+
+# ── Supplier disqualifiers ────────────────────────────────────────────────────
+disqualifier_flags:
+  - suspended
+  - debarred
+  - insolvent
+  - no_public_sector_experience
+  - no_relevant_accreditation
+
+# ── Outreach targeting ────────────────────────────────────────────────────────
+top_n_per_tender: 5
+outreach_priority_thresholds:
+  high: 70
+  medium: 55

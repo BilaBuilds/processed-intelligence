@@ -1,0 +1,46 @@
+{
+  "records": [
+    {
+      "id": "cae5771668f2555e",
+      "title": "Flood risk and coastal change",
+      "authority": "HM Government",
+      "region": "Unknown",
+      "published_at": "",
+      "effective_at": "",
+      "url": "https://www.gov.uk/guidance/flood-risk-and-coastal-change",
+      "summary": "Flood risk and coastal change Flood risk and coastal change",
+      "source": "govuk_guidance",
+      "trade_tags": [
+        "drainage"
+      ],
+      "impact_type": "other",
+      "raw_text": "Flood risk and coastal change\nFlood risk and coastal change",
+      "relevance_score": 20,
+      "relevance_reasons": [
+        "matched: drainage"
+      ]
+    }
+  ],
+  "new_records": [
+    {
+      "id": "cae5771668f2555e",
+      "title": "Flood risk and coastal change",
+      "authority": "HM Government",
+      "region": "Unknown",
+      "published_at": "",
+      "effective_at": "",
+      "url": "https://www.gov.uk/guidance/flood-risk-and-coastal-change",
+      "summary": "Flood risk and coastal change Flood risk and coastal change",
+      "source": "govuk_guidance",
+      "trade_tags": [
+        "drainage"
+      ],
+      "impact_type": "other",
+      "raw_text": "Flood risk and coastal change\nFlood risk and coastal change",
+      "relevance_score": 20,
+      "relevance_reasons": [
+        "matched: drainage"
+      ]
+    }
+  ]
+}

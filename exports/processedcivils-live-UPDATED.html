@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProcessEd Civils | Future-Ready Groundworks & Civil Engineering</title>
+    <meta name="description" content="ProcessEd Civils delivers future-ready groundworks, drainage, enabling works, and civil engineering packages across London and the South East. Direct communication. Clear scopes. Delivery that is here to stay.">
+    <meta name="theme-color" content="#071b33">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+
+        :root {
+            --ink-950: #071b33;
+            --ink-900: #0d2648;
+            --ink-800: #17345f;
+            --ink-700: #284a74;
+            --teal-500: #18cec0;
+            --teal-400: #4fe0d5;
+            --mist-100: #eef3f7;
+            --mist-200: #dde6ee;
+            --stone-400: #7b8796;
+            --stone-600: #546071;
+            --stone-900: #18202b;
+            --white: #ffffff;
+            --shadow-soft: 0 30px 70px rgba(5, 14, 27, 0.18);
+            --max-width: 1240px;
+            --header-height: 82px;
+            --radius-xl: 32px;
+            --radius-lg: 22px;
+            --radius-md: 16px;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            font-family: "Manrope", sans-serif;
+            color: var(--stone-900);
+            background: var(--mist-100);
+            line-height: 1.55;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+
+        body.menu-open { overflow: hidden; }
+
+        img, video { display: block; max-width: 100%; }
+
+        a { color: inherit; }
+
+        button, input, textarea, select {
+            font: inherit;
+        }
+
+        h1, h2, h3, h4 {
+            margin: 0;
+            font-family: "Sora", sans-serif;
+            letter-spacing: -0.03em;
+        }
+
+        .site-header {
+            position: fixed;
+            inset: 0 0 auto;
+            z-index: 30;
+            transition: background 0.28s ease, box-shadow 0.28s ease, backdrop-filter 0.28s ease;
+        }
+
+        .site-header.scrolled {
+            background: rgba(7, 27, 51, 0.82);
+            backdrop-filter: blur(18px);
+            box-shadow: 0 16px 50px rgba(5, 14, 27, 0.18);
+        }
+
+        .header-shell {
+            width: min(var(--max-width), calc(100% - 2rem));
+            margin: 0 auto;
+            min-height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.95rem;
+            text-decoration: none;
+            color: var(--white);
+            min-width: 0;
+        }
+
+        .brand-mark {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            background:
+                linear-gradient(155deg, rgba(24, 206, 192, 0.95), rgba(10, 39, 76, 0.94) 62%),
+                linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent 60%);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .brand-mark::before,
+        .brand-mark::after {
+            content: "";
+            position: absolute;
+            background: rgba(255, 255, 255, 0.92);
+        }
+
+        .brand-mark::before {
+            width: 18px;
+            height: 2px;
+            top: 14px;
+            left: 11px;
+            transform: rotate(-45deg);
+            transform-origin: left center;
+        }
+
+        .brand-mark::after {
+            width: 18px;
+            height: 2px;
+            right: 9px;
+            top: 12px;
+            transform: rotate(45deg);
+            transform-origin: right center;
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            gap: 0.08rem;
+            min-width: 0;
+        }
+
+        .brand-name {
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            line-height: 1;
+        }
+
+        .brand-tag {
+            font-size: 0.73rem;
+            color: rgba(255, 255, 255, 0.74);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .site-nav {
+            display: flex;
+            align-items: center;
+            gap: 1.4rem;
+        }
+
+        .site-nav a {
+            text-decoration: none;
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.78);
+            transition: color 0.2s ease, opacity 0.2s ease;
+        }
+
+        .site-nav a:hover,
+        .site-nav a:focus-visible {
+            color: var(--white);
+        }
+
+        .site-nav .nav-cta {
+            color: var(--ink-950);
+            background: linear-gradient(135deg, var(--teal-400), var(--teal-500));
+            padding: 0.8rem 1.2rem;
+            border-radius: 999px;
+            box-shadow: 0 16px 30px rgba(24, 206, 192, 0.22);
+        }
+
+        .site-nav .nav-cta:hover,
+        .site-nav .nav-cta:focus-visible {
+            color: var(--ink-950);
+            opacity: 0.96;
+        }
+
+        .menu-toggle {
+            display: none;
+            width: 48px;
+            height: 48px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--white);
+            border-radius: 14px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .menu-toggle span {
+            width: 18px;
+            height: 2px;
+            background: currentColor;
+            border-radius: 999px;
+            transition: transform 0.24s ease, opacity 0.24s ease;
+        }
+
+        .menu-toggle[aria-expanded="true"] span:nth-child(1) {
+            transform: translateY(6px) rotate(45deg);
+        }
+
+        .menu-toggle[aria-expanded="true"] span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle[aria-expanded="true"] span:nth-child(3) {
+            transform: translateY(-6px) rotate(-45deg);
+        }
+
+        .hero {
+            position: relative;
+            min-height: 100svh;
+            color: var(--white);
+            overflow: clip;
+            background: #071b33;
+        }
+
+        .hero-video,
+        .hero-poster {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-poster {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 78% 18%, rgba(24, 206, 192, 0.18), transparent 28%),
+                linear-gradient(180deg, rgba(7, 27, 51, 0.2) 0%, rgba(7, 27, 51, 0.78) 72%, rgba(7, 27, 51, 0.94) 100%);
+            z-index: 1;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+            background-size: 96px 96px;
+            mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.14) 0%, rgba(0, 0, 0, 0.9) 56%, transparent 100%);
+            z-index: 1;
+            opacity: 0.32;
+        }
+
+        .hero-inner {
+            position: relative;
+            z-index: 2;
+            width: min(var(--max-width), calc(100% - 2rem));
+            margin: 0 auto;
+            min-height: 100svh;
+            padding: calc(var(--header-height) + 4.2rem) 0 4rem;
+            display: grid;
+            align-items: end;
+        }
+
+        .hero-copy {
+            max-width: 760px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            margin: 0 0 1rem;
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.76);
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 46px;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(24, 206, 192, 0.15), rgba(24, 206, 192, 1));
+        }
+
+        .hero h1 {
+            font-size: clamp(3.3rem, 7vw, 6.6rem);
+            line-height: 0.94;
+            max-width: 11ch;
+        }
+
+        .hero h1 span {
+            color: var(--teal-400);
+        }
+
+        .hero-lead {
+            margin: 1.45rem 0 0;
+            max-width: 42rem;
+            font-size: clamp(1.02rem, 1.1vw + 0.8rem, 1.3rem);
+            color: rgba(255, 255, 255, 0.82);
+        }
+
+        .hero-actions {
+            margin-top: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.9rem;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.95rem 1.35rem;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: transform 0.22s ease, background 0.22s ease, border-color 0.22s ease, color 0.22s ease;
+        }
+
+        .button:hover,
+        .button:focus-visible {
+            transform: translateY(-2px);
+        }
+
+        .button-primary {
+            color: var(--ink-950);
+            background: linear-gradient(135deg, var(--teal-400), var(--teal-500));
+            box-shadow: 0 18px 36px rgba(24, 206, 192, 0.2);
+        }
+
+        .button-secondary {
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.24);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .button-secondary:hover,
+        .button-secondary:focus-visible {
+            border-color: rgba(255, 255, 255, 0.42);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .hero-signals {
+            margin-top: 2.4rem;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1rem;
+            max-width: 980px;
+        }
+
+        .hero-signal {
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.16);
+        }
+
+        .hero-signal strong {
+            display: block;
+            margin-bottom: 0.28rem;
+            font-size: 1.25rem;
+            color: var(--white);
+        }
+
+        .hero-signal span {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.97rem;
+        }
+
+        .hero-note {
+            margin-top: 1.5rem;
+            font-size: 0.96rem;
+            color: rgba(255, 255, 255, 0.74);
+            max-width: 34rem;
+        }
+
+        .hero-note strong {
+            color: var(--white);
+        }
+
+        .scroll-tag {
+            position: absolute;
+            right: 2.2rem;
+            bottom: 2rem;
+            z-index: 2;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.65rem;
+            color: rgba(255, 255, 255, 0.78);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            text-decoration: none;
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+        }
+
+        .scroll-tag::before {
+            content: "";
+            width: 1px;
+            height: 54px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(24, 206, 192, 1));
+        }
+
+        .signal-band {
+            background: linear-gradient(180deg, var(--ink-950), var(--ink-900));
+            color: var(--white);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .signal-band-inner {
+            width: min(var(--max-width), calc(100% - 2rem));
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 1.2rem;
+            padding: 1.35rem 0;
+        }
+
+        .signal-band-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.22rem;
+            padding-right: 1.2rem;
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .signal-band-item:last-child {
+            border-right: 0;
+            padding-right: 0;
+        }
+
+        .signal-band-item strong {
+            font-size: 0.98rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .signal-band-item span {
+            color: rgba(255, 255, 255, 0.68);
+            font-size: 0.9rem;
+        }
+
+        section {
+            padding: 6.2rem 0;
+        }
+
+        .section-shell {
+            width: min(var(--max-width), calc(100% - 2rem));
+            margin: 0 auto;
+        }
+
+        .section-top {
+            max-width: 760px;
+            margin-bottom: 3rem;
+        }
+
+        .section-kicker {
+            margin: 0 0 0.75rem;
+            font-size: 0.82rem;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--ink-700);
+        }
+
+        .section-top h2 {
+            font-size: clamp(2.2rem, 4vw, 4rem);
+            line-height: 0.96;
+        }
+
+        .section-top p {
+            margin: 1rem 0 0;
+            font-size: 1.05rem;
+            color: var(--stone-600);
+            max-width: 42rem;
+        }
+
+        .manifesto {
+            position: relative;
+            background:
+                radial-gradient(circle at 20% 12%, rgba(24, 206, 192, 0.08), transparent 28%),
+                linear-gradient(180deg, #f5f9fc 0%, #edf3f8 100%);
+        }
+
+        .manifesto-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .manifesto-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 1.35rem;
+        }
+
+        .manifesto-copy p {
+            margin: 0;
+            font-size: 1.06rem;
+            color: var(--stone-600);
+        }
+
+        .manifesto-points {
+            display: grid;
+            gap: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        .manifesto-points div {
+            padding: 1rem 0 1rem 1.25rem;
+            border-top: 1px solid rgba(13, 38, 72, 0.12);
+            position: relative;
+            font-weight: 700;
+            color: var(--ink-900);
+        }
+
+        .manifesto-points div::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 1.35rem;
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            background: var(--teal-500);
+            box-shadow: 0 0 0 6px rgba(24, 206, 192, 0.12);
+        }
+
+        .visual-stack {
+            display: grid;
+            gap: 1rem;
+            align-content: start;
+        }
+
+        .photo-frame {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius-xl);
+            min-height: 580px;
+            box-shadow: var(--shadow-soft);
+            background: var(--ink-950);
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-caption {
+            position: absolute;
+            left: 1.25rem;
+            right: 1.25rem;
+            bottom: 1.25rem;
+            padding: 1rem 1.1rem;
+            border-radius: var(--radius-md);
+            background: rgba(7, 27, 51, 0.74);
+            color: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(14px);
+        }
+
+        .photo-caption strong {
+            display: block;
+            margin-bottom: 0.28rem;
+            color: var(--white);
+        }
+
+        .logo-ribbon {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(233, 241, 247, 0.98));
+            border: 1px solid rgba(13, 38, 72, 0.08);
+            border-radius: var(--radius-lg);
+            padding: 1.2rem;
+        }
+
+        .logo-ribbon img {
+            width: min(100%, 280px);
+            margin-bottom: 0.9rem;
+        }
+
+        .logo-ribbon p {
+            margin: 0;
+            font-size: 0.95rem;
+            color: var(--stone-600);
+        }
+
+        .logo-ribbon strong {
+            color: var(--ink-900);
+        }
+
+        .services {
+            background: var(--white);
+        }
+
+        .service-list {
+            display: grid;
+            gap: 0;
+            border-top: 1px solid rgba(13, 38, 72, 0.12);
+        }
+
+        .service-row {
+            display: grid;
+            grid-template-columns: 100px minmax(0, 1fr) minmax(240px, 320px);
+            gap: 1.2rem;
+            align-items: start;
+            padding: 1.4rem 0;
+            border-bottom: 1px solid rgba(13, 38, 72, 0.12);
+        }
+
+        .service-index {
+            font-family: "Sora", sans-serif;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--stone-400);
+            letter-spacing: 0.12em;
+        }
+
+        .service-row h3 {
+            font-size: clamp(1.2rem, 2vw, 1.8rem);
+            margin-bottom: 0.4rem;
+        }
+
+        .service-row p,
+        .service-side {
+            margin: 0;
+            color: var(--stone-600);
+        }
+
+        .service-side {
+            font-size: 0.95rem;
+            padding-top: 0.2rem;
+        }
+        .fit-section {
+            background:
+                linear-gradient(180deg, rgba(7, 27, 51, 0.98), rgba(10, 33, 61, 0.98)),
+                radial-gradient(circle at 85% 12%, rgba(24, 206, 192, 0.16), transparent 26%);
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fit-section::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 72px 72px;
+            opacity: 0.22;
+        }
+
+        .fit-section .section-shell,
+        .proof-section .section-shell,
+        .contact-section .section-shell {
+            position: relative;
+            z-index: 1;
+        }
+
+        .fit-section .section-kicker,
+        .fit-section .section-top p {
+            color: rgba(255, 255, 255, 0.72);
+        }
+
+        .fit-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .fit-item {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(260px, 0.8fr);
+            gap: 1rem;
+            padding: 1.3rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            align-items: start;
+        }
+
+        .fit-item:last-child {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .fit-item h3 {
+            font-size: clamp(1.25rem, 2vw, 2rem);
+        }
+
+        .fit-item p,
+        .fit-item span {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.72);
+        }
+
+        .fit-item span {
+            font-size: 0.96rem;
+        }
+
+        .proof-section {
+            background: linear-gradient(180deg, #f4f8fb 0%, #edf3f8 100%);
+        }
+
+        .proof-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1.4rem;
+        }
+
+        .proof-block {
+            padding: 1.6rem 1.45rem 1.7rem;
+            border-top: 3px solid rgba(24, 206, 192, 0.28);
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(10px);
+        }
+
+        .proof-block strong {
+            display: block;
+            margin-bottom: 0.45rem;
+            font-size: clamp(1.3rem, 2.4vw, 2rem);
+            color: var(--ink-900);
+            line-height: 1.02;
+        }
+
+        .proof-block p {
+            margin: 0;
+            color: var(--stone-600);
+        }
+
+        .process-grid {
+            margin-top: 2.5rem;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .process-step {
+            padding-top: 1rem;
+            border-top: 1px solid rgba(13, 38, 72, 0.16);
+        }
+
+        .process-step span {
+            display: inline-block;
+            margin-bottom: 0.55rem;
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--ink-700);
+        }
+
+        .process-step h3 {
+            font-size: 1.18rem;
+            margin-bottom: 0.45rem;
+        }
+
+        .process-step p {
+            margin: 0;
+            color: var(--stone-600);
+        }
+
+        .contact-section {
+            padding-bottom: 3.8rem;
+            background:
+                linear-gradient(180deg, rgba(7, 27, 51, 0.98), rgba(6, 22, 42, 1)),
+                radial-gradient(circle at 10% 10%, rgba(24, 206, 192, 0.15), transparent 24%);
+            color: var(--white);
+        }
+
+        .contact-section .section-kicker,
+        .contact-section .section-top p {
+            color: rgba(255, 255, 255, 0.74);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(320px, 430px);
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .contact-panel {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .contact-direct {
+            display: grid;
+            gap: 1rem;
+            margin-top: 0.4rem;
+        }
+
+        .contact-line {
+            display: grid;
+            gap: 0.2rem;
+            padding: 1rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .contact-line strong {
+            font-size: 0.82rem;
+            letter-spacing: 0.13em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.64);
+        }
+
+        .contact-line a,
+        .contact-line span {
+            font-size: 1.18rem;
+            text-decoration: none;
+            color: var(--white);
+            font-weight: 700;
+        }
+
+        .contact-mini {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            max-width: 34rem;
+        }
+
+        .contact-form {
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(14px);
+        }
+
+        .contact-form h3 {
+            font-size: 1.55rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .contact-form p {
+            margin: 0 0 1.3rem;
+            color: rgba(255, 255, 255, 0.72);
+        }
+
+        .field {
+            display: grid;
+            gap: 0.45rem;
+            margin-bottom: 0.95rem;
+        }
+
+        .field label {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.84);
+        }
+
+        .field input,
+        .field textarea,
+        .field select {
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--white);
+            padding: 0.95rem 1rem;
+            border-radius: 14px;
+            outline: none;
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .field input::placeholder,
+        .field textarea::placeholder {
+            color: rgba(255, 255, 255, 0.42);
+        }
+
+        .field input:focus,
+        .field textarea:focus,
+        .field select:focus {
+            border-color: rgba(79, 224, 213, 0.86);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .field textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        .field select {
+            appearance: none;
+        }
+
+        .submit-button {
+            width: 100%;
+            border: 0;
+            cursor: pointer;
+        }
+
+        .form-note {
+            margin-top: 0.95rem;
+            color: rgba(255, 255, 255, 0.66);
+            font-size: 0.9rem;
+        }
+
+        .form-success {
+            display: none;
+            margin-top: 1rem;
+            color: var(--teal-400);
+            font-size: 0.94rem;
+            font-weight: 700;
+        }
+
+        footer {
+            background: #061629;
+            color: rgba(255, 255, 255, 0.62);
+        }
+
+        .footer-shell {
+            width: min(var(--max-width), calc(100% - 2rem));
+            margin: 0 auto;
+            padding: 1.2rem 0 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-mark {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: rgba(255, 255, 255, 0.76);
+            font-size: 0.92rem;
+        }
+
+        .footer-mark img {
+            width: 52px;
+            border-radius: 12px;
+        }
+
+        .footer-line {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.54);
+        }
+
+        @media (max-width: 1100px) {
+            .hero-signals,
+            .proof-grid,
+            .process-grid,
+            .signal-band-inner {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .manifesto-grid,
+            .contact-grid,
+            .fit-item {
+                grid-template-columns: 1fr;
+            }
+
+            .service-row {
+                grid-template-columns: 84px minmax(0, 1fr);
+            }
+
+            .service-side {
+                grid-column: 2;
+                max-width: 38rem;
+            }
+
+            .photo-frame {
+                min-height: 460px;
+            }
+        }
+
+        @media (max-width: 860px) {
+            .menu-toggle {
+                display: inline-flex;
+            }
+
+            .site-nav {
+                position: fixed;
+                top: calc(var(--header-height) + 0.5rem);
+                left: 1rem;
+                right: 1rem;
+                display: grid;
+                gap: 0.4rem;
+                padding: 0.8rem;
+                border-radius: 20px;
+                background: rgba(7, 27, 51, 0.96);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                box-shadow: 0 30px 60px rgba(3, 9, 18, 0.24);
+                transform: translateY(-18px);
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.22s ease, transform 0.22s ease;
+            }
+
+            .site-nav.open {
+                opacity: 1;
+                pointer-events: auto;
+                transform: translateY(0);
+            }
+
+            .site-nav a {
+                padding: 0.95rem 1rem;
+                border-radius: 14px;
+                background: rgba(255, 255, 255, 0.04);
+            }
+
+            .site-nav .nav-cta {
+                text-align: center;
+            }
+
+            .hero-inner {
+                padding-top: calc(var(--header-height) + 3.8rem);
+            }
+
+            .hero-signals {
+                grid-template-columns: 1fr;
+                max-width: 28rem;
+            }
+
+            .scroll-tag {
+                display: none;
+            }
+        }
+
+        @media (max-width: 640px) {
+            :root {
+                --header-height: 74px;
+            }
+
+            section {
+                padding: 4.8rem 0;
+            }
+
+            .header-shell,
+            .hero-inner,
+            .section-shell,
+            .signal-band-inner,
+            .footer-shell {
+                width: min(var(--max-width), calc(100% - 1.2rem));
+            }
+
+            .hero h1 {
+                max-width: 9ch;
+            }
+
+            .button {
+                width: 100%;
+            }
+
+            .signal-band-inner,
+            .proof-grid,
+            .process-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .signal-band-item {
+                border-right: 0;
+                padding-right: 0;
+                padding-bottom: 0.75rem;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            .signal-band-item:last-child {
+                border-bottom: 0;
+                padding-bottom: 0;
+            }
+
+            .service-row {
+                grid-template-columns: 1fr;
+                gap: 0.65rem;
+            }
+
+            .service-side {
+                grid-column: 1;
+            }
+
+            .contact-form {
+                padding: 1.2rem;
+            }
+
+            .footer-shell {
+                align-items: flex-start;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header" id="siteHeader">
+        <div class="header-shell">
+            <a class="brand" href="#top" aria-label="ProcessEd Civils home">
+                <span class="brand-mark" aria-hidden="true"></span>
+                <span class="brand-text">
+                    <span class="brand-name">ProcessEd</span>
+                    <span class="brand-tag">Groundworks & Civil Engineering</span>
+                </span>
+            </a>
+            <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="siteNav" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <nav class="site-nav" id="siteNav">
+                <a href="#why">Why ProcessEd</a>
+                <a href="#services">Services</a>
+                <a href="#fit">Target Projects</a>
+                <a href="#contact" class="nav-cta">Start a Package</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="top">
+        <section class="hero">
+            <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="hero-poster.jpg" aria-hidden="true">
+                <source src="hero-video-mobile.mp4" media="(max-width: 767px)" type="video/mp4">
+                <source src="hero-video.mp4" type="video/mp4">
+            </video>
+            <img class="hero-poster" src="hero-poster.jpg" alt="" aria-hidden="true">
+            <div class="hero-inner">
+                <div class="hero-copy" data-aos="fade-up" data-aos-duration="900">
+                    <p class="eyebrow">London & South East | Future-Ready Civils</p>
+                    <h1>We build the <span>ground</span> for what comes next.</h1>
+                    <p class="hero-lead">ProcessEd Civils delivers drainage, groundworks, enabling works, and civil engineering packages with a modern contractor mindset: direct communication, clear scope ownership, and delivery discipline from the first call to final handover.</p>
+                    <div class="hero-actions">
+                        <a class="button button-primary" href="#contact">Talk About a Package</a>
+                        <a class="button button-secondary" href="#fit">See Where We Fit Best</a>
+                        <a href="tel:+447853505322" style="display:inline-flex;align-items:center;gap:.5rem;color:var(--teal-400);font-weight:600;font-size:1.05rem;text-decoration:none;margin-left:.5rem;">&#128222; 07853 505 322</a>
+                    </div>
+                    <div class="hero-signals">
+                        <div class="hero-signal">
+                            <strong>10+ years</strong>
+                            <span>Practical groundwork and civils experience across residential, commercial, and public sector projects.</span>
+                        </div>
+                        <div class="hero-signal">
+                            <strong>Construction sectors</strong>
+                            <span>Residential, public realm, utilities, education, commercial, and industrial environments.</span>
+                        </div>
+                        <div class="hero-signal">
+                            <strong>Direct and responsive</strong>
+                            <span>Fewer layers, faster decisions, and a 24-hour target for serious enquiries.</span>
+                        </div>
+                    </div>
+                    <p class="hero-note"><strong>Trust the future.</strong> We are here to stay, and we want to be involved in the projects that shape the next phase of the built environment.</p>
+                </div>
+            </div>
+            <a class="scroll-tag" href="#why">Scroll</a>
+        </section>
+
+        <div class="signal-band">
+            <div class="signal-band-inner">
+                <div class="signal-band-item" data-aos="fade-up" data-aos-duration="700">
+                    <strong>Groundworks and drainage first</strong>
+                    <span>Substructure, utilities, formation, attenuation, and civils packages below ground.</span>
+                </div>
+                <div class="signal-band-item" data-aos="fade-up" data-aos-delay="70" data-aos-duration="700">
+                    <strong>Built for modern delivery teams</strong>
+                    <span>Clear scope conversations, fast feedback, and fewer delays between tender and mobilisation.</span>
+                </div>
+                <div class="signal-band-item" data-aos="fade-up" data-aos-delay="140" data-aos-duration="700">
+                    <strong>Ready for regulated environments</strong>
+                    <span>Construction, public-sector, and principal contractor support where documentation and communication matter.</span>
+                </div>
+                <div class="signal-band-item" data-aos="fade-up" data-aos-delay="210" data-aos-duration="700">
+                    <strong>Ambition with staying power</strong>
+                    <span>We want the kind of work that lasts: schools, infrastructure, housing, public realm, and estate upgrades.</span>
+                </div>
+            </div>
+        </div>
+        <section class="manifesto" id="why">
+            <div class="section-shell">
+                <div class="section-top" data-aos="fade-up" data-aos-duration="850">
+                    <p class="section-kicker">Why ProcessEd</p>
+                    <h2>A sharper contractor presence for the work ahead.</h2>
+                    <p>Some businesses still sound like the industry has not changed. ProcessEd is built for buyers, estimators, project managers, and delivery teams who want less theatre, more clarity, and a contractor that feels switched on from day one.</p>
+                </div>
+                <div class="manifesto-grid">
+                    <div class="manifesto-copy" data-aos="fade-up" data-aos-duration="850">
+                        <p>We stay close to the details that make civils packages move properly: scope understanding, sequencing, drainage coordination, site readiness, and honest conversations about programme and delivery risk.</p>
+                        <p>That means a better fit for projects where the below-ground phase matters just as much as what gets seen above it. We want to support teams that are building homes, upgrading places, improving public spaces, and putting future infrastructure in the ground the right way.</p>
+                        <div class="manifesto-points">
+                            <div>Direct communication with real decision-makers, not layers of corporate drift.</div>
+                            <div>Future-facing brand and delivery style without losing the practical discipline construction demands.</div>
+                            <div>A contractor profile designed to grow into the jobs that define the next decade, not just repeat the last one.</div>
+                        </div>
+                    </div>
+                    <div class="visual-stack">
+                        <figure class="photo-frame" data-aos="fade-left" data-aos-duration="900">
+                            <img src="site-photo-optimized.jpg" alt="Groundworks and drainage installation taking place on an active UK construction site" loading="eager">
+                            <figcaption class="photo-caption">
+                                <strong>Real site footage. Real delivery language.</strong>
+                                Below-ground work needs coordination, pace, and confidence. That is where ProcessEd wants to stand out.
+                            </figcaption>
+                        </figure>
+                        <div class="logo-ribbon" data-aos="fade-up" data-aos-duration="850">
+                            <img src="logoProsecced.png" alt="ProcessEd brand logo" loading="lazy">
+                            <p><strong>Future-ready by design.</strong> The brand direction now matches the message: capable, current, and built to be taken seriously.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="services" id="services">
+            <div class="section-shell">
+                <div class="section-top" data-aos="fade-up" data-aos-duration="850">
+                    <p class="section-kicker">What We Deliver</p>
+                    <h2>Packages below ground. Standards above it.</h2>
+                    <p>ProcessEd is positioned for the kind of civils work where sequence, communication, and delivery quality matter as much as productivity on site.</p>
+                </div>
+                <div class="service-list">
+                    <article class="service-row" data-aos="fade-up" data-aos-duration="780">
+                        <div class="service-index">01</div>
+                        <div>
+                            <h3>Groundworks and foundations</h3>
+                            <p>Excavation, formation prep, substructure, foundations, concrete bases, and the groundwork required to move a project cleanly out of the ground.</p>
+                        </div>
+                        <p class="service-side">Best for residential plots, commercial shells, school extensions, and enabling packages that need stable early-stage delivery.</p>
+                    </article>
+                    <article class="service-row" data-aos="fade-up" data-aos-delay="60" data-aos-duration="780">
+                        <div class="service-index">02</div>
+                        <div>
+                            <h3>Drainage and utilities</h3>
+                            <p>Foul and surface water drainage, attenuation systems, ducting, service coordination, and utility-related civils that keep the programme moving.</p>
+                        </div>
+                        <p class="service-side">Ideal for schemes where below-ground coordination can either unlock the build or hold it back.</p>
+                    </article>
+                    <article class="service-row" data-aos="fade-up" data-aos-delay="120" data-aos-duration="780">
+                        <div class="service-index">03</div>
+                        <div>
+                            <h3>Enabling works and site preparation</h3>
+                            <p>Strip-out, clearance, remediation support, reduced level dig, and early works that create a reliable platform for the next trade in sequence.</p>
+                        </div>
+                        <p class="service-side">Useful when principal contractors need a civils partner that can get sites ready without unnecessary drag.</p>
+                    </article>
+                    <article class="service-row" data-aos="fade-up" data-aos-delay="180" data-aos-duration="780">
+                        <div class="service-index">04</div>
+                        <div>
+                            <h3>External works and public realm support</h3>
+                            <p>Roads, kerbs, paving, hard landscaping, surfacing interfaces, and the civils details that turn a finished build into a finished place.</p>
+                        </div>
+                        <p class="service-side">A strong fit for estate improvement works, public spaces, urban upgrades, and housing externals.</p>
+                    </article>
+                    <article class="service-row" data-aos="fade-up" data-aos-delay="240" data-aos-duration="780">
+                        <div class="service-index">05</div>
+                        <div>
+                            <h3>Principal contractor support</h3>
+                            <p>Responsive package delivery for project teams that need clean communication, reliable site reporting, and a civils contractor that integrates properly.</p>
+                        </div>
+                        <p class="service-side">Designed for construction partners who want capability without the sluggishness that can come with bigger legacy setups.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="fit-section" id="fit">
+            <div class="section-shell">
+                <div class="section-top" data-aos="fade-up" data-aos-duration="850">
+                    <p class="section-kicker">Target Projects</p>
+                    <h2>The work we want in front of us.</h2>
+                    <p>These are the kinds of packages ProcessEd should be moving towards and becoming known for: practical, valuable civils work with long-term impact and a clear need for capable delivery.</p>
+                </div>
+                <div class="fit-list">
+                    <article class="fit-item" data-aos="fade-up" data-aos-duration="780">
+                        <h3>Residential infrastructure and housing externals</h3>
+                        <span>Plot drainage, foundations, attenuation, access roads, utilities coordination, and the civils packages that support new homes and mixed-use schemes.</span>
+                    </article>
+                    <article class="fit-item" data-aos="fade-up" data-aos-delay="60" data-aos-duration="780">
+                        <h3>Education and community estate upgrades</h3>
+                        <span>School expansions, campus drainage, safe access works, service routes, and external packages where programme and site control both matter.</span>
+                    </article>
+                    <article class="fit-item" data-aos="fade-up" data-aos-delay="120" data-aos-duration="780">
+                        <h3>Public realm, highways, and urban improvement works</h3>
+                        <span>Paving, kerbing, drainage, utility interfaces, and civils support for councils, regeneration teams, and principal contractors improving public places.</span>
+                    </article>
+                    <article class="fit-item" data-aos="fade-up" data-aos-delay="180" data-aos-duration="780">
+                        <h3>Industrial yards, logistics, and commercial site prep</h3>
+                        <span>Formation, slab prep, drainage runs, hardstanding interfaces, and enabling packages for fast-moving commercial and industrial environments.</span>
+                    </article>
+                    <article class="fit-item" data-aos="fade-up" data-aos-delay="240" data-aos-duration="780">
+                        <h3>Infrastructure packages that shape what is next</h3>
+                        <span>Any project where below-ground quality unlocks the bigger vision above it, from estate regeneration to new-build infrastructure support.</span>
+                    </article>
+                </div>
+            </div>
+        </section>
+        <section class="proof-section">
+            <div class="section-shell">
+                <div class="section-top" data-aos="fade-up" data-aos-duration="850">
+                    <p class="section-kicker">Proof and Positioning</p>
+                    <h2>What gives delivery teams confidence.</h2>
+                    <p>Some of these points come from live experience, some from how we intend to operate, and together they position ProcessEd as a serious future-facing contractor rather than another generic brochure site.</p>
+                </div>
+                <div class="proof-grid">
+                    <div class="proof-block" data-aos="fade-up" data-aos-duration="760">
+                        <strong>10+ years of hands-on experience</strong>
+                        <p>A decade of practical groundwork and civils delivery gives the business a stronger foundation than a new company presence might suggest at first glance.</p>
+                    </div>
+                    <div class="proof-block" data-aos="fade-up" data-aos-delay="70" data-aos-duration="760">
+                        <strong>Ready for residential, commercial, and public-sector work</strong>
+                        <p>The messaging is now aimed at the places where ProcessEd wants to be involved: housing, public realm, education, estates, and modern construction packages.</p>
+                    </div>
+                    <div class="proof-block" data-aos="fade-up" data-aos-delay="140" data-aos-duration="760">
+                        <strong>Direct decisions and clearer communication</strong>
+                        <p>A leaner setup should mean faster feedback, better access to the people actually responsible, and less wasted time between enquiry, pricing, and mobilisation.</p>
+                    </div>
+                </div>
+
+                <div class="process-grid">
+                    <div class="process-step" data-aos="fade-up" data-aos-duration="760">
+                        <span>01</span>
+                        <h3>Review the scope</h3>
+                        <p>Understand the package properly, identify the risk points early, and keep the conversation practical from the start.</p>
+                    </div>
+                    <div class="process-step" data-aos="fade-up" data-aos-delay="60" data-aos-duration="760">
+                        <span>02</span>
+                        <h3>Price with clarity</h3>
+                        <p>Offer clear feedback on what is covered, what matters to sequence, and where the package needs sharper definition.</p>
+                    </div>
+                    <div class="process-step" data-aos="fade-up" data-aos-delay="120" data-aos-duration="760">
+                        <span>03</span>
+                        <h3>Mobilise with discipline</h3>
+                        <p>Turn accepted work into a clean site start with better preparation, better communication, and less friction.</p>
+                    </div>
+                    <div class="process-step" data-aos="fade-up" data-aos-delay="180" data-aos-duration="760">
+                        <span>04</span>
+                        <h3>Leave a strong handover</h3>
+                        <p>Finish with quality below ground, reliable records, and a reputation that earns the next conversation.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="contact-section" id="contact">
+            <div class="section-shell">
+                <div class="section-top" data-aos="fade-up" data-aos-duration="850">
+                    <p class="section-kicker">Start the Conversation</p>
+                    <h2>Bring ProcessEd into the next package.</h2>
+                    <p>If you are pricing upcoming civils work, planning drainage or enabling packages, or looking for a more responsive groundwork partner, let’s start early and get aligned properly.</p>
+                </div>
+                <div class="contact-grid">
+                    <div class="contact-panel" data-aos="fade-up" data-aos-duration="850">
+                        <div class="contact-direct">
+                            <div class="contact-line">
+                                <strong>Phone</strong>
+                                <a href="tel:+447853505322">07853 505 322</a>
+                            </div>
+                            <div class="contact-line">
+                                <strong>Email</strong>
+                                <a href="mailto:info@processedcivils.com">info@processedcivils.com</a>
+                            </div>
+                            <div class="contact-line">
+                                <strong>Coverage</strong>
+                                <span>London and South East England</span>
+                            </div>
+                            <div class="contact-line">
+                                <strong>What to send</strong>
+                                <span>Drawings, package scope, programme, tender dates, or early-stage project context.</span>
+                            </div>
+                        </div>
+                        <p class="contact-mini">Capability information, introduction calls, and first-stage package conversations can all start here. The goal is simple: respond quickly, communicate clearly, and make it obvious that ProcessEd belongs in serious project discussions.</p>
+                    </div>
+                    <div class="contact-form" data-aos="fade-left" data-aos-duration="900">
+                        <h3>Send an enquiry</h3>
+                        <p>Use the form below and we will open a pre-filled email draft in your mail app.</p>
+                        <form id="enquiryForm">
+                            <div class="field">
+                                <label for="name">Your name</label>
+                                <input id="name" name="name" type="text" placeholder="Full name" required>
+                            </div>
+                            <div class="field">
+                                <label for="company">Company or organisation</label>
+                                <input id="company" name="company" type="text" placeholder="Main contractor, developer, council, consultant">
+                            </div>
+                            <div class="field">
+                                <label for="email">Email</label>
+                                <input id="email" name="email" type="email" placeholder="you@company.com" required>
+                            </div>
+                            <div class="field">
+                                <label for="enquiryType">Enquiry type</label>
+                                <select id="enquiryType" name="enquiryType">
+                                    <option value="Tender enquiry">Tender enquiry</option>
+                                    <option value="Capability request">Capability request</option>
+                                    <option value="Early project discussion">Early project discussion</option>
+                                    <option value="General enquiry">General enquiry</option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <label for="message">Project details</label>
+                                <textarea id="message" name="message" placeholder="Tell us about the package, timeline, location, or what support you need."></textarea>
+                            </div>
+                            <button class="button button-primary submit-button" type="submit">Create Email Enquiry</button>
+                            <div class="form-success" id="formSuccess">Your email draft should open now. If it does not, email us directly at info@processedcivils.com.</div>
+                            <div class="form-note">Prefer direct contact? Call 07853 505 322.</div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-shell">
+            <div class="footer-mark">
+                <img src="logoProsecced.png" alt="ProcessEd logo" loading="lazy">
+                <span>ProcessEd Civils. Trust the future. We are here to stay.</span>
+            </div>
+            <div class="footer-line">&copy; 2026 ProcessEd Civils. All rights reserved.</div>
+        </div>
+    </footer>
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        const header = document.getElementById("siteHeader");
+        const menuToggle = document.getElementById("menuToggle");
+        const siteNav = document.getElementById("siteNav");
+        const navLinks = siteNav.querySelectorAll("a");
+        const form = document.getElementById("enquiryForm");
+        const formSuccess = document.getElementById("formSuccess");
+        const heroVideo = document.querySelector(".hero-video");
+        const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        function updateHeaderState() {
+            header.classList.toggle("scrolled", window.scrollY > 18);
+        }
+
+        function closeMenu() {
+            menuToggle.setAttribute("aria-expanded", "false");
+            siteNav.classList.remove("open");
+            document.body.classList.remove("menu-open");
+        }
+
+        menuToggle.addEventListener("click", () => {
+            const isOpen = menuToggle.getAttribute("aria-expanded") === "true";
+            menuToggle.setAttribute("aria-expanded", String(!isOpen));
+            siteNav.classList.toggle("open");
+            document.body.classList.toggle("menu-open", !isOpen);
+        });
+
+        navLinks.forEach((link) => {
+            link.addEventListener("click", closeMenu);
+        });
+
+        window.addEventListener("scroll", updateHeaderState, { passive: true });
+        updateHeaderState();
+
+        if (reducedMotion) {
+            heroVideo.removeAttribute("autoplay");
+            heroVideo.pause();
+        } else if (window.AOS) {
+            AOS.init({
+                once: true,
+                duration: 760,
+                easing: "ease-out-cubic",
+                offset: 40
+            });
+        }
+
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const name = document.getElementById("name").value.trim();
+            const company = document.getElementById("company").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const enquiryType = document.getElementById("enquiryType").value;
+            const message = document.getElementById("message").value.trim();
+
+            const subject = encodeURIComponent("ProcessEd website enquiry | " + enquiryType);
+            const body = encodeURIComponent(
+                "Name: " + name + "\n" +
+                "Company / organisation: " + company + "\n" +
+                "Email: " + email + "\n" +
+                "Enquiry type: " + enquiryType + "\n\n" +
+                "Project details:\n" + message
+            );
+
+            window.location.href = "mailto:info@processedcivils.com?subject=" + subject + "&body=" + body;
+            formSuccess.style.display = "block";
+        });
+    </script>
+</body>
+</html>

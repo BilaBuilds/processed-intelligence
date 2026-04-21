@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProcessEd Construction | Groundworks & Civil Engineering | London & South East</title>
+    <meta name="description" content="ProcessEd Construction delivers groundworks, civil engineering, drainage, and site preparation for public sector and commercial clients across London and the South East.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+        :root{--navy:#1a2744;--blue:#2f5496;--orange:#e67e22;--orange-dark:#d35400;--light:#f8f9fa;--white:#fff;--g100:#f1f3f5;--g200:#e9ecef;--g500:#868e96;--g700:#495057;--g900:#212529}
+        html{scroll-behavior:smooth}
+        body{font-family:'Inter',-apple-system,sans-serif;color:var(--g900);line-height:1.6;-webkit-font-smoothing:antialiased}
+        nav{position:fixed;top:0;width:100%;z-index:100;background:var(--navy);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:70px;box-shadow:0 2px 20px rgba(0,0,0,.15)}
+        .nav-logo{font-size:1.3rem;font-weight:800;color:var(--white);text-decoration:none;letter-spacing:-.02em}
+        .nav-logo span{color:var(--orange)}
+        .nav-links{display:flex;gap:2rem;list-style:none}
+        .nav-links a{color:rgba(255,255,255,.85);text-decoration:none;font-size:.9rem;font-weight:500;transition:color .2s}
+        .nav-links a:hover{color:var(--orange)}
+        .nav-cta{background:var(--orange);color:var(--white)!important;padding:.5rem 1.2rem;border-radius:6px;font-weight:600!important;transition:background .2s}
+        .nav-cta:hover{background:var(--orange-dark)}
+        .hamburger{display:none;background:none;border:none;cursor:pointer;padding:.5rem}
+        .hamburger span{display:block;width:24px;height:2px;background:#fff;margin:5px 0;transition:.3s}
+        .hero{margin-top:70px;background:linear-gradient(135deg,var(--navy),#2c3e6b);padding:6rem 2rem 5rem;text-align:center;color:var(--white);position:relative;overflow:hidden}
+        .hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E")}
+        .hero-content{position:relative;max-width:800px;margin:0 auto}
+        .hero h1{font-size:3rem;font-weight:800;line-height:1.15;margin-bottom:1.5rem;letter-spacing:-.03em}
+        .hero h1 span{color:var(--orange)}
+        .hero p{font-size:1.2rem;color:rgba(255,255,255,.8);max-width:600px;margin:0 auto 2.5rem;line-height:1.7}
+        .hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+        .btn{padding:.85rem 2rem;border-radius:8px;font-size:1rem;font-weight:600;text-decoration:none;display:inline-block;transition:all .2s}
+        .btn-primary{background:var(--orange);color:var(--white)}
+        .btn-primary:hover{background:var(--orange-dark);transform:translateY(-1px)}
+        .btn-outline{background:transparent;color:var(--white);border:2px solid rgba(255,255,255,.4)}
+        .btn-outline:hover{border-color:var(--white)}
+        .trust-bar{background:var(--white);border-bottom:1px solid var(--g200);padding:1.5rem 2rem;text-align:center}
+        .trust-items{display:flex;justify-content:center;align-items:center;gap:3rem;flex-wrap:wrap;max-width:900px;margin:0 auto}
+        .trust-item{display:flex;align-items:center;gap:.6rem;color:var(--g700);font-size:.9rem;font-weight:500}
+        .trust-icon{width:36px;height:36px;background:var(--g100);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+        section{padding:5rem 2rem}
+        .container{max-width:1100px;margin:0 auto}
+        .section-label{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:.75rem}
+        .section-title{font-size:2.2rem;font-weight:800;line-height:1.2;margin-bottom:1rem;letter-spacing:-.02em}
+        .section-subtitle{font-size:1.05rem;color:var(--g700);max-width:600px;line-height:1.7}
+        #services{background:var(--light)}
+        .services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:3rem}
+        .service-card{background:var(--white);border-radius:12px;padding:2rem;border:1px solid var(--g200);transition:all .2s}
+        .service-card:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,0,0,.08)}
+        .service-icon{width:48px;height:48px;background:linear-gradient(135deg,var(--orange),var(--orange-dark));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:1.2rem}
+        .service-card h3{font-size:1.15rem;font-weight:700;margin-bottom:.6rem}
+        .service-card p{color:var(--g700);font-size:.95rem;line-height:1.6}
+        #about{background:var(--white)}
+        .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-top:3rem}
+        .about-stats{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2rem}
+        .stat{background:var(--light);border-radius:10px;padding:1.5rem;text-align:center}
+        .stat-number{font-size:2rem;font-weight:800;color:var(--blue);letter-spacing:-.03em}
+        .stat-label{font-size:.85rem;color:var(--g500);margin-top:.25rem}
+        .about-text p{color:var(--g700);margin-bottom:1rem;font-size:1rem;line-height:1.7}
+        .about-image{background:linear-gradient(135deg,var(--navy),var(--blue));border-radius:16px;height:400px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.7);font-size:.9rem;text-align:center;padding:2rem;position:relative;overflow:hidden}
+        .about-image::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(255,255,255,.02) 20px,rgba(255,255,255,.02) 40px)}
+        .about-image-content{position:relative}
+        .about-image-content .placeholder-icon{font-size:3rem;margin-bottom:1rem}
+        #sectors{background:var(--light)}
+        .sectors-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:3rem}
+        .sector-tag{background:var(--white);border:1px solid var(--g200);border-radius:10px;padding:1.2rem 1.5rem;font-weight:600;font-size:.95rem;display:flex;align-items:center;gap:.75rem;transition:all .2s}
+        .sector-tag:hover{border-color:var(--orange)}
+        .sector-dot{width:10px;height:10px;border-radius:50%;background:var(--orange);flex-shrink:0}
+        #accreditations{background:var(--white)}
+        .accred-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-top:3rem}
+        .accred-card{background:var(--light);border-radius:12px;padding:2rem;text-align:center;border:1px solid var(--g200)}
+        .accred-card .accred-icon{font-size:2rem;margin-bottom:.75rem}
+        .accred-card h4{font-size:.95rem;font-weight:700;margin-bottom:.3rem}
+        .accred-card p{font-size:.85rem;color:var(--g500)}
+        #contact{background:var(--navy);color:var(--white)}
+        .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-top:3rem}
+        .contact-info h3{font-size:1.3rem;margin-bottom:1.5rem}
+        .contact-item{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.5rem}
+        .contact-icon{width:40px;height:40px;background:rgba(255,255,255,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+        .contact-item strong{display:block;font-size:.85rem;color:rgba(255,255,255,.6);margin-bottom:.2rem}
+        .contact-item span{font-size:1rem}
+        .contact-item a{color:var(--orange);text-decoration:none}
+        .contact-item a:hover{text-decoration:underline}
+        .contact-form{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:2.5rem}
+        .contact-form h3{font-size:1.2rem;margin-bottom:1.5rem}
+        .form-group{margin-bottom:1.2rem}
+        .form-group label{display:block;font-size:.85rem;font-weight:500;margin-bottom:.4rem;color:rgba(255,255,255,.7)}
+        .form-group input,.form-group textarea,.form-group select{width:100%;padding:.75rem 1rem;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);color:var(--white);font-family:inherit;font-size:.95rem;transition:border-color .2s}
+        .form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline:none;border-color:var(--orange)}
+        .form-group textarea{min-height:120px;resize:vertical}
+        .form-group select option{background:var(--navy);color:#fff}
+        .form-submit{background:var(--orange);color:var(--white);border:none;padding:.85rem 2rem;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;width:100%;transition:background .2s}
+        .form-submit:hover{background:var(--orange-dark)}
+        footer{background:#0f1a2e;color:rgba(255,255,255,.5);text-align:center;padding:2rem;font-size:.85rem}
+        @media(max-width:768px){.nav-links{display:none}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:70px;left:0;right:0;background:var(--navy);padding:1.5rem 2rem}.hamburger{display:block}.hero h1{font-size:2rem}.hero p{font-size:1rem}.about-grid,.contact-grid{grid-template-columns:1fr;gap:2rem}.about-image{height:250px}section{padding:3.5rem 1.5rem}.trust-items{gap:1.5rem}}
+    </style>
+</head>
+<body>
+<nav>
+    <a href="#" class="nav-logo">ProcessEd<span>Construction</span></a>
+    <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">
+        <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links">
+        <li><a href="#services">Services</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#sectors">Sectors</a></li>
+        <li><a href="#accreditations">Accreditations</a></li>
+        <li><a href="#contact" class="nav-cta">Get in Touch</a></li>
+    </ul>
+</nav>
+
+<section class="hero">
+    <div class="hero-content">
+        <h1>Groundworks &amp; Civil Engineering<br>for the <span>Public Sector</span></h1>
+        <p>ProcessEd Construction delivers reliable civil engineering, drainage, foundations, and site preparation for councils, government bodies, and commercial clients across London and the South East.</p>
+        <div class="hero-btns">
+            <a href="#contact" class="btn btn-primary">Request a Quote</a>
+            <a href="#services" class="btn btn-outline">Our Services</a>
+        </div>
+    </div>
+</section>
+
+<div class="trust-bar">
+    <div class="trust-items">
+        <div class="trust-item"><div class="trust-icon">&#9989;</div>Contracts Finder Registered</div>
+        <div class="trust-item"><div class="trust-icon">&#128737;</div>Public Sector Experienced</div>
+        <div class="trust-item"><div class="trust-icon">&#128205;</div>London &amp; South East</div>
+        <div class="trust-item"><div class="trust-icon">&#9881;</div>Fully Insured</div>
+    </div>
+</div>
+
+<section id="services">
+    <div class="container">
+        <div class="section-label">What We Do</div>
+        <h2 class="section-title">Our Services</h2>
+        <p class="section-subtitle">End-to-end groundworks and civil engineering, from site investigation through to completion and handover.</p>
+        <div class="services-grid">
+            <div class="service-card"><div class="service-icon">&#9874;</div><h3>Civil Engineering</h3><p>Roads, bridges, retaining structures, and public realm infrastructure. Full design-and-build or construct-only packages for local authorities and government agencies.</p></div>
+            <div class="service-card"><div class="service-icon">&#9881;</div><h3>Groundworks &amp; Foundations</h3><p>Site clearance, bulk excavation, piling, foundations, and substructure works. Everything below ground level so your build starts on solid footing.</p></div>
+            <div class="service-card"><div class="service-icon">&#128167;</div><h3>Drainage &amp; Utilities</h3><p>Foul and surface water drainage, attenuation systems, utility diversions and connections. NRSWA accredited for streetworks.</p></div>
+            <div class="service-card"><div class="service-icon">&#127795;</div><h3>Landscaping &amp; External Works</h3><p>Hard and soft landscaping, car parks, fencing, footpaths, and public realm finishes. Delivered to council specification with full aftercare.</p></div>
+            <div class="service-card"><div class="service-icon">&#128736;</div><h3>Site Preparation</h3><p>Demolition, site strip, ground investigation, remediation, and enabling works. Getting complex sites ready for construction on programme.</p></div>
+            <div class="service-card"><div class="service-icon">&#128679;</div><h3>Minor Works &amp; Repairs</h3><p>Reactive and planned minor civil works, repairs to highways, footpaths, and public assets. Framework-ready for term service contracts.</p></div>
+        </div>
+    </div>
+</section>
+
+<section id="about">
+    <div class="container">
+        <div class="about-grid">
+            <div>
+                <div class="section-label">About Us</div>
+                <h2 class="section-title">Built on Delivery,<br>Not Promises</h2>
+                <div class="about-text">
+                    <p>ProcessEd Construction is a groundworks and civil engineering contractor serving public sector clients across London and the South East.</p>
+                    <p>We specialise in the projects that councils and government bodies need done right the first time: drainage, foundations, site preparation, and infrastructure works. Every project is delivered with clear communication, transparent pricing, and a focus on programme certainty.</p>
+                    <p>We actively monitor public sector procurement through Contracts Finder and Find a Tender, and we're set up to respond quickly to both framework call-offs and open tenders.</p>
+                </div>
+                <div class="about-stats">
+                    <div class="stat"><div class="stat-number">London</div><div class="stat-label">&amp; South East Coverage</div></div>
+                    <div class="stat"><div class="stat-number">&#163;50k&#8211;5M</div><div class="stat-label">Project Value Range</div></div>
+                    <div class="stat"><div class="stat-number">100%</div><div class="stat-label">Public Sector Focus</div></div>
+                    <div class="stat"><div class="stat-number">24/7</div><div class="stat-label">Emergency Response</div></div>
+                </div>
+            </div>
+            <div class="about-image">
+                <div class="about-image-content">
+                    <div class="placeholder-icon">&#128247;</div>
+                    <p>Replace with a project photo<br><small>Use the Gemini prompt to generate one, or add a real site photo</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="sectors">
+    <div class="container">
+        <div class="section-label">Who We Work With</div>
+        <h2 class="section-title">Sectors &amp; Clients</h2>
+        <p class="section-subtitle">We deliver for public sector buyers across a range of sectors.</p>
+        <div class="sectors-grid">
+            <div class="sector-tag"><div class="sector-dot"></div>Local Authorities &amp; Councils</div>
+            <div class="sector-tag"><div class="sector-dot"></div>NHS Trusts &amp; Healthcare</div>
+            <div class="sector-tag"><div class="sector-dot"></div>Ministry of Defence</div>
+            <div class="sector-tag"><div class="sector-dot"></div>Department for Education</div>
+            <div class="sector-tag"><div class="sector-dot"></div>Housing Associations</div>
+            <div class="sector-tag"><div class="sector-dot"></div>National Highways</div>
+            <div class="sector-tag"><div class="sector-dot"></div>Environment Agency</div>
+            <div class="sector-tag"><div class="sector-dot"></div>Home Office</div>
+        </div>
+    </div>
+</section>
+
+<section id="accreditations">
+    <div class="container">
+        <div class="section-label">Compliance</div>
+        <h2 class="section-title">Accreditations &amp; Memberships</h2>
+        <p class="section-subtitle">Fully accredited and compliant with public sector procurement requirements.</p>
+        <div class="accred-grid">
+            <div class="accred-card"><div class="accred-icon">&#128737;</div><h4>Constructionline</h4><p>Verified contractor</p></div>
+            <div class="accred-card"><div class="accred-icon">&#9989;</div><h4>CHAS</h4><p>Health &amp; safety assessed</p></div>
+            <div class="accred-card"><div class="accred-icon">&#128272;</div><h4>SSIP</h4><p>Safety schemes member</p></div>
+            <div class="accred-card"><div class="accred-icon">&#127758;</div><h4>Contracts Finder</h4><p>Registered supplier</p></div>
+        </div>
+    </div>
+</section>
+
+<section id="contact">
+    <div class="container">
+        <div class="contact-grid">
+            <div class="contact-info">
+                <div class="section-label" style="color:var(--orange)">Get in Touch</div>
+                <h2 class="section-title" style="color:var(--white)">Ready to Talk?</h2>
+                <p style="color:rgba(255,255,255,.7);margin-bottom:2rem;line-height:1.7">Whether you're a procurement team looking for a reliable groundworks contractor, or you have a project going to tender, we'd like to hear from you.</p>
+                <div class="contact-item"><div class="contact-icon">&#128222;</div><div><strong>Phone</strong><span><a href="tel:07853505322">07853 505 322</a></span></div></div>
+                <div class="contact-item"><div class="contact-icon">&#9993;</div><div><strong>Email</strong><span><a href="mailto:info@processedconstruction.co.uk">info@processedconstruction.co.uk</a></span></div></div>
+                <div class="contact-item"><div class="contact-icon">&#128205;</div><div><strong>Coverage</strong><span>London &amp; South East England</span></div></div>
+                <div class="contact-item"><div class="contact-icon">&#128197;</div><div><strong>Availability</strong><span>Mon&#8211;Fri 7:00am &#8211; 6:00pm</span></div></div>
+            </div>
+            <div class="contact-form">
+                <h3>Send an Enquiry</h3>
+                <form id="enquiryForm" onsubmit="handleSubmit(event)">
+                    <div class="form-group"><label for="name">Your Name</label><input type="text" id="name" required placeholder="Full name"></div>
+                    <div class="form-group"><label for="org">Organisation</label><input type="text" id="org" placeholder="Council / company name"></div>
+                    <div class="form-group"><label for="email">Email</label><input type="email" id="email" required placeholder="you@organisation.gov.uk"></div>
+                    <div class="form-group"><label for="type">Enquiry Type</label><select id="type"><option value="quote">Request a Quote</option><option value="capability">Capability Statement</option><option value="framework">Framework Registration</option><option value="general">General Enquiry</option></select></div>
+                    <div class="form-group"><label for="message">Project Details</label><textarea id="message" placeholder="Brief description of the project or requirement..."></textarea></div>
+                    <button type="submit" class="form-submit">Send Enquiry</button>
+                </form>
+                <p id="formSuccess" style="display:none;margin-top:1rem;color:var(--orange);font-weight:600;text-align:center">Thank you! We'll be in touch within 24 hours.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer><p>&copy; 2026 ProcessEd Construction. All rights reserved.</p></footer>
+<script>function handleSubmit(e){e.preventDefault();document.getElementById('enquiryForm').style.display='none';document.getElementById('formSuccess').style.display='block'}</script>
+</body>
+</html>

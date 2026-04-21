@@ -1,0 +1,16 @@
+supplier_id,name,region,capabilities,sectors,accreditations,value_min,value_max,flags
+SUP-001,Apex Civil Engineering Ltd,London,"civil engineering,drainage,groundworks,earthworks","construction,utilities","ISO9001,CHAS,Constructionline",50000,2000000,
+SUP-002,Meridian Groundworks Ltd,South East England,"groundworks,excavation,piling,foundations","construction","CHAS,SSIP",75000,1500000,
+SUP-003,TerraFlow Drainage Ltd,London,"drainage,sewerage,surface water,foul sewer,utilities","construction,water","ISO9001,CHAS",40000,800000,
+SUP-004,Greenway Civil Contractors,Greater Manchester,"civil engineering,highways,roads,earthworks","construction,highways","Constructionline,CHAS",100000,3000000,
+SUP-005,Solent Infrastructure Ltd,South East England,"civil engineering,groundworks,public realm,streetworks","construction","ISO9001,ISO14001,CHAS",150000,5000000,
+SUP-006,Premier Earthworks Ltd,Yorkshire and The Humber,"earthworks,excavation,groundworks,demolition","construction","CHAS",25000,500000,
+SUP-007,Capital Civils Ltd,London,"civil engineering,drainage,public realm,highways","construction,utilities","ISO9001,CHAS,Constructionline",200000,8000000,
+SUP-008,FloodGuard Solutions Ltd,East of England,"drainage,flood management,attenuation,surface water","construction,water,environment","ISO9001,ISO14001",80000,2000000,
+SUP-009,Badger Builders Ltd,,,"construction",,10000,200000,
+SUP-010,Zenith Plant Hire Ltd,West Midlands,"plant hire,equipment","plant",,,,no_public_sector_experience
+SUP-011,Redline Civil Works,Scotland,"civil engineering,groundworks,highways","construction","CHAS",60000,1200000,
+SUP-012,Urban Realm Ltd,London,"public realm,streetworks,landscaping,hard landscaping","construction","ISO9001,CHAS",50000,1000000,
+SUP-013,Suspended Co Ltd,London,"civil engineering,groundworks","construction","CHAS",50000,1000000,suspended
+SUP-014,Precision Piling Ltd,South East England,"piling,foundations,ground investigation","construction,geotechnical","ISO9001,CHAS,Constructionline",100000,3000000,
+SUP-015,Riviera Groundworks,South West England,"groundworks,excavation,drainage","construction","CHAS",30000,600000,

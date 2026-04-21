@@ -1,0 +1,13 @@
+{
+  "client_id": "demo_drainage_midlands",
+  "display_name": "Demo Drainage Midlands",
+  "run_id": "2026-04-19_040413",
+  "generated_at": "2026-04-19T04:04:17Z",
+  "subscribed_products": [
+    "drainage_regulations"
+  ],
+  "item_count": 0,
+  "new_count": 0,
+  "notified": false,
+  "notify_status": "skipped"
+}

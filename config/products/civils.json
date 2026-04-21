@@ -1,0 +1,26 @@
+{
+  "id": "civils",
+  "display_name": "Civils & Construction",
+  "enabled": true,
+  "min_score": 20,
+  "shortlist_size": 10,
+  "include_keywords": [
+    "civil engineering", "civils", "construction", "infrastructure",
+    "public realm", "highways", "road", "bridge", "earthworks",
+    "groundwork", "structural", "piling", "site preparation",
+    "demolition", "excavation"
+  ],
+  "exclude_keywords": [],
+  "regions": [],
+  "buyer_filters": [],
+  "value_min": 50000,
+  "value_max": null,
+  "score_boosts": {
+    "civil engineering": 10,
+    "civils": 8,
+    "public realm": 6,
+    "infrastructure": 5,
+    "highways": 5
+  },
+  "notify": true
+}

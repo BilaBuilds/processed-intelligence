@@ -1,0 +1,49 @@
+{
+  "defaultClientId": "northbuild",
+  "tiers": {
+    "Starter": {
+      "shortlist": true,
+      "decision_reasoning": true,
+      "buyer_intel": false,
+      "pipeline_history": false,
+      "exports": false
+    },
+    "Pro": {
+      "shortlist": true,
+      "decision_reasoning": true,
+      "buyer_intel": true,
+      "pipeline_history": false,
+      "exports": true
+    },
+    "Agency": {
+      "shortlist": true,
+      "decision_reasoning": true,
+      "buyer_intel": true,
+      "pipeline_history": true,
+      "exports": true
+    }
+  },
+  "clients": [
+    {
+      "id": "northbuild",
+      "name": "North Build Ltd",
+      "tier": "Starter",
+      "region": "North East",
+      "watchlist": ["environment agency", "transport for london"]
+    },
+    {
+      "id": "metrocivil",
+      "name": "Metro Civil Engineering",
+      "tier": "Pro",
+      "region": "London",
+      "watchlist": ["croydon council", "london borough of wandsworth"]
+    },
+    {
+      "id": "agencydemo",
+      "name": "Agency Demo Account",
+      "tier": "Agency",
+      "region": "UK",
+      "watchlist": ["croydon council", "environment agency", "transport for london"]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "drainage_regulations",
+  "display_name": "Drainage Regulation Alerts",
+  "enabled": true,
+  "min_score": 20,
+  "shortlist_size": 10,
+  "include_keywords": ["sewer", "drainage", "SUDS", "surface water", "flood"],
+  "exclude_keywords": [],
+  "regions": [],
+  "trade_tags": ["drainage"],
+  "impact_types": [],
+  "allow_null_effective_date": true,
+  "notify": true
+}

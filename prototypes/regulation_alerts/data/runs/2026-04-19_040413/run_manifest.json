@@ -1,0 +1,132 @@
+{
+  "run_id": "2026-04-19_040413",
+  "product": "regulation_alerts",
+  "started_at": "2026-04-19T04:04:13Z",
+  "completed_at": "2026-04-19T04:04:18Z",
+  "steps": {
+    "ingest": {
+      "status": "ok",
+      "raw_count": 12
+    },
+    "normalize": {
+      "status": "ok",
+      "normalized_count": 7
+    },
+    "match": {
+      "status": "ok",
+      "scored_count": 7
+    },
+    "products": {
+      "status": "ok",
+      "generated_count": 3
+    },
+    "clients": {
+      "status": "ok",
+      "notified_count": 0
+    },
+    "notify": {
+      "status": "ok"
+    }
+  },
+  "source_health": {
+    "govuk_guidance": {
+      "status": "ok",
+      "fetched": 5,
+      "error": null
+    },
+    "ea_publications": {
+      "status": "ok",
+      "fetched": 5,
+      "error": null
+    },
+    "planning_portal": {
+      "status": "error",
+      "fetched": 0,
+      "error": "404 Client Error: Not Found for url: https://www.planningportal.co.uk/info/200130/home_improvement"
+    },
+    "hse_construction": {
+      "status": "ok",
+      "fetched": 2,
+      "error": null
+    }
+  },
+  "products": {
+    "civils_regulations": {
+      "product_id": "civils_regulations",
+      "display_name": "Civils Regulation Alerts",
+      "run_id": "2026-04-19_040413",
+      "generated_at": "2026-04-19T04:04:17Z",
+      "item_count": 0,
+      "filter_stages": {
+        "initial": 7,
+        "after_include_keywords": 0,
+        "after_exclude_keywords": 0,
+        "after_region": 0,
+        "after_trade_tags": 0,
+        "after_impact_types": 0,
+        "after_min_score": 0
+      }
+    },
+    "drainage_regulations": {
+      "product_id": "drainage_regulations",
+      "display_name": "Drainage Regulation Alerts",
+      "run_id": "2026-04-19_040413",
+      "generated_at": "2026-04-19T04:04:17Z",
+      "item_count": 0,
+      "filter_stages": {
+        "initial": 7,
+        "after_include_keywords": 0,
+        "after_exclude_keywords": 0,
+        "after_region": 0,
+        "after_trade_tags": 0,
+        "after_impact_types": 0,
+        "after_min_score": 0
+      }
+    },
+    "london_regulations": {
+      "product_id": "london_regulations",
+      "display_name": "London Region Alerts",
+      "run_id": "2026-04-19_040413",
+      "generated_at": "2026-04-19T04:04:17Z",
+      "item_count": 0,
+      "filter_stages": {
+        "initial": 7,
+        "after_include_keywords": 7,
+        "after_exclude_keywords": 7,
+        "after_region": 0,
+        "after_trade_tags": 0,
+        "after_impact_types": 0,
+        "after_min_score": 0
+      }
+    }
+  },
+  "clients": {
+    "demo_drainage_midlands": {
+      "client_id": "demo_drainage_midlands",
+      "display_name": "Demo Drainage Midlands",
+      "run_id": "2026-04-19_040413",
+      "generated_at": "2026-04-19T04:04:17Z",
+      "subscribed_products": [
+        "drainage_regulations"
+      ],
+      "item_count": 0,
+      "new_count": 0,
+      "notified": false,
+      "notify_status": "skipped"
+    },
+    "demo_london_civils": {
+      "client_id": "demo_london_civils",
+      "display_name": "Demo London Civils",
+      "run_id": "2026-04-19_040413",
+      "generated_at": "2026-04-19T04:04:18Z",
+      "subscribed_products": [
+        "civils_regulations",
+        "london_regulations"
+      ],
+      "item_count": 0,
+      "new_count": 0,
+      "notified": false,
+      "notify_status": "skipped"
+    }
+  }
+}

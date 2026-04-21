@@ -1,0 +1,28 @@
+# Prompt injection detection patterns (one grep-compatible regex per line)
+ignore previous instructions
+ignore all previous
+forget your instructions
+disregard your
+new instructions:
+system prompt:
+you are now
+act as if you
+pretend you are
+your new role is
+override your
+bypass your
+jailbreak
+DAN mode
+do anything now
+you must now
+ignore your training
+forget everything
+from now on you
+I am your developer
+I am your creator
+you have been reprogrammed
+your true purpose
+your hidden instructions
+unlock your capabilities
+disable your filters
+enable developer mode

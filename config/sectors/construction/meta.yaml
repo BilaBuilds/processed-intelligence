@@ -1,0 +1,57 @@
+# config/sectors/construction/meta.yaml
+# =======================================
+# Display labels, outreach templates, and branding for the
+# Construction & Civil Engineering sector pack.
+
+display_name: "Construction & Civil Engineering"
+short_name: "Construction"
+emoji: "🏗️"
+
+dashboard_labels:
+  tender_noun: "tender"
+  tender_noun_plural: "tenders"
+  buyer_noun: "buyer"
+  buyer_noun_plural: "buyers"
+  score_label: "Relevance Score"
+  fit_label: "Delivery Fit"
+  category_label: "Trade"
+  primary_region_label: "Region"
+
+outreach_templates:
+  intro: >
+    We are a specialist civil engineering and groundworks contractor
+    with a strong delivery record across South East England and London.
+    We noticed your recent procurement activity and would welcome the
+    opportunity to discuss upcoming works in our delivery area.
+
+  hot_buyer: >
+    Given your recent volume of activity in our core trades
+    (drainage, civils, groundworks, public realm), we believe
+    there is a strong fit between your programme and our capability.
+    We would like to arrange a brief introduction call at your
+    convenience ahead of your next procurement window.
+
+  warm_buyer: >
+    We have followed your procurement pipeline and see alignment
+    with several upcoming project types in our capability range.
+    We would welcome an introductory conversation to register our
+    interest as a potential bidder.
+
+  watch_buyer: >
+    We are monitoring the market in your region and note your
+    organisation as a potential future client. Please consider
+    this message an open invitation to discuss any planned
+    civil engineering, drainage, or groundworks requirements.
+
+value_range:
+  min: 100000
+  max: 5000000
+  currency: GBP
+  currency_symbol: "£"
+
+typical_cpv_codes:
+  - "45200000"   # Civil engineering works
+  - "45230000"   # Construction work for pipelines
+  - "45232400"   # Sewage works construction
+  - "45233000"   # Construction of highways
+  - "45112700"   # Landscaping work

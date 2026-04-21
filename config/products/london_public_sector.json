@@ -1,0 +1,18 @@
+{
+  "id": "london_public_sector",
+  "display_name": "London Public Sector",
+  "enabled": true,
+  "min_score": 20,
+  "shortlist_size": 10,
+  "include_keywords": [],
+  "exclude_keywords": [],
+  "regions": ["London", "Greater London"],
+  "buyer_filters": ["council", "borough", "tfl", "gla", "transport for london", "mayor"],
+  "value_min": 100000,
+  "value_max": null,
+  "score_boosts": {
+    "london": 5,
+    "borough": 3
+  },
+  "notify": true
+}

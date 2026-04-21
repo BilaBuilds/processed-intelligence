@@ -1,0 +1,14 @@
+{
+  "id": "civils_regulations",
+  "display_name": "Civils Regulation Alerts",
+  "enabled": true,
+  "min_score": 20,
+  "shortlist_size": 10,
+  "include_keywords": ["highway", "excavation", "groundwork", "carriageway", "civils"],
+  "exclude_keywords": [],
+  "regions": [],
+  "trade_tags": ["civils"],
+  "impact_types": [],
+  "allow_null_effective_date": true,
+  "notify": true
+}

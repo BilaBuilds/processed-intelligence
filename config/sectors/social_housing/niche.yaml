@@ -1,0 +1,212 @@
+# config/sectors/social_housing/niche.yaml
+# ==========================================
+# Trade definitions and geographies for the Social Housing & Retrofit sector.
+# Used by context.py to classify and score tenders.
+
+trades:
+  retrofit:
+    description: Whole-house and fabric-first retrofit, EWI, insulation, decarbonisation
+    keywords:
+      - retrofit
+      - external wall insulation
+      - ewi
+      - insulation
+      - decarbonisation
+      - energy efficiency
+      - net zero
+      - fabric works
+      - solid wall insulation
+      - cavity wall insulation
+      - loft insulation
+    geographies:
+      - london
+      - south east
+      - west midlands
+      - north west
+      - yorkshire
+    min_value: 50000
+    max_value: 5000000
+
+  planned_maintenance:
+    description: Planned maintenance programmes for housing associations and councils
+    keywords:
+      - planned maintenance
+      - major works
+      - decent homes
+      - component replacement
+      - cyclical maintenance
+      - capital programme
+      - housing programme
+      - stock improvement
+    geographies:
+      - london
+      - south east
+      - west midlands
+      - east of england
+    min_value: 100000
+    max_value: 8000000
+
+  roofing_and_cladding:
+    description: Roofing, cladding remediation, envelope works
+    keywords:
+      - roofing
+      - cladding
+      - cladding remediation
+      - flat roof
+      - pitched roof
+      - roof replacement
+      - external envelope
+      - facade works
+      - fire safety
+    geographies:
+      - london
+      - south east
+      - west midlands
+    min_value: 100000
+    max_value: 4000000
+
+  mep_and_heating:
+    description: Mechanical, electrical, heating, boiler and heat pump replacement
+    keywords:
+      - heating
+      - boiler replacement
+      - heat pump
+      - air source heat pump
+      - ground source heat pump
+      - mechanical and electrical
+      - electrical upgrade
+      - rewiring
+      - ventilation
+      - mvhr
+      - solar panels
+      - photovoltaic
+    geographies:
+      - london
+      - south east
+      - west midlands
+      - north west
+    min_value: 50000
+    max_value: 3000000
+
+  void_and_responsive:
+    description: Void works, responsive repairs, bathroom/kitchen replacements
+    keywords:
+      - voids
+      - void works
+      - responsive repairs
+      - kitchen replacement
+      - bathroom replacement
+      - damp proofing
+      - window replacement
+      - door replacement
+      - communal areas
+    geographies:
+      - london
+      - south east
+      - east of england
+    min_value: 25000
+    max_value: 2000000
+
+# Exclusions: if a tender matches ANY of these, it is SKIP
+exclusions:
+  keywords:
+    # Furniture / equipment
+    - chairs
+    - desks
+    - furniture
+    - stationery
+    - uniforms
+    # Food & hospitality
+    - catering
+    - food supply
+    - beverages
+    - vending
+    - meals
+    - hospitality
+    # IT / Software
+    - software
+    - saas
+    - it support
+    - helpdesk
+    - website design
+    - digital services
+    - cloud computing
+    # Professional services
+    - legal services
+    - accounting
+    - consultancy
+    - recruitment
+    - staffing
+    - hr services
+    # Healthcare / social care
+    - nursing
+    - domiciliary care
+    - counselling
+    - pharmacy
+    - ppe supply
+    # Heavy civil (not relevant for housing)
+    - highway construction
+    - road construction
+    - bridge
+    - flood alleviation
+    - sewer construction
+    # Other
+    - fitness classes
+    - gym services
+    - printing
+    - translation services
+    - advertising
+    - courier service
+
+  buyers: []
+
+# Value bands: programme contracts are typically larger
+value_bands:
+  - min: 25000
+    max: 150000
+    label: small
+    priority: medium
+  - min: 150001
+    max: 500000
+    label: medium
+    priority: high
+  - min: 500001
+    max: 2000000
+    label: large
+    priority: high
+  - min: 2000001
+    max: 8000000
+    label: xlarge
+    priority: medium
+
+# Key buyers in the social housing procurement market
+buyer_intelligence:
+  - buyer_name: "L&Q"
+    frequency: "quarterly"
+    avg_value: 1200000
+    style: "framework preferred, pre-qualification required"
+    success_rate: 0.25
+
+  - buyer_name: "Peabody"
+    frequency: "quarterly"
+    avg_value: 900000
+    style: "collaborative, strong ESG requirements"
+    success_rate: 0.3
+
+  - buyer_name: "Clarion Housing"
+    frequency: "monthly"
+    avg_value: 800000
+    style: "active programme, multiple lots"
+    success_rate: 0.28
+
+  - buyer_name: "Homes England"
+    frequency: "quarterly"
+    avg_value: 2500000
+    style: "strategic capital programme, competitive"
+    success_rate: 0.15
+
+  - buyer_name: "London Borough of Southwark"
+    frequency: "monthly"
+    avg_value: 700000
+    style: "large housing stock, regular programme"
+    success_rate: 0.3

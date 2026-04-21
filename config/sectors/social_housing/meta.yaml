@@ -1,0 +1,61 @@
+# config/sectors/social_housing/meta.yaml
+# =========================================
+# Display labels, outreach templates, and branding for the
+# Social Housing & Retrofit sector pack.
+
+display_name: "Social Housing & Retrofit"
+short_name: "Social Housing"
+emoji: "🏘️"
+
+dashboard_labels:
+  tender_noun: "tender"
+  tender_noun_plural: "tenders"
+  buyer_noun: "client"
+  buyer_noun_plural: "clients"
+  score_label: "Relevance Score"
+  fit_label: "Programme Fit"
+  category_label: "Work Type"
+  primary_region_label: "Region"
+
+outreach_templates:
+  intro: >
+    We are a specialist retrofit and planned maintenance contractor
+    with extensive experience delivering social housing programmes
+    across England. We are actively seeking opportunities to work
+    with housing associations and local authorities on retrofit,
+    decarbonisation, and major works programmes.
+
+  hot_buyer: >
+    We have been tracking your procurement activity closely and
+    believe we have a strong fit with your current programme pipeline
+    — particularly in retrofit, planned maintenance, and component
+    replacement. We would welcome a brief call to discuss how we could
+    support your delivery objectives and register our interest ahead
+    of upcoming procurement exercises.
+
+  warm_buyer: >
+    We have noted your recent procurement activity in the social
+    housing and retrofit space and believe there is good alignment
+    with our delivery capability. We would welcome the opportunity
+    to introduce ourselves and explore future opportunities.
+
+  watch_buyer: >
+    We monitor the social housing procurement market actively and
+    have noted your organisation as a potential future client.
+    We deliver retrofit, planned maintenance, and component
+    replacement programmes across England and would welcome a
+    conversation at an appropriate time.
+
+value_range:
+  min: 25000
+  max: 8000000
+  currency: GBP
+  currency_symbol: "£"
+
+typical_cpv_codes:
+  - "45211000"   # Construction work for multi-dwelling buildings
+  - "45321000"   # Thermal insulation work
+  - "45331000"   # Heating, ventilation and air-conditioning equipment
+  - "45261000"   # Erection and related work of roof frames and coverings
+  - "45420000"   # Joinery and carpentry installation work
+  - "45330000"   # Plumbing and sanitary works

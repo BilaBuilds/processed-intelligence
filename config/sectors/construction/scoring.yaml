@@ -1,0 +1,124 @@
+# config/sectors/construction/scoring.yaml
+# =========================================
+# Scoring weights for the Construction & Civil Engineering sector.
+# Loaded by src/sector_pack.py when TENDER_SECTOR=construction (default).
+
+keyword_weights:
+  # High value — core delivery keywords
+  construction:       15
+  refurbishment:      15
+  fit out:            15
+  building works:     15
+  civil engineering:  15
+  # Medium — common delivery scope
+  maintenance:        10
+  facilities:         10
+  infrastructure:     10
+  renovation:         10
+  highways:           10
+  drainage:           10
+  groundworks:        10
+  # Lower — broader but still relevant
+  cleaning:            5
+  grounds:             5
+  landscaping:         5
+  repair:              5
+  earthworks:          8
+  excavation:          8
+  piling:              8
+  foundations:         8
+  public realm:        8
+  streetworks:         6
+
+disqualify_keywords:
+  # Furniture / equipment supply
+  - chairs
+  - desks
+  - furniture
+  - stationery
+  - uniforms
+  - clothing
+  # Food / hospitality
+  - catering
+  - food
+  - beverages
+  - vending
+  - meals
+  # Digital / software / IT
+  - software
+  - saas
+  - licensing
+  - cyber
+  - it support
+  - helpdesk
+  - website
+  - digital
+  - cloud
+  - data analytics
+  - crm
+  - erp
+  # Professional services (non-construction)
+  - consultancy
+  - advisory
+  - legal services
+  - accounting
+  - audit services
+  - recruitment
+  - staffing
+  - hr services
+  - payroll
+  # Healthcare / social
+  - nursing
+  - domiciliary
+  - counselling
+  - therapy
+  - pharmacy
+  - personal protective equipment
+  - ppe supply
+  # Leisure / fitness
+  - fitness
+  - fitness classes
+  - gym
+  - leisure operator
+  - swimming
+  # General non-delivery
+  - training
+  # Transport / logistics (non-civil)
+  - courier
+  - taxi
+  - bus service
+  - vehicle hire
+  # Other off-niche
+  - printing
+  - translation
+  - marketing
+  - advertising
+
+region_weights:
+  london:            10
+  south east:        10
+  east of england:    8
+  west midlands:      8
+  north west:         6
+  yorkshire:          6
+  east midlands:      6
+  south west:         5
+  north east:         5
+  wales:              4
+  scotland:           4
+  northern ireland:   4
+
+value_bands:
+  # (min, max, score) — sweet spot for SME contractors
+  - min:   50000
+    max:   250000
+    score: 20
+  - min:   250001
+    max:   750000
+    score: 25
+  - min:   750001
+    max:   2000000
+    score: 20
+  - min:   2000001
+    max:   5000000
+    score: 10

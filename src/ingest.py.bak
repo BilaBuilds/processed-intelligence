@@ -1,0 +1,75 @@
+"""
+src/ingest.py
+=============
+Step 1 - Ingest
+
+Scrapes raw tenders from sources and writes raw_tenders.jsonl
+to the run directory.
+
+Currently scrapes:
+  - Find a Tender Service (UK government open data feed)
+
+To add a new source: add a function fetch_<sourcename>() that
+returns a list of raw dicts, then call it inside run().
+"""
+
+import json
+import logging
+from datetime import datetime, timezone
+from pathlib import Path
+
+import requests
+
+log = logging.getLogger("ingest")
+
+# --- Sources -----------------------------------------------------------------
+
+CONTRACTS_FINDER_URL = (
+    "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search"
+    "?limit=100&offset=0"
+)
+
+
+def fetch_contracts_finder() -> list[dict]:
+    """Fetch latest notices from Contracts Finder (OCDS format)."""
+    log.info("Fetching Contracts Finder...")
+    try:
+        headers = {"Accept": "application/json"}
+        resp = requests.get(CONTRACTS_FINDER_URL, headers=headers, timeout=30)
+        resp.raise_for_status()
+        data = resp.json()
+        releases = data.get("releases", [])
+        log.info("Contracts Finder: %d releases fetched", len(releases))
+        return [{"_source": "contracts_finder", **r} for r in releases]
+    except requests.RequestException as exc:
+        log.error("Contracts Finder fetch failed: %s", exc)
+        raise
+
+
+# --- Runner ------------------------------------------------------------------
+
+
+def run(context: dict) -> dict:
+    """
+    Runs all ingest sources and writes raw_tenders.jsonl.
+    Returns updated context with raw_count and raw_file path.
+    """
+    run_dir: Path = context["run_dir"]
+    raw_file = run_dir / "raw_tenders.jsonl"
+
+    all_raw: list[dict] = []
+
+    # Add more sources here as you build them
+    all_raw.extend(fetch_contracts_finder())
+
+    # Write one JSON object per line (JSONL)
+    with open(raw_file, "w", encoding="utf-8") as f:
+        for record in all_raw:
+            f.write(json.dumps(record, default=str) + "\n")
+
+    log.info("Ingest complete: %d raw records -> %s", len(all_raw), raw_file.name)
+
+    return {
+        "raw_count": len(all_raw),
+        "raw_file":  raw_file,
+    }

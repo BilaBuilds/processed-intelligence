@@ -1,0 +1,27 @@
+{
+  "id": "drainage",
+  "display_name": "Drainage & Water Management",
+  "enabled": true,
+  "min_score": 20,
+  "shortlist_size": 8,
+  "include_keywords": [
+    "drainage", "sewer", "sewerage", "SUDS", "sustainable drainage",
+    "groundworks", "surface water", "flood risk", "watercourse",
+    "culvert", "storm drain", "wastewater", "pumping station",
+    "water management", "pipe lining", "pipe rehabilitation"
+  ],
+  "exclude_keywords": [],
+  "regions": [],
+  "buyer_filters": [],
+  "value_min": 25000,
+  "value_max": null,
+  "score_boosts": {
+    "drainage": 8,
+    "sewer": 8,
+    "SUDS": 10,
+    "sustainable drainage": 10,
+    "flood risk": 6,
+    "water management": 6
+  },
+  "notify": true
+}

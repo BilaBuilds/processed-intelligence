@@ -1,0 +1,14 @@
+{
+  "id": "london_regulations",
+  "display_name": "London Region Alerts",
+  "enabled": true,
+  "min_score": 15,
+  "shortlist_size": 10,
+  "include_keywords": [],
+  "exclude_keywords": [],
+  "regions": ["London"],
+  "trade_tags": [],
+  "impact_types": [],
+  "allow_null_effective_date": true,
+  "notify": true
+}

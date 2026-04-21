@@ -1,0 +1,14 @@
+{
+  "client_id": "demo_london_civils",
+  "display_name": "Demo London Civils",
+  "run_id": "2026-04-19_041633",
+  "generated_at": "2026-04-19T04:16:39Z",
+  "subscribed_products": [
+    "civils_regulations",
+    "london_regulations"
+  ],
+  "item_count": 0,
+  "new_count": 0,
+  "notified": false,
+  "notify_status": "skipped"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "sme_quick_wins",
+  "display_name": "SME Quick Wins",
+  "enabled": true,
+  "min_score": 25,
+  "shortlist_size": 15,
+  "include_keywords": [],
+  "exclude_keywords": [],
+  "regions": [],
+  "buyer_filters": [],
+  "value_min": 10000,
+  "value_max": 100000,
+  "score_boosts": {},
+  "notify": false
+}

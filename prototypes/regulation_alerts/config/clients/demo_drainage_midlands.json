@@ -1,0 +1,15 @@
+{
+  "client_id": "demo_drainage_midlands",
+  "display_name": "Demo Drainage Midlands",
+  "active": true,
+  "subscribed_products": ["drainage_regulations"],
+  "filters": {
+    "min_score": 20,
+    "regions": [],
+    "authority_whitelist": []
+  },
+  "notify": {
+    "channel": "discord",
+    "webhook_env_var": "TENDER_WEBHOOK_URL"
+  }
+}

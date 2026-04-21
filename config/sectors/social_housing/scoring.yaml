@@ -1,0 +1,136 @@
+# config/sectors/social_housing/scoring.yaml
+# ===========================================
+# Scoring weights for the Social Housing & Retrofit sector.
+# Loaded by src/sector_pack.py when TENDER_SECTOR=social_housing.
+
+keyword_weights:
+  # High value — core retrofit / planned maintenance keywords
+  retrofit:                   15
+  decarbonisation:            15
+  planned maintenance:        15
+  major works:                15
+  decent homes:               15
+  # Medium — common housing delivery scope
+  housing association:        10
+  registered provider:        10
+  social housing:             10
+  external wall insulation:   10
+  ewi:                        10
+  cladding:                   10
+  roofing:                    10
+  window replacement:         10
+  door replacement:           10
+  heating:                    10
+  boiler replacement:         10
+  mechanical and electrical:  10
+  # Lower — broader residential works
+  refurbishment:               8
+  voids:                       8
+  responsive repairs:          8
+  communal areas:              8
+  bathroom replacement:        8
+  kitchen replacement:         8
+  damp proofing:               7
+  ventilation:                 7
+  insulation:                  7
+  energy efficiency:           7
+  net zero:                    7
+  heat pump:                   8
+  solar panels:                6
+
+disqualify_keywords:
+  # Furniture / equipment supply
+  - chairs
+  - desks
+  - furniture
+  - stationery
+  - uniforms
+  - clothing
+  # Food / hospitality
+  - catering
+  - food
+  - beverages
+  - vending
+  - meals
+  # Digital / software / IT
+  - software
+  - saas
+  - licensing
+  - cyber
+  - it support
+  - helpdesk
+  - website
+  - digital
+  - cloud
+  - data analytics
+  - crm
+  - erp
+  # Professional services (non-construction)
+  - consultancy
+  - advisory
+  - legal services
+  - accounting
+  - audit services
+  - recruitment
+  - staffing
+  - hr services
+  - payroll
+  # Healthcare / social care
+  - nursing
+  - domiciliary care
+  - counselling
+  - therapy
+  - pharmacy
+  - personal protective equipment
+  - ppe supply
+  # Leisure / fitness
+  - fitness
+  - fitness classes
+  - gym
+  - leisure operator
+  - swimming
+  # General non-delivery
+  - training
+  # Transport / logistics
+  - courier
+  - taxi
+  - bus service
+  - vehicle hire
+  # Other off-niche
+  - printing
+  - translation
+  - marketing
+  - advertising
+  # Civil / groundworks-only (not social housing)
+  - highway construction
+  - road construction
+  - bridge construction
+
+region_weights:
+  london:              10
+  south east:          10
+  west midlands:        9
+  east of england:      8
+  north west:           8
+  yorkshire:            7
+  east midlands:        7
+  south west:           6
+  north east:           6
+  wales:                5
+  scotland:             5
+  northern ireland:     4
+
+value_bands:
+  # Social housing contracts tend to be programme/framework based
+  - min:   25000
+    max:   150000
+    score: 18
+  - min:   150001
+    max:   500000
+    score: 25
+  - min:   500001
+    max:   2000000
+    score: 22
+  - min:   2000001
+    max:   8000000
+    score: 12

@@ -1,0 +1,42 @@
+[
+  {
+    "key": "govuk_guidance",
+    "display_name": "GOV.UK Guidance Updates",
+    "url": "https://www.gov.uk/search/guidance-and-regulation.json?keywords=construction+drainage+civils",
+    "type": "json",
+    "region": "National",
+    "authority": "HM Government",
+    "enabled": true,
+    "fetch_limit": 20
+  },
+  {
+    "key": "ea_publications",
+    "display_name": "Environment Agency Publications",
+    "url": "https://www.gov.uk/government/organisations/environment-agency",
+    "type": "html",
+    "region": "National",
+    "authority": "Environment Agency",
+    "enabled": true,
+    "fetch_limit": 20
+  },
+  {
+    "key": "planning_portal",
+    "display_name": "Planning Portal Building Regs",
+    "url": "https://www.planningportal.co.uk/permission/common-projects",
+    "type": "html",
+    "region": "National",
+    "authority": "Planning Portal",
+    "enabled": true,
+    "fetch_limit": 20
+  },
+  {
+    "key": "hse_construction",
+    "display_name": "HSE Construction Guidance",
+    "url": "https://www.hse.gov.uk/construction/",
+    "type": "html",
+    "region": "National",
+    "authority": "HSE",
+    "enabled": true,
+    "fetch_limit": 20
+  }
+]

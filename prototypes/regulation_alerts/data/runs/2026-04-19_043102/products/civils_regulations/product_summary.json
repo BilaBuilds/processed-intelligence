@@ -1,0 +1,16 @@
+{
+  "product_id": "civils_regulations",
+  "display_name": "Civils Regulation Alerts",
+  "run_id": "2026-04-19_043102",
+  "generated_at": "2026-04-19T04:31:08Z",
+  "item_count": 0,
+  "filter_stages": {
+    "initial": 32,
+    "after_include_keywords": 0,
+    "after_exclude_keywords": 0,
+    "after_region": 0,
+    "after_trade_tags": 0,
+    "after_impact_types": 0,
+    "after_min_score": 0
+  }
+}

@@ -1,0 +1,182 @@
+# civils_niche.yaml
+# ==================
+# Trade definitions, geographies, and value bands for ProcessEd
+# Used by context.py to classify and score tenders
+
+trades:
+  civils:
+    description: Civil engineering, highways, roads, infrastructure
+    keywords:
+      - civil engineering
+      - civils
+      - highways
+      - roads
+      - infrastructure
+      - structural works
+      - bridging
+      - embankments
+      - cutting
+      - earthworks
+    geographies:
+      - london
+      - south east
+      - surrey
+      - sussex
+      - kent
+    min_value: 150000
+    max_value: 3000000
+
+  drainage:
+    description: Drainage, sewerage, water management, foul/surface water
+    keywords:
+      - drainage
+      - sewerage
+      - foul sewer
+      - surface water
+      - water management
+      - pipes
+      - pumping stations
+      - flood management
+      - attenuation
+    geographies:
+      - london
+      - south east
+      - surrey
+      - sussex
+      - kent
+    min_value: 100000
+    max_value: 2000000
+
+  groundworks:
+    description: Groundworks, piling, foundations, demolition prep
+    keywords:
+      - groundworks
+      - ground preparation
+      - piling
+      - foundations
+      - demolition
+      - site clearance
+      - excavation
+      - remediation
+    geographies:
+      - london
+      - south east
+      - surrey
+      - sussex
+      - kent
+    min_value: 120000
+    max_value: 2500000
+
+  public_realm:
+    description: Public realm, streetworks, pavements, landscaping
+    keywords:
+      - public realm
+      - streetworks
+      - pavements
+      - hard landscaping
+      - street furniture
+      - kerbing
+      - surface treatments
+    geographies:
+      - london
+      - south east
+    min_value: 100000
+    max_value: 2000000
+
+# Exclusions: if a tender matches ANY of these keywords, it's SKIP
+exclusions:
+  keywords:
+    # Furniture / equipment
+    - chairs
+    - desks
+    - furniture
+    - stationery
+    - uniforms
+
+    # Food & hospitality
+    - catering
+    - food supply
+    - beverages
+    - vending
+    - meals
+    - hospitality
+
+    # IT / Software
+    - software
+    - saas
+    - it support
+    - helpdesk
+    - website design
+    - digital services
+    - cloud computing
+
+    # Professional services (non-construction)
+    - legal services
+    - accounting
+    - consultancy
+    - recruitment
+    - staffing
+    - hr services
+
+    # Healthcare
+    - nursing
+    - domiciliary care
+    - counselling
+    - pharmacy
+    - ppe supply
+
+    # Other off-niche
+    - fitness classes
+    - gym services
+    - printing
+    - translation services
+    - advertising
+    - courier service
+
+  # Buyers you never bid to (optional)
+  buyers: []
+
+# Value bands: sweet spot for your typical delivery
+value_bands:
+  - min: 100000
+    max: 400000
+    label: small
+    priority: high
+  - min: 400001
+    max: 1000000
+    label: medium
+    priority: high
+  - min: 1000001
+    max: 2500000
+    label: large
+    priority: medium
+  - min: 2500001
+    max: 5000000
+    label: xlarge
+    priority: low
+
+# Buyer intelligence: patterns you know
+buyer_intelligence:
+  - buyer_name: "Transport for London"
+    frequency: "monthly"
+    avg_value: 800000
+    style: "detailed tender, slow process"
+    success_rate: 0.3
+
+  - buyer_name: "London Borough of Wandsworth"
+    frequency: "monthly"
+    avg_value: 500000
+    style: "mid-complexity, 2-week window"
+    success_rate: 0.4
+
+  - buyer_name: "National Highways"
+    frequency: "quarterly"
+    avg_value: 1200000
+    style: "complex, long lead time"
+    success_rate: 0.2
+
+  - buyer_name: "Environment Agency"
+    frequency: "quarterly"
+    avg_value: 900000
+    style: "environmental focus, detailed specs"
+    success_rate: 0.25

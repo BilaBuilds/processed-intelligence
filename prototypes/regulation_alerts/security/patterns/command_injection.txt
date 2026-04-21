@@ -1,0 +1,26 @@
+# Command injection detection patterns
+\$\(.*\)
+`[^`]*`
+;\s*rm\s
+;\s*wget\s
+;\s*curl\s
+;\s*bash\s
+&&\s*rm\s
+&&\s*wget\s
+&&\s*curl\s
+\|\s*bash
+\|\s*sh\b
+\|\s*python
+\|\s*perl
+\|\s*nc\s
+\|\s*netcat
+>\s*/etc/
+>>\s*/etc/
+/bin/sh
+/bin/bash
+exec\s*\(
+eval\s*\(
+__import__
+os\.system
+subprocess\.
+shell=True

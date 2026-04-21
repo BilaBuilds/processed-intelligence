@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProcessEd Civils | Groundworks & Civil Engineering | London & South East</title>
+    <meta name="description" content="ProcessEd Civils delivers groundworks, civil engineering, drainage, and site preparation for public sector and commercial clients across London and the South East.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --navy: #1a2744;
+            --blue: #2f5496;
+            --orange: #e67e22;
+            --orange-dark: #d35400;
+            --light: #f8f9fa;
+            --white: #ffffff;
+            --gray-100: #f1f3f5;
+            --gray-200: #e9ecef;
+            --gray-500: #868e96;
+            --gray-700: #495057;
+            --gray-900: #212529;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--gray-900);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* NAV */
+        nav {
+            position: fixed; top: 0; width: 100%; z-index: 100;
+            background: var(--navy);
+            padding: 0 2rem;
+            display: flex; align-items: center; justify-content: space-between;
+            height: 70px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.15);
+        }
+        .nav-logo {
+            font-size: 1.3rem; font-weight: 800; color: var(--white);
+            text-decoration: none; letter-spacing: -0.02em;
+        }
+        .nav-logo span { color: var(--orange); }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a {
+            color: rgba(255,255,255,0.85); text-decoration: none;
+            font-size: 0.9rem; font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--orange); }
+        .nav-cta {
+            background: var(--orange); color: var(--white) !important;
+            padding: 0.5rem 1.2rem; border-radius: 6px;
+            font-weight: 600 !important;
+            transition: background 0.2s;
+        }
+        .nav-cta:hover { background: var(--orange-dark); }
+
+        .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 0.5rem; }
+        .hamburger span { display: block; width: 24px; height: 2px; background: white; margin: 5px 0; transition: 0.3s; }
+
+        /* HERO */
+        .hero {
+            margin-top: 70px;
+            background: linear-gradient(135deg, var(--navy) 0%, #2c3e6b 100%);
+            padding: 6rem 2rem 5rem;
+            text-align: center;
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(26, 39, 68, 0.7);
+            z-index: 1;
+        }
+        .hero-video {
+            position: absolute; top: 50%; left: 50%;
+            min-width: 100%; min-height: 100%;
+            width: auto; height: auto;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            z-index: 0;
+        }
+        .hero-content { position: relative; max-width: 800px; margin: 0 auto; z-index: 2; }
+        .hero-kicker {
+            display: inline-block;
+            margin-bottom: 1rem;
+            padding: 0.45rem 0.85rem;
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 999px;
+            background: rgba(255,255,255,0.08);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.85);
+        }
+        .hero h1 {
+            font-size: 3rem; font-weight: 800; line-height: 1.15;
+            margin-bottom: 1.5rem; letter-spacing: -0.03em;
+        }
+        .hero h1 span { color: var(--orange); }
+        .hero p {
+            font-size: 1.2rem; color: rgba(255,255,255,0.8);
+            max-width: 600px; margin: 0 auto 2.5rem;
+            line-height: 1.7;
+        }
+        .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            padding: 0.85rem 2rem; border-radius: 8px; font-size: 1rem;
+            font-weight: 600; text-decoration: none; display: inline-block;
+            transition: all 0.2s;
+        }
+        .btn-primary { background: var(--orange); color: var(--white); }
+        .btn-primary:hover { background: var(--orange-dark); transform: translateY(-1px); }
+        .btn-outline {
+            background: transparent; color: var(--white);
+            border: 2px solid rgba(255,255,255,0.4);
+        }
+        .btn-outline:hover { border-color: var(--white); }
+        .hero-trust {
+            display: flex;
+            justify-content: center;
+            gap: 0.85rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+        .hero-trust-item {
+            padding: 0.55rem 0.85rem;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            font-size: 0.88rem;
+            color: rgba(255,255,255,0.86);
+        }
+
+        /* TRUST BAR */
+        .trust-bar {
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-200);
+            padding: 1.5rem 2rem;
+            text-align: center;
+        }
+        .trust-items {
+            display: flex; justify-content: center; align-items: center;
+            gap: 3rem; flex-wrap: wrap;
+            max-width: 900px; margin: 0 auto;
+        }
+        .trust-item {
+            display: flex; align-items: center; gap: 0.6rem;
+            color: var(--gray-700); font-size: 0.9rem; font-weight: 500;
+        }
+        .trust-icon {
+            width: 36px; height: 36px; background: var(--gray-100);
+            border-radius: 8px; display: flex; align-items: center;
+            justify-content: center; font-size: 1.1rem;
+        }
+
+        /* SECTIONS */
+        section { padding: 5rem 2rem; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .section-label {
+            font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.1em; color: var(--orange); margin-bottom: 0.75rem;
+        }
+        .section-title {
+            font-size: 2.2rem; font-weight: 800; line-height: 1.2;
+            margin-bottom: 1rem; letter-spacing: -0.02em;
+        }
+        .section-subtitle {
+            font-size: 1.05rem; color: var(--gray-700);
+            max-width: 600px; line-height: 1.7;
+        }
+
+        /* SERVICES */
+        #services { background: var(--light); }
+        .services-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem; margin-top: 3rem;
+        }
+        .service-card {
+            background: var(--white); border-radius: 12px;
+            padding: 2rem; border: 1px solid var(--gray-200);
+            transition: all 0.2s;
+        }
+        .service-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        }
+        .service-icon {
+            width: 48px; height: 48px; background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+            border-radius: 10px; display: flex; align-items: center;
+            justify-content: center; font-size: 1.4rem; margin-bottom: 1.2rem;
+        }
+        .service-card h3 {
+            font-size: 1.15rem; font-weight: 700; margin-bottom: 0.6rem;
+        }
+        .service-card p { color: var(--gray-700); font-size: 0.95rem; line-height: 1.6; }
+
+        /* ABOUT */
+        #about { background: var(--white); }
+        .about-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 4rem; align-items: center; margin-top: 3rem;
+        }
+        .about-stats {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 1.5rem; margin-top: 2rem;
+        }
+        .stat {
+            background: var(--light); border-radius: 10px; padding: 1.5rem;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2rem; font-weight: 800; color: var(--blue);
+            letter-spacing: -0.03em;
+        }
+        .stat-label { font-size: 0.85rem; color: var(--gray-500); margin-top: 0.25rem; }
+        .about-text p {
+            color: var(--gray-700); margin-bottom: 1rem; font-size: 1rem; line-height: 1.7;
+        }
+
+        .about-image {
+            background: linear-gradient(135deg, var(--navy), var(--blue));
+            border-radius: 16px; height: 400px;
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.7); font-size: 0.9rem;
+            text-align: center; padding: 2rem;
+            position: relative; overflow: hidden;
+        }
+        .about-image::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(
+                45deg, transparent, transparent 20px,
+                rgba(255,255,255,0.02) 20px, rgba(255,255,255,0.02) 40px
+            );
+        }
+        .about-image-content { position: relative; }
+        .about-image-content .placeholder-icon { font-size: 3rem; margin-bottom: 1rem; }
+
+        /* SECTORS */
+        #sectors { background: var(--light); }
+        .sectors-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem; margin-top: 3rem;
+        }
+        .sector-tag {
+            background: var(--white); border: 1px solid var(--gray-200);
+            border-radius: 10px; padding: 1.2rem 1.5rem;
+            font-weight: 600; font-size: 0.95rem;
+            display: flex; align-items: center; gap: 0.75rem;
+            transition: all 0.2s;
+        }
+        .sector-tag:hover { border-color: var(--orange); }
+        .sector-dot {
+            width: 10px; height: 10px; border-radius: 50%;
+            background: var(--orange); flex-shrink: 0;
+        }
+
+        /* ACCREDITATIONS */
+        #accreditations { background: var(--white); }
+        .accred-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem; margin-top: 3rem;
+        }
+        .accred-card {
+            background: var(--light); border-radius: 12px;
+            padding: 2rem; text-align: center;
+            border: 1px solid var(--gray-200);
+        }
+        .accred-card .accred-icon {
+            font-size: 2rem; margin-bottom: 0.75rem;
+        }
+        .accred-card h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }
+        .accred-card p { font-size: 0.85rem; color: var(--gray-500); }
+
+        /* CONTACT */
+        #contact {
+            background: var(--navy); color: var(--white);
+        }
+        .contact-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 4rem; margin-top: 3rem;
+        }
+        .contact-info h3 { font-size: 1.3rem; margin-bottom: 1.5rem; }
+        .contact-item {
+            display: flex; align-items: flex-start; gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .contact-icon {
+            width: 40px; height: 40px; background: rgba(255,255,255,0.1);
+            border-radius: 8px; display: flex; align-items: center;
+            justify-content: center; font-size: 1.1rem; flex-shrink: 0;
+        }
+        .contact-item strong { display: block; font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-bottom: 0.2rem; }
+        .contact-item span { font-size: 1rem; }
+        .contact-item a { color: var(--orange); text-decoration: none; }
+        .contact-item a:hover { text-decoration: underline; }
+
+        .contact-form {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px; padding: 2.5rem;
+        }
+        .contact-form h3 { font-size: 1.2rem; margin-bottom: 1.5rem; }
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label {
+            display: block; font-size: 0.85rem; font-weight: 500;
+            margin-bottom: 0.4rem; color: rgba(255,255,255,0.7);
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%; padding: 0.75rem 1rem; border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.08); color: var(--white);
+            font-family: inherit; font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none; border-color: var(--orange);
+        }
+        .form-group textarea { min-height: 120px; resize: vertical; }
+        .form-group select option { background: var(--navy); color: var(--white); }
+        .form-submit {
+            background: var(--orange); color: var(--white);
+            border: none; padding: 0.85rem 2rem; border-radius: 8px;
+            font-size: 1rem; font-weight: 600; cursor: pointer;
+            width: 100%; transition: background 0.2s;
+        }
+        .form-submit:hover { background: var(--orange-dark); }
+
+        /* FOOTER */
+        footer {
+            background: #0f1a2e; color: rgba(255,255,255,0.5);
+            text-align: center; padding: 2rem;
+            font-size: 0.85rem;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .nav-links.open {
+                display: flex; flex-direction: column;
+                position: absolute; top: 70px; left: 0; right: 0;
+                background: var(--navy); padding: 1.5rem 2rem;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            }
+            .hamburger { display: block; }
+            .hero h1 { font-size: 2rem; }
+            .hero p { font-size: 1rem; }
+            .hero-trust { gap: 0.6rem; }
+            .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .about-image { height: 250px; }
+            section { padding: 3.5rem 1.5rem; }
+            .trust-items { gap: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+    <a href="#" class="nav-logo">ProcessEd<span>Civils</span></a>
+    <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">
+        <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links">
+        <li><a href="#services">Services</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#sectors">Sectors</a></li>
+        <li><a href="#accreditations">Accreditations</a></li>
+        <li><a href="#contact" class="nav-cta">Get in Touch</a></li>
+    </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <video class="hero-video" autoplay muted loop playsinline poster="hero-poster.jpg" aria-hidden="true">
+        <source src="hero-video.mp4" type="video/mp4">
+    </video>
+    <div class="hero-content">
+        <div class="hero-kicker">ProcessEd Civils | London &amp; South East</div>
+        <h1>Groundworks and civils packages delivered with <span>public-sector discipline</span></h1>
+        <p>ProcessEd Civils supports councils, housing providers, principal contractors, and estates teams with drainage, enabling works, foundations, external works, and civil engineering packages delivered with clear communication and practical tender responsiveness.</p>
+        <div class="hero-btns">
+            <a href="#contact" class="btn btn-primary">Request a Quote</a>
+            <a href="#services" class="btn btn-outline">Our Services</a>
+        </div>
+        <p style="margin-top: 1.25rem; font-size: 1.05rem; color: rgba(255,255,255,0.9);">
+            Call us: <a href="tel:07853505322" style="color: var(--orange); text-decoration: none; font-weight: 700;">07853 505322</a>
+        </p>
+        <div class="hero-trust">
+            <div class="hero-trust-item">Groundworks, drainage and externals</div>
+            <div class="hero-trust-item">Tender-ready documentation approach</div>
+            <div class="hero-trust-item">Fast enquiry response</div>
+        </div>
+    </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+    <div class="trust-items">
+        <div class="trust-item">
+            <div class="trust-icon">&#9989;</div>
+            Groundworks &amp; Civils Focused
+        </div>
+        <div class="trust-item">
+            <div class="trust-icon">&#128737;</div>
+            Public Tender Responsive
+        </div>
+        <div class="trust-item">
+            <div class="trust-icon">&#128205;</div>
+            London &amp; South East
+        </div>
+        <div class="trust-item">
+            <div class="trust-icon">&#9881;</div>
+            Direct Contact, Clear Communication
+        </div>
+    </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+    <div class="container">
+        <div class="section-label">What We Do</div>
+        <h2 class="section-title">Our Services</h2>
+        <p class="section-subtitle">End-to-end groundworks and civil engineering, from site investigation through to completion and handover.</p>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">&#9874;</div>
+                <h3>Civil Engineering</h3>
+                <p>Roads, bridges, retaining structures, and public realm infrastructure. Full design-and-build or construct-only packages for local authorities and government agencies.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">&#9881;</div>
+                <h3>Groundworks &amp; Foundations</h3>
+                <p>Site clearance, bulk excavation, piling, foundations, and substructure works. We handle everything below ground level so your build starts on solid footing.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">&#128167;</div>
+                <h3>Drainage &amp; Utilities</h3>
+                <p>Foul and surface water drainage, attenuation systems, utility diversions and connections. NRSWA accredited for streetworks.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">&#127795;</div>
+                <h3>Landscaping &amp; External Works</h3>
+                <p>Hard and soft landscaping, car parks, fencing, footpaths, and public realm finishes. Delivered to council specification with full aftercare.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">&#128736;</div>
+                <h3>Site Preparation</h3>
+                <p>Demolition, site strip, ground investigation, remediation, and enabling works. Getting complex sites ready for construction on programme.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">&#128679;</div>
+                <h3>Minor Works &amp; Repairs</h3>
+                <p>Reactive and planned minor civil works, repairs to highways, footpaths, and public assets. Framework-ready for term service contracts.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+    <div class="container">
+        <div class="about-grid">
+            <div>
+                <div class="section-label">About Us</div>
+                <h2 class="section-title">Built on Delivery,<br>Not Promises</h2>
+                <div class="about-text">
+                    <p>ProcessEd Civils is a London and South East contractor focused on groundworks, drainage, enabling works, and external civils packages for public and regulated environments.</p>
+                    <p>We are building the business around the standards buyers actually care about: clear scope understanding, responsive communication, practical documentation, and a straightforward approach to tender enquiries.</p>
+                    <p>We actively monitor Contracts Finder and Find a Tender, which means we stay close to live opportunities and can respond quickly when the right package appears.</p>
+                </div>
+                <div class="about-stats">
+                    <div class="stat">
+                        <div class="stat-number">London</div>
+                        <div class="stat-label">&amp; South East Coverage</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">&#163;50k&#8211;5M</div>
+                        <div class="stat-label">Typical Package Range</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">Civils</div>
+                        <div class="stat-label">Groundworks &amp; Drainage Focus</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">24h</div>
+                        <div class="stat-label">Enquiry Response Target</div>
+                    </div>
+                </div>
+            </div>
+            <div class="about-image">
+                <div class="about-image-content">
+                    <div class="placeholder-icon">&#128247;</div>
+                    <p>Replace with a project photo<br><small>Recommended: 800x600px, on-site team or completed works</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTORS -->
+<section id="sectors">
+    <div class="container">
+        <div class="section-label">Who We Work With</div>
+        <h2 class="section-title">Sectors &amp; Clients</h2>
+        <p class="section-subtitle">We are positioned for buyers and delivery teams that need practical civils support, clear communication, and reliable tender engagement.</p>
+        <div class="sectors-grid">
+            <div class="sector-tag"><div class="sector-dot"></div>Local Authorities &amp; Councils</div>
+            <div class="sector-tag"><div class="sector-dot"></div>Housing Associations</div>
+            <div class="sector-tag"><div class="sector-dot"></div>Schools &amp; Education Estates</div>
+            <div class="sector-tag"><div class="sector-dot"></div>NHS &amp; Community Health Estates</div>
+            <div class="sector-tag"><div class="sector-dot"></div>Public Realm &amp; Highways</div>
+            <div class="sector-tag"><div class="sector-dot"></div>Parks &amp; Leisure Assets</div>
+            <div class="sector-tag"><div class="sector-dot"></div>Estate Regeneration Works</div>
+            <div class="sector-tag"><div class="sector-dot"></div>Principal Contractor Support</div>
+        </div>
+    </div>
+</section>
+
+<!-- ACCREDITATIONS -->
+<section id="accreditations">
+    <div class="container">
+        <div class="section-label">Tender Readiness</div>
+        <h2 class="section-title">Documentation &amp; Buyer Confidence</h2>
+        <p class="section-subtitle">A credible contractor presence depends on being clear, reachable, and ready to support procurement and delivery conversations properly.</p>
+        <div class="accred-grid">
+            <div class="accred-card">
+                <div class="accred-icon">&#128737;</div>
+                <h4>Capability Information</h4>
+                <p>Core services and scope presented clearly</p>
+            </div>
+            <div class="accred-card">
+                <div class="accred-icon">&#9989;</div>
+                <h4>Health &amp; Safety Documentation</h4>
+                <p>RAMS and supporting documents available on request</p>
+            </div>
+            <div class="accred-card">
+                <div class="accred-icon">&#128272;</div>
+                <h4>Insurance &amp; Compliance Pack</h4>
+                <p>Prepared for buyer due diligence conversations</p>
+            </div>
+            <div class="accred-card">
+                <div class="accred-icon">&#127758;</div>
+                <h4>Public Tender Monitoring</h4>
+                <p>Active monitoring across live public opportunities</p>
+            </div>
+        </div>
+        <p style="margin-top:2rem; color: var(--gray-500); font-size: 0.85rem; text-align:center;">
+            Documentation and additional credentials can be provided as the business onboarding pack is completed.
+        </p>
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+    <div class="container">
+        <div class="contact-grid">
+            <div class="contact-info">
+                <div class="section-label" style="color: var(--orange);">Get in Touch</div>
+                <h2 class="section-title" style="color: var(--white);">Talk to us about an upcoming package</h2>
+                <p style="color: rgba(255,255,255,0.7); margin-bottom: 2rem; line-height: 1.7;">
+                    If you are pricing an upcoming package, planning public realm works, or looking for a responsive civils delivery partner, we are happy to have an initial conversation.
+                </p>
+                <div class="contact-item">
+                    <div class="contact-icon">&#128222;</div>
+                    <div>
+                        <strong>Phone</strong>
+                        <span><a href="tel:07853505322" style="color:var(--orange);text-decoration:none;">07853 505 322</a></span>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">&#9993;</div>
+                    <div>
+                        <strong>Email</strong>
+                        <span><a href="mailto:info@processedcivils.com">info@processedcivils.com</a></span>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">&#128205;</div>
+                    <div>
+                        <strong>Coverage</strong>
+                        <span>London &amp; South East England</span>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">&#128197;</div>
+                    <div>
+                        <strong>Availability</strong>
+                        <span>Mon&#8211;Fri 7:00am &#8211; 6:00pm</span>
+                    </div>
+                </div>
+            </div>
+            <div class="contact-form">
+                <h3>Send an Enquiry</h3>
+                <form id="enquiryForm" onsubmit="handleSubmit(event)">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" name="name" required placeholder="Full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="org">Organisation</label>
+                        <input type="text" id="org" name="org" placeholder="Council / company name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required placeholder="you@organisation.gov.uk">
+                    </div>
+                    <div class="form-group">
+                        <label for="type">Enquiry Type</label>
+                        <select id="type" name="type">
+                            <option value="quote">Request a Quote</option>
+                            <option value="capability">Capability Statement</option>
+                            <option value="framework">Framework Registration</option>
+                            <option value="general">General Enquiry</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Project Details</label>
+                        <textarea id="message" name="message" placeholder="Brief description of the project or requirement..."></textarea>
+                    </div>
+                    <button type="submit" class="form-submit">Send Email Enquiry</button>
+                </form>
+                <p id="formSuccess" style="display:none; margin-top:1rem; color:var(--orange); font-weight:600; text-align:center;">
+                    Opening your email client now. If nothing opens, email us directly at info@processedcivils.com.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>&copy; 2026 ProcessEd Civils. All rights reserved.</p>
+</footer>
+
+<script>
+function handleSubmit(e) {
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const org = document.getElementById('org').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const type = document.getElementById('type').value.trim();
+    const message = document.getElementById('message').value.trim();
+    const subject = encodeURIComponent('Website enquiry - ' + (type || 'general'));
+    const body = encodeURIComponent(
+        'Name: ' + name + '\n' +
+        'Organisation: ' + org + '\n' +
+        'Email: ' + email + '\n' +
+        'Enquiry type: ' + type + '\n\n' +
+        'Project details:\n' + message
+    );
+    window.location.href = 'mailto:info@processedcivils.com?subject=' + subject + '&body=' + body;
+    document.getElementById('formSuccess').style.display = 'block';
+}
+</script>
+
+</body>
+</html>
