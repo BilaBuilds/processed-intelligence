@@ -390,14 +390,22 @@ def iter_pages(
 
     while requests_made < cfg.max_requests_for_mode():
         requests_made += 1
-        payload = fetch_page(
-            session=session,
-            cfg=cfg,
-            updated_from=updated_from,
-            updated_to=updated_to,
-            cursor=cursor,
-            stages=stages,
-        )
+        try:
+            payload = fetch_page(
+                session=session,
+                cfg=cfg,
+                updated_from=updated_from,
+                updated_to=updated_to,
+                cursor=cursor,
+                stages=stages,
+            )
+        except RuntimeError as exc:
+            logging.warning(
+                "FTS page fetch failed (keeping %d releases collected so far): %s",
+                len(releases),
+                exc,
+            )
+            break
         page_releases = extract_releases(payload)
         releases.extend(page_releases)
         if not page_releases and not extract_cursor(payload):
