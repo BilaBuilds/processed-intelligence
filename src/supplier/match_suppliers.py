@@ -483,6 +483,12 @@ def load_shortlist(shortlist_path: Path) -> list[ShortlistedTender]:
         raise FileNotFoundError(f"Shortlist not found: {shortlist_path}")
 
     raw = json.loads(shortlist_path.read_text(encoding="utf-8"))
+    # Accept {"opportunities": [...]} or {"records": [...]} wrapper shapes
+    if isinstance(raw, dict):
+        for key in ("opportunities", "records"):
+            if key in raw:
+                raw = raw[key]
+                break
     if not isinstance(raw, list):
         raise ValueError(f"decision_shortlist.json must be a JSON array, got: {type(raw)}")
 
