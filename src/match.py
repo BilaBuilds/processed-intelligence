@@ -159,11 +159,11 @@ def parse_deadline(value: str | None) -> datetime | None:
         return None
 
 
-def score_deadline_window(rec: dict) -> tuple[int, str]:
+def score_deadline_window(rec: dict, now_utc: datetime) -> tuple[int, str]:
     deadline = parse_deadline(rec.get("deadline_at") or rec.get("deadline"))
     if deadline is None:
         return 0, "unknown"
-    days_until = int((deadline - datetime.now(timezone.utc)).total_seconds() // 86400)
+    days_until = int((deadline - now_utc).total_seconds() // 86400)
     if 5 <= days_until <= 30:
         return 5, "preferred_5_30_days"
     if 31 <= days_until <= 45:
@@ -189,7 +189,7 @@ def cpv_missing(rec: dict) -> bool:
     return not cpv_codes and not procurement_category
 
 
-def score_tender(rec: dict) -> dict:
+def score_tender(rec: dict, now_utc: datetime) -> dict:
     searchable = " ".join(filter(None, [
         rec.get("title", ""),
         rec.get("description", ""),
@@ -235,7 +235,7 @@ def score_tender(rec: dict) -> dict:
     if value_amount is None:
         value_amount = rec.get("value")
     val_score, val_label = score_value(value_amount)
-    deadline_score, deadline_label = score_deadline_window(rec)
+    deadline_score, deadline_label = score_deadline_window(rec, now_utc)
 
     soft_value_penalty = int(rec.get("soft_value_penalty") or 0)
     total = min(kw_score + reg_score + val_score + deadline_score, MAX_SCORE)
@@ -268,6 +268,7 @@ def run(context: dict) -> dict:
     norm_file: Path = context["norm_file"]
     run_dir: Path   = context["run_dir"]
     scored_file     = run_dir / "scored_tenders.jsonl"
+    now_utc = datetime.now(timezone.utc)
 
     scored = []
     disqualified_count = 0
@@ -282,7 +283,7 @@ def run(context: dict) -> dict:
             except json.JSONDecodeError as exc:
                 log.warning("Skipping malformed JSON line in %s: %s", norm_file.name, exc)
                 continue
-            scored_rec = score_tender(rec)
+            scored_rec = score_tender(rec, now_utc)
             if (scored_rec.get("score_breakdown") or {}).get("cpv_missing"):
                 cpv_missing_count += 1
             if "disqualified_by" in (scored_rec.get("score_breakdown") or {}):

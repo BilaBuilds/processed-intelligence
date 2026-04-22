@@ -226,6 +226,15 @@ def apply_manifest_fields(manifest: dict, context: dict, cleanup_stats: dict[str
     manifest["decision_verdict_counts"] = context.get("decision_verdict_counts", {})
     manifest["decision_event_count"] = context.get("decision_event_count", 0)
     manifest["risk_signal_count"] = context.get("risk_signal_count", 0)
+    manifest["supplier_match_status"] = context.get("supplier_match_status", "not_run")
+    manifest["supplier_match_tenders_processed"] = context.get("supplier_match_tenders_processed", 0)
+    manifest["supplier_match_suppliers_evaluated"] = context.get("supplier_match_suppliers_evaluated", 0)
+    manifest["supplier_match_matches_total"] = context.get("supplier_match_matches_total", 0)
+    manifest["supplier_match_matches_included"] = context.get("supplier_match_matches_included", 0)
+    manifest["supplier_match_suppliers_excluded"] = context.get("supplier_match_suppliers_excluded", 0)
+    manifest["supplier_match_market_profile"] = context.get("supplier_match_market_profile")
+    manifest["supplier_match_market_profile_version"] = context.get("supplier_match_market_profile_version")
+    manifest["supplier_match_source_file"] = context.get("supplier_match_source_file")
     manifest["supplier_entity_count"] = context.get("supplier_entity_count", 0)
     manifest["lead_activation_state_file"] = str(context.get("lead_activation_state_file"))
     manifest["lead_activation_state_created"] = bool(context.get("lead_activation_state_created"))
@@ -238,6 +247,9 @@ def apply_manifest_fields(manifest: dict, context: dict, cleanup_stats: dict[str
         else None,
         "supplier_entities_file": str(context.get("supplier_entities_file"))
         if context.get("supplier_entities_file")
+        else None,
+        "supplier_matches_file": str(context.get("supplier_matches_file"))
+        if context.get("supplier_matches_file")
         else None,
         "deduped_file": str(context.get("deduped_file")) if context.get("deduped_file") else None,
         "shortlist_jsonl_file": str(context.get("shortlist_jsonl_file"))
@@ -440,6 +452,7 @@ def run_pipeline(
         ("patterns", "src.patterns", "run"),
         ("select", "src.select", "run"),
         ("decision", "src.decision", "run"),
+        ("supplier_match", "src.supplier_runner", "run"),
         ("dedupe", "src.dedupe", "run"),
     ]
 
@@ -460,18 +473,32 @@ def run_pipeline(
         try:
             module = import_module_fn(module_path)
             func = getattr(module, func_name)
-            result = func(context)
-            context.update(result or {})
+            result = func(context) or {}
+            context.update(result)
 
             duration = round(time.time() - step_start, 2)
-            manifest["steps"][step_name] = {"status": "ok", "duration_s": duration}
-            log.info("Step '%s' OK in %.2fs", step_name, duration)
+            if step_name == "supplier_match":
+                step_status = result.get("supplier_match_status", "ok")
+                manifest["steps"][step_name] = {
+                    "status": step_status,
+                    "duration_s": duration,
+                    "tenders_processed": result.get("supplier_match_tenders_processed", 0),
+                    "suppliers_evaluated": result.get("supplier_match_suppliers_evaluated", 0),
+                    "matches_included": result.get("supplier_match_matches_included", 0),
+                }
+                if step_status == "skipped":
+                    log.info("Step '%s' SKIPPED in %.2fs", step_name, duration)
+                else:
+                    log.info("Step '%s' OK in %.2fs", step_name, duration)
+            else:
+                manifest["steps"][step_name] = {"status": "ok", "duration_s": duration}
+                log.info("Step '%s' OK in %.2fs", step_name, duration)
 
         except Exception as exc:
-            if step_name in ("patterns", "buyer_intel", "tender_forecast", "buyer_timing"):
+            if step_name in ("patterns", "buyer_intel", "tender_forecast", "buyer_timing", "supplier_match"):
                 duration = round(time.time() - step_start, 2)
                 manifest["steps"][step_name] = {
-                    "status": "error",
+                    "status": "failed" if step_name == "supplier_match" else "error",
                     "error": str(exc),
                     "duration_s": duration,
                 }
@@ -503,6 +530,22 @@ def run_pipeline(
                         }
                     )
                     log.error("Buyer timing step error (non-fatal): %s", exc)
+                elif step_name == "supplier_match":
+                    context.update(
+                        {
+                            "supplier_match_status": "failed",
+                            "supplier_match_tenders_processed": 0,
+                            "supplier_match_suppliers_evaluated": 0,
+                            "supplier_match_matches_total": 0,
+                            "supplier_match_matches_included": 0,
+                            "supplier_match_suppliers_excluded": 0,
+                            "supplier_match_market_profile": None,
+                            "supplier_match_market_profile_version": None,
+                            "supplier_match_source_file": None,
+                            "supplier_matches_file": None,
+                        }
+                    )
+                    log.error("Supplier match step error (non-fatal): %s", exc)
                 else:
                     context.update(
                         {
