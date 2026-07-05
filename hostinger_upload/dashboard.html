@@ -1,0 +1,3633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProcessEd — Tender Intelligence Dashboard</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { font-family: "Aptos", "Segoe UI Variable Text", "Segoe UI", sans-serif; min-height: 100%; }
+
+    :root {
+      --navy: #163a5d;
+      --navy-dark: #09182a;
+      --navy-soft: #254c73;
+      --navy-frost: rgba(18, 44, 70, 0.78);
+      --gold: #d7a64d;
+      --gold-soft: #f0c777;
+      --green: #2f8b61;
+      --amber: #bc7f18;
+      --red: #b94f44;
+      --bg: #edf3f8;
+      --surface: rgba(255,255,255,0.88);
+      --surface-strong: rgba(255,255,255,0.96);
+      --surface-soft: rgba(245,249,253,0.82);
+      --surface-ink: rgba(9,24,42,0.06);
+      --border: rgba(22, 58, 93, 0.11);
+      --text: #13202e;
+      --muted: #6a7d91;
+      --radius: 20px;
+      --shadow: 0 18px 44px rgba(10, 26, 44, 0.08);
+      --shadow-soft: 0 8px 20px rgba(10, 26, 44, 0.05);
+    }
+
+    body {
+      background:
+        radial-gradient(circle at top left, rgba(215,166,77,0.14), transparent 28%),
+        radial-gradient(circle at 82% 18%, rgba(22,58,93,0.09), transparent 26%),
+        linear-gradient(180deg, #f5f8fb 0%, #ebf1f6 48%, #e9f0f6 100%);
+      color: var(--text);
+      position: relative;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.24) 0%, transparent 18%, transparent 82%, rgba(255,255,255,0.2) 100%),
+        linear-gradient(180deg, rgba(255,255,255,0.28), rgba(255,255,255,0));
+      mix-blend-mode: screen;
+      opacity: 0.6;
+    }
+
+    /* Layout */
+    .container { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 248px;
+      background: linear-gradient(180deg, #081626 0%, #102844 52%, #122a41 100%);
+      color: #fff;
+      padding: 24px 18px 18px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 16px 0 48px rgba(8,22,38,0.22);
+      position: relative;
+      z-index: 2;
+    }
+    .sidebar::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at top right, rgba(215,166,77,0.12), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0));
+    }
+    .sidebar-brand {
+      font-family: "Aptos Display", "Segoe UI Variable Display", "Aptos", "Segoe UI", sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 28px;
+      letter-spacing: -0.06em;
+      position: relative;
+      z-index: 1;
+    }
+    .sidebar-brand span {
+      color: var(--gold);
+      text-shadow: 0 0 18px rgba(215,166,77,0.16);
+    }
+    .sidebar-nav { flex: 1; }
+    .nav-item {
+      display: block;
+      padding: 12px 14px;
+      border-radius: 16px;
+      color: rgba(255,255,255,0.72);
+      font-size: 13px;
+      cursor: pointer;
+      margin-bottom: 8px;
+      transition: all 0.22s ease;
+      text-decoration: none;
+      border: 1px solid transparent;
+      position: relative;
+      backdrop-filter: blur(10px);
+    }
+    .nav-item-content { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .nav-item-main { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .nav-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.06);
+      font-size: 13px;
+      flex: 0 0 auto;
+    }
+    .nav-text {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      min-width: 0;
+    }
+    .nav-title { font-size: 13px; font-weight: 700; color: inherit; }
+    .nav-caption {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.42);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .nav-pill {
+      min-width: 26px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.82);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-align: center;
+      flex: 0 0 auto;
+    }
+    .nav-item:hover {
+      color: #fff;
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.08);
+      transform: translateX(2px);
+    }
+    .nav-item.active {
+      color: #fff;
+      background: linear-gradient(180deg, rgba(37,76,115,0.92), rgba(22,58,93,0.92));
+      border-color: rgba(215,166,77,0.75);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 24px rgba(3,10,18,0.18);
+    }
+    .nav-item.active .nav-icon {
+      background: rgba(215,166,77,0.16);
+      border-color: rgba(215,166,77,0.28);
+    }
+    .nav-item.active .nav-caption { color: rgba(255,255,255,0.58); }
+    .nav-item.active .nav-pill {
+      background: rgba(215,166,77,0.18);
+      border-color: rgba(215,166,77,0.24);
+      color: #fff5df;
+    }
+    .nav-item.active::before {
+      content: "";
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      transform: translateY(-50%);
+      box-shadow: 0 0 18px rgba(215,166,77,0.65);
+    }
+    .nav-divider { height: 1px; background: rgba(255,255,255,0.1); margin: 14px 0; }
+    .sidebar-footer {
+      font-size: 11px;
+      color: rgba(255,255,255,0.52);
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      position: relative;
+      z-index: 1;
+    }
+    .sidebar-footer-card {
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+    .sidebar-footer-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.56);
+    }
+    .sidebar-footer-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.03em;
+      margin-bottom: 4px;
+    }
+    .sidebar-footer-subtitle {
+      font-size: 11px;
+      color: rgba(255,255,255,0.62);
+      margin-bottom: 12px;
+    }
+    .sidebar-footer-stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .sidebar-footer-stat {
+      padding: 9px 10px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .sidebar-footer-stat-label {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.42);
+      margin-bottom: 4px;
+    }
+    .sidebar-footer-stat-value {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .main { flex: 1; overflow: auto; padding: 26px 30px 36px; position: relative; z-index: 1; }
+    .page { display: none; }
+    .page.active { display: block; animation: pageIn 0.28s ease; }
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Topbar */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 26px;
+      padding: 18px 20px;
+      border: 1px solid rgba(22,58,93,0.08);
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at top right, rgba(215,166,77,0.12), transparent 24%),
+        linear-gradient(180deg, rgba(255,255,255,0.92), rgba(247,250,253,0.78));
+      backdrop-filter: blur(18px);
+      box-shadow: 0 20px 46px rgba(10, 26, 44, 0.07);
+      position: sticky;
+      top: 14px;
+      z-index: 20;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 16px; }
+    .topbar-title {
+      font-family: "Aptos Display", "Segoe UI Variable Display", "Aptos", "Segoe UI", sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--navy-dark);
+      letter-spacing: -0.05em;
+    }
+    .topbar-subtitle { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .topbar-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 11px;
+      border-radius: 999px;
+      background: rgba(17, 43, 67, 0.06);
+      border: 1px solid rgba(17, 43, 67, 0.08);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--navy-dark);
+    }
+    .meta-chip strong { color: var(--navy-dark); }
+    .toggle-group { display: flex; gap: 4px; background: rgba(255,255,255,0.72); border: 1px solid var(--border); border-radius: 12px; padding: 4px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.65); }
+    .toggle-btn { padding: 7px 12px; font-size: 12px; font-weight: 700; border: none; border-radius: 9px; background: transparent; color: var(--muted); cursor: pointer; transition: all 0.18s; }
+    .toggle-btn.active { background: linear-gradient(180deg, var(--navy), var(--navy-dark)); color: #fff; box-shadow: 0 8px 18px rgba(9,24,42,0.18); }
+    .select-client {
+      padding: 10px 13px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.82);
+      color: var(--text);
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: var(--shadow-soft);
+    }
+
+    /* KPI Grid */
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-bottom: 26px; }
+    .kpi-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(248,250,253,0.86));
+      padding: 18px 18px 16px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(18,44,70,0.08);
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .kpi-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold), rgba(215,166,77,0.08) 48%, transparent 100%);
+    }
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 34px rgba(10,26,44,0.09);
+      border-color: rgba(22,58,93,0.12);
+    }
+    .kpi-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 6px; }
+    .kpi-value {
+      font-family: "Aptos Display", "Segoe UI Variable Display", "Aptos", "Segoe UI", sans-serif;
+      font-size: 34px;
+      font-weight: 700;
+      color: var(--navy-dark);
+      letter-spacing: -0.05em;
+    }
+    .kpi-sub { font-size: 12px; color: var(--muted); margin-top: 6px; }
+    .kpi-card.is-accent {
+      background:
+        radial-gradient(circle at top right, rgba(215,166,77,0.18), transparent 28%),
+        linear-gradient(180deg, rgba(16,40,68,0.98), rgba(8,22,38,0.98));
+      border-color: rgba(17,43,67,0.08);
+      box-shadow: 0 18px 42px rgba(9,24,42,0.18);
+    }
+    .kpi-card.is-accent::before {
+      background: linear-gradient(90deg, rgba(240,199,119,0.98), rgba(255,255,255,0.2), transparent 100%);
+    }
+    .kpi-card.is-accent .kpi-label,
+    .kpi-card.is-accent .kpi-sub { color: rgba(255,255,255,0.66); }
+    .kpi-card.is-accent .kpi-value { color: #fff; }
+    .kpi-card.is-accent .kpi-sub strong { color: #fff5df; }
+
+    .overview-banner {
+      margin-bottom: 18px;
+      border-radius: 30px;
+      overflow: hidden;
+      border: 1px solid rgba(17,43,67,0.08);
+      background:
+        radial-gradient(circle at top left, rgba(215,166,77,0.18), transparent 28%),
+        radial-gradient(circle at 84% 12%, rgba(255,255,255,0.08), transparent 16%),
+        linear-gradient(135deg, rgba(11,30,49,0.98), rgba(18,44,70,0.96) 52%, rgba(37,76,115,0.94) 100%);
+      box-shadow: 0 28px 60px rgba(10, 26, 44, 0.18);
+      position: relative;
+    }
+    .overview-banner::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(110deg, rgba(255,255,255,0.08), transparent 36%),
+        linear-gradient(180deg, rgba(255,255,255,0.04), transparent 46%);
+    }
+    .overview-banner-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.9fr);
+      gap: 20px;
+      padding: 24px;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.84);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 16px;
+    }
+    .hero-title {
+      font-family: "Aptos Display", "Segoe UI Variable Display", "Aptos", "Segoe UI", sans-serif;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.02;
+      letter-spacing: -0.07em;
+      color: #fff;
+      max-width: 10ch;
+      margin-bottom: 10px;
+    }
+    .hero-subtitle {
+      max-width: 64ch;
+      font-size: 14px;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.76);
+      margin-bottom: 18px;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .hero-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.88);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    .overview-side {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+    .overview-side-card {
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+    .overview-side-label {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.58);
+      margin-bottom: 8px;
+    }
+    .overview-side-value {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.35;
+      margin-bottom: 6px;
+    }
+    .overview-side-note {
+      font-size: 12px;
+      line-height: 1.5;
+      color: rgba(255,255,255,0.72);
+    }
+    .overview-signal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .overview-signal {
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .overview-signal-label {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.54);
+      margin-bottom: 6px;
+    }
+    .overview-signal-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.05em;
+    }
+    .overview-signal-note {
+      font-size: 11px;
+      color: rgba(255,255,255,0.64);
+      margin-top: 4px;
+    }
+
+    /* Controls */
+    .controls { display: flex; gap: 12px; margin-bottom: 20px; align-items: center; flex-wrap: wrap; }
+    .search-box, .select-sort {
+      padding: 11px 14px;
+      border: 1px solid rgba(17,43,67,0.1);
+      border-radius: 13px;
+      background: rgba(255,255,255,0.88);
+      font-size: 13px;
+      color: var(--text);
+      cursor: pointer;
+      box-shadow: var(--shadow-soft);
+    }
+    .search-box { flex: 1; min-width: 220px; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 16px;
+      border: none;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .btn.primary { background: linear-gradient(180deg, var(--navy), var(--navy-dark)); color: #fff; box-shadow: 0 10px 22px rgba(9,24,42,0.18); }
+    .btn.primary:hover { transform: translateY(-1px); }
+    .btn.secondary { background: rgba(255,255,255,0.82); color: var(--navy); border: 1px solid rgba(17,43,67,0.1); box-shadow: var(--shadow-soft); }
+    .btn.secondary:hover { background: var(--surface-strong); border-color: rgba(22,58,93,0.18); transform: translateY(-1px); }
+
+    .mailbox-grid { display: grid; grid-template-columns: minmax(280px, 1.2fr) repeat(2, minmax(220px, 0.9fr)); gap: 16px; }
+    .mailbox-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(248,250,253,0.86));
+      border: 1px solid rgba(17,43,67,0.08);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow-soft);
+      color: var(--text);
+      text-decoration: none;
+      min-height: 190px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .mailbox-card.primary {
+      background:
+        radial-gradient(circle at top right, rgba(215,166,77,0.22), transparent 30%),
+        linear-gradient(135deg, rgba(9,24,42,0.98), rgba(22,58,93,0.96));
+      color: #fff;
+      box-shadow: 0 22px 48px rgba(9,24,42,0.18);
+    }
+    .mailbox-kicker { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+    .mailbox-card.primary .mailbox-kicker { color: rgba(255,255,255,0.62); }
+    .mailbox-title { font-size: 22px; font-weight: 800; letter-spacing: -0.04em; color: var(--navy-dark); margin-top: 8px; }
+    .mailbox-card.primary .mailbox-title { color: #fff; }
+    .mailbox-copy { font-size: 13px; line-height: 1.55; color: var(--muted); margin-top: 8px; }
+    .mailbox-card.primary .mailbox-copy { color: rgba(255,255,255,0.72); }
+    .mailbox-address {
+      display: inline-flex;
+      width: fit-content;
+      padding: 8px 11px;
+      border-radius: 999px;
+      background: rgba(17,43,67,0.06);
+      border: 1px solid rgba(17,43,67,0.08);
+      color: var(--navy-dark);
+      font-size: 12px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+    .mailbox-card.primary .mailbox-address {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.14);
+      color: #fff8e8;
+    }
+    .mailbox-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .mailbox-link { color: var(--navy); font-size: 12px; font-weight: 800; text-decoration: none; }
+    .mailbox-link:hover { color: var(--navy-dark); }
+
+    /* Section Header */
+    .section-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+    .section-title {
+      font-family: "Aptos Display", "Segoe UI Variable Display", "Aptos", "Segoe UI", sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--navy-dark);
+      letter-spacing: -0.04em;
+    }
+
+    /* Tables */
+    .table-scroll { overflow-x: auto; }
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(249,251,253,0.84));
+      border: 1px solid rgba(17,43,67,0.08);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+    }
+    .table thead { background: rgba(241,246,250,0.92); border-bottom: 1px solid var(--border); }
+    .table th {
+      padding: 14px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--navy-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      backdrop-filter: blur(10px);
+    }
+    .table td { padding: 13px 14px; border-bottom: 1px solid rgba(17,43,67,0.06); font-size: 13px; }
+    .table tbody tr:hover { background: rgba(244,248,252,0.94); }
+    .table tbody tr:last-child td { border-bottom: none; }
+
+    /* Badges & Indicators */
+    .badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    .badge.green { background: rgba(46,139,87,0.12); color: var(--green); }
+    .badge.amber { background: rgba(201,133,18,0.14); color: var(--amber); }
+    .badge.navy { background: rgba(26,60,94,0.12); color: var(--navy); }
+    .badge.muted { background: rgba(100,116,139,0.1); color: var(--muted); }
+    .badge.red { background: rgba(181,59,59,0.12); color: var(--red); }
+    .badge.ignored { background: rgba(100,116,139,0.12); color: var(--muted); }
+    .badge.drafted { background: rgba(201,133,18,0.14); color: var(--amber); }
+    .badge.sent { background: rgba(46,139,87,0.12); color: var(--green); }
+    .badge.not_started { background: #f1f5f9; color: var(--muted); }
+
+    .label-badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+    .label-badge.Actionable { background: rgba(46,139,87,0.14); color: var(--green); }
+    .label-badge.Watch { background: rgba(201,133,18,0.16); color: var(--amber); }
+    .label-badge.Tracking { background: #f1f5f9; color: var(--muted); }
+
+    .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+    .status-dot.green { background: var(--green); }
+    .status-dot.amber { background: var(--amber); }
+    .status-dot.gray { background: var(--muted); }
+
+    /* Activity bars */
+    .activity-bars { display: flex; gap: 8px; align-items: center; height: 24px; }
+    .activity-bar { flex: 1; height: 4px; background: var(--border); border-radius: 2px; position: relative; }
+    .activity-bar-fill { height: 100%; background: var(--navy); border-radius: 2px; }
+    .activity-label { font-size: 11px; color: var(--muted); min-width: 35px; text-align: right; }
+
+    /* Modal */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 1000; }
+    .modal-overlay.active { display: flex; align-items: center; justify-content: center; }
+    .modal { background: var(--surface); border-radius: var(--radius); width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow); }
+    .modal-header { padding: 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .modal-title { font-size: 18px; font-weight: 700; color: var(--navy-dark); }
+    .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--muted); }
+    .modal-body { padding: 20px 24px; }
+    .modal-section { margin-bottom: 20px; }
+    .modal-section-title { font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--navy-dark); margin-bottom: 8px; letter-spacing: 0.05em; }
+    .tender-title { font-size: 16px; font-weight: 700; color: var(--navy-dark); margin-bottom: 8px; }
+    .tender-meta { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
+    .tender-meta-item { }
+    .tender-meta-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; margin-bottom: 3px; }
+    .tender-meta-value { font-size: 13px; color: var(--navy-dark); font-weight: 600; }
+    .tender-description { font-size: 13px; color: var(--text); line-height: 1.5; }
+    .tender-reasons { font-size: 12px; color: var(--navy-dark); line-height: 1.6; }
+    .risk-flag { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; background: rgba(181,59,59,0.1); color: var(--red); margin: 2px 4px 2px 0; }
+
+    /* Commercial Radar */
+    .radar-focus-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap: 16px; margin-bottom: 28px; }
+    .radar-focus-card { background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,250,252,0.88)); border-radius: 18px; padding: 20px; box-shadow: var(--shadow-soft); border: 1px solid var(--border); border-left: 4px solid var(--border); }
+    .radar-focus-card.actionable-high { border-left-color: var(--gold); box-shadow: 0 8px 28px rgba(217,164,65,0.18); }
+    .radar-focus-card.actionable-medium { border-left-color: var(--navy); box-shadow: 0 6px 20px rgba(26,60,94,0.12); }
+    .radar-focus-card.watch { border-left-color: var(--amber); }
+    .radar-focus-card.tracking { background: var(--surface-soft); border-left-color: var(--border); }
+    .radar-focus-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .radar-focus-card-name { font-size: 15px; font-weight: 700; color: var(--navy-dark); }
+    .radar-focus-card-meta { display: flex; gap: 8px; align-items: center; margin-top: 8px; font-size: 12px; color: var(--muted); }
+    .radar-focus-card-window { font-size: 12px; color: var(--navy-dark); font-weight: 600; margin-top: 6px; line-height: 1.4; }
+    .radar-focus-card-action { font-size: 11px; color: var(--muted); font-style: italic; margin-top: 8px; }
+
+    .radar-three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+    .radar-col { background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(248,250,252,0.86)); border-radius: 18px; border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow-soft); }
+    .radar-col-header { background: linear-gradient(180deg, rgba(11,30,49,0.98), rgba(16,40,68,0.96)); color: #fff; padding: 12px 16px; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+    .radar-col-body { padding: 0; }
+    .radar-row { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 4px; }
+    .radar-row:last-child { border-bottom: none; }
+    .radar-row-name { font-weight: 700; color: var(--navy-dark); font-size: 13px; }
+    .radar-row-meta { font-size: 11px; color: var(--muted); }
+
+    .radar-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+    .radar-chip { padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+    .radar-chip.actionable { background: rgba(46,139,87,0.12); color: var(--green); }
+    .radar-chip.watch { background: rgba(201,133,18,0.14); color: var(--amber); }
+    .radar-chip.slipped { background: rgba(120,120,120,0.12); color: #6b7280; }
+    .radar-chip.emerging { background: rgba(26,60,94,0.09); color: var(--navy); }
+
+    .sector-tag { display: inline-block; padding: 5px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; margin: 3px 3px 3px 0; }
+    .sector-tag.cat { background: rgba(26,60,94,0.09); color: var(--navy); }
+    .sector-tag.region { background: rgba(217,164,65,0.14); color: var(--amber); }
+
+    .buyer-intel-note { font-size: 11px; color: var(--muted); font-style: italic; margin-top: 4px; line-height: 1.35; max-width: 260px; }
+    .timing-row-hidden { opacity: 0.55; }
+    .timing-row-limited { opacity: 0.8; }
+    .action-stack { display: flex; flex-direction: column; gap: 6px; min-width: 160px; }
+    .action-state-line { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .next-action { font-size: 12px; color: var(--navy-dark); font-weight: 600; }
+    .micro-note { font-size: 11px; color: var(--muted); line-height: 1.35; }
+    .mini-link { font-size: 11px; color: var(--navy); text-decoration: none; border-bottom: 1px dotted rgba(26,60,94,0.35); }
+    .mini-link:hover { color: var(--navy-dark); border-bottom-color: var(--navy-dark); }
+    .mini-btn { display: inline-flex; align-items: center; gap: 4px; padding: 5px 9px; border-radius: 999px; border: 1px solid var(--border); background: rgba(255,255,255,0.92); color: var(--navy-dark); font-size: 11px; font-weight: 700; cursor: pointer; box-shadow: var(--shadow-soft); }
+    .mini-btn:hover { background: var(--surface-soft); border-color: var(--navy); }
+    .mini-btn.primary { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .mini-btn.success { background: rgba(47,139,97,0.12); color: var(--green); border-color: rgba(47,139,97,0.18); }
+    .row-actions { display: flex; gap: 6px; flex-wrap: wrap; min-width: 180px; }
+    .draft-workbench {
+      display: grid;
+      grid-template-columns: minmax(280px, 1.1fr) minmax(260px, 0.9fr);
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .draft-panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(248,250,253,0.86));
+      border: 1px solid rgba(17,43,67,0.08);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow-soft);
+    }
+    .draft-panel.primary {
+      background:
+        radial-gradient(circle at top right, rgba(215,166,77,0.18), transparent 28%),
+        linear-gradient(135deg, rgba(9,24,42,0.98), rgba(22,58,93,0.96));
+      color: #fff;
+    }
+    .draft-panel-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 8px; }
+    .draft-panel.primary .draft-panel-label { color: rgba(255,255,255,0.62); }
+    .draft-panel-title { font-size: 20px; font-weight: 800; letter-spacing: -0.04em; color: var(--navy-dark); }
+    .draft-panel.primary .draft-panel-title { color: #fff; }
+    .draft-panel-copy { font-size: 13px; line-height: 1.55; color: var(--muted); margin-top: 8px; }
+    .draft-panel.primary .draft-panel-copy { color: rgba(255,255,255,0.72); }
+    .draft-preview {
+      background: rgba(248,250,253,0.92);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 13px;
+      line-height: 1.55;
+      white-space: pre-line;
+      color: var(--text);
+    }
+    .toast {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 1200;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: rgba(9,24,42,0.94);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 16px 34px rgba(9,24,42,0.22);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: opacity 0.18s, transform 0.18s;
+    }
+    .toast.visible { opacity: 1; transform: translateY(0); }
+    .cmd-chip-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+    .cmd-chip { font-size: 11px; color: var(--navy-dark); background: rgba(255,255,255,0.92); border: 1px solid var(--border); border-radius: 999px; padding: 5px 9px; cursor: pointer; box-shadow: var(--shadow-soft); }
+    .cmd-chip:hover { background: var(--surface-soft); border-color: var(--navy); }
+    .mono-path { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11px; color: var(--muted); word-break: break-all; }
+    .radar-action-strip { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+    .ops-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:16px; }
+    .ops-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(248,250,252,0.88));
+      border:1px solid rgba(17,43,67,0.08);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow-soft);
+      padding:20px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
+    }
+    .ops-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, rgba(215,166,77,0.94), rgba(22,58,93,0.22), transparent 70%);
+    }
+    .ops-card:hover { transform: translateY(-2px); box-shadow: 0 16px 30px rgba(9,24,42,0.08); }
+    .ops-card-head { display:flex; justify-content:space-between; align-items:flex-start; gap:14px; margin-bottom:14px; }
+    .ops-card-title { font-size:16px; font-weight:700; color:var(--navy-dark); }
+    .ops-card-subtitle { font-size:12px; color:var(--muted); margin-top:4px; line-height:1.45; }
+    .ops-card-stats { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+    .stat-pill { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; background:var(--surface-soft); border:1px solid var(--border); font-size:11px; font-weight:700; color:var(--navy-dark); letter-spacing:0.04em; text-transform:uppercase; }
+    .ops-footer { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
+    .ops-list { display:flex; flex-wrap:wrap; gap:6px; }
+    .ops-inline { margin-top:16px; padding-top:14px; border-top:1px solid var(--border); }
+    .ops-note { font-size:12px; color:var(--muted); line-height:1.5; }
+    .ops-truncation { margin-top:10px; font-size:12px; color:var(--muted); }
+    .ops-rail {
+      margin: 14px 0 16px;
+      padding: 14px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(244,248,252,0.92), rgba(250,252,254,0.84));
+      border: 1px solid rgba(17,43,67,0.07);
+    }
+    .ops-rail-label {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .ops-funnel {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .ops-funnel-stage {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.78);
+      border: 1px solid rgba(17,43,67,0.08);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+    .ops-funnel-stage-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--navy-dark);
+      letter-spacing: -0.05em;
+    }
+    .ops-funnel-stage-label {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .ops-card-topline {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .ops-card-topline .meta-chip {
+      background: rgba(17,43,67,0.05);
+      border-color: rgba(17,43,67,0.08);
+    }
+    .ops-inline .table {
+      background: rgba(255,255,255,0.92);
+      box-shadow: none;
+    }
+
+    /* Empty state */
+    .empty {
+      text-align: center;
+      padding: 52px 28px;
+      color: var(--muted);
+      font-size: 14px;
+      background: rgba(255,255,255,0.74);
+      border: 1px dashed rgba(22,58,93,0.16);
+      border-radius: 22px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .spotlight-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+    .spotlight-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,250,252,0.86));
+      border: 1px solid rgba(17,43,67,0.08);
+      border-radius: 22px;
+      padding: 18px 18px 16px;
+      box-shadow: var(--shadow-soft);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .spotlight-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold), rgba(22,58,93,0.18), transparent 72%);
+    }
+    .spotlight-card:hover { transform: translateY(-2px); box-shadow: 0 16px 30px rgba(9,24,42,0.08); }
+    .spotlight-card.featured {
+      grid-column: span 2;
+      background:
+        radial-gradient(circle at top right, rgba(215,166,77,0.14), transparent 26%),
+        linear-gradient(180deg, rgba(255,255,255,0.98), rgba(246,250,253,0.9));
+    }
+    .spotlight-head { display:flex; justify-content:space-between; align-items:flex-start; gap:14px; margin-bottom:10px; }
+    .spotlight-title { font-size:15px; font-weight:700; color:var(--navy-dark); line-height:1.35; }
+    .spotlight-meta { display:flex; gap:12px; flex-wrap:wrap; font-size:12px; color:var(--muted); margin-bottom:10px; }
+    .spotlight-desc { font-size:12px; color:var(--text); line-height:1.55; max-width: 88ch; }
+    .spotlight-empty { margin-top: 6px; }
+    .spotlight-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .spotlight-stat {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 10px;
+      border-radius: 12px;
+      background: rgba(17,43,67,0.05);
+      border: 1px solid rgba(17,43,67,0.07);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--navy-dark);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .spotlight-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(17,43,67,0.08);
+      flex-wrap: wrap;
+    }
+    .spotlight-footer-note { font-size: 12px; color: var(--muted); }
+    .spotlight-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: 12px;
+      background: rgba(17,43,67,0.06);
+      border: 1px solid rgba(17,43,67,0.08);
+      color: var(--navy-dark);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .overview-banner-grid { grid-template-columns: 1fr; }
+      .radar-three-col { grid-template-columns: 1fr; }
+      .mailbox-grid { grid-template-columns: 1fr; }
+      .draft-workbench { grid-template-columns: 1fr; }
+      .kpi-grid { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
+      .spotlight-card.featured { grid-column: span 1; }
+    }
+
+    @media (max-width: 768px) {
+      .container { flex-direction: column; }
+      .sidebar { width: 100%; height: auto; box-shadow: none; }
+      .main { padding: 16px; }
+      .topbar { position: static; border-radius: 18px; }
+      .topbar-right { width: 100%; justify-content: space-between; flex-wrap: wrap; }
+      .topbar-left, .topbar-right { align-items: flex-start; }
+      .sidebar-footer-stats, .overview-signal-grid, .ops-funnel { grid-template-columns: 1fr; }
+      .controls { flex-direction: column; }
+      .search-box { flex: 1; }
+    }
+
+    /* ── Login overlay ── */
+    #login-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      background:
+        radial-gradient(circle at top left, rgba(215,166,77,0.18), transparent 32%),
+        radial-gradient(circle at 80% 15%, rgba(22,58,93,0.12), transparent 28%),
+        linear-gradient(180deg, #f5f8fb 0%, #e9f0f6 100%);
+    }
+    #login-box {
+      background: rgba(255,255,255,0.92);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 48px 44px 44px;
+      width: 100%; max-width: 380px;
+      display: flex; flex-direction: column; gap: 22px;
+    }
+    #login-box .lb-brand {
+      font-size: 22px; font-weight: 700; color: var(--navy); letter-spacing: -0.3px;
+      text-align: center;
+    }
+    #login-box .lb-brand span { color: var(--gold); }
+    #login-box .lb-title {
+      font-size: 13px; color: var(--muted); text-align: center; margin-top: -12px;
+    }
+    #login-box label {
+      font-size: 12px; font-weight: 600; color: var(--navy); letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+    #login-box .lb-field {
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    #login-box input {
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 14px; color: var(--text);
+      background: var(--surface-strong);
+      outline: none; transition: border-color 0.15s;
+    }
+    #login-box input:focus { border-color: var(--navy-soft); }
+    #login-box .lb-error {
+      font-size: 12px; color: var(--red);
+      text-align: center; min-height: 16px;
+    }
+    #login-box button {
+      background: var(--navy);
+      color: #fff;
+      border: none; border-radius: 12px;
+      padding: 12px; font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: background 0.15s;
+    }
+    #login-box button:hover { background: var(--navy-soft); }
+    #login-overlay.hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <div id="login-overlay">
+    <div id="login-box">
+      <div class="lb-brand">Process<span>Ed</span></div>
+      <div class="lb-title">Tender Intelligence Portal</div>
+      <div class="lb-field">
+        <label for="lb-user">Username</label>
+        <input type="text" id="lb-user" autocomplete="username" placeholder="username" />
+      </div>
+      <div class="lb-field">
+        <label for="lb-pass">Password</label>
+        <input type="password" id="lb-pass" autocomplete="current-password" placeholder="••••••••" />
+      </div>
+      <div class="lb-error" id="lb-error"></div>
+      <button id="lb-btn">Sign in</button>
+    </div>
+  </div>
+  <div class="container">
+    <div class="sidebar">
+      <div class="sidebar-brand">Process<span>Ed</span></div>
+      <nav class="sidebar-nav" id="sidebar-nav"></nav>
+      <div class="sidebar-footer" id="sidebar-footer"></div>
+    </div>
+
+    <main class="main">
+      <div class="topbar" id="topbar"></div>
+
+      <!-- Dashboard -->
+      <section id="page-dashboard" class="page">
+        <div id="overview-banner" class="overview-banner"></div>
+        <div id="kpi-grid" class="kpi-grid"></div>
+        <div id="architecture-fact-check" style="margin-bottom:24px;"></div>
+        <div class="section-header" style="margin-bottom:16px;">
+          <div>
+            <div class="section-title">Top opportunities</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;">Your best matches from the latest pipeline run</div>
+          </div>
+        </div>
+        <div id="top-opportunities" class="spotlight-list"></div>
+      </section>
+
+      <!-- Opportunities -->
+      <section id="page-opportunities" class="page">
+        <div class="section-header">
+          <div>
+            <div class="section-title">All opportunities</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;">Searchable tender list with decision verdicts</div>
+          </div>
+          <button class="btn secondary" id="export-opportunities-btn">Export all CSV</button>
+        </div>
+        <div class="controls" id="opportunities-controls"></div>
+        <div class="table-scroll">
+          <table class="table" id="opportunities-table">
+            <thead>
+              <tr>
+                <th>Tender</th>
+                <th>Buyer</th>
+                <th>Region</th>
+                <th>Deadline</th>
+                <th>Value</th>
+                <th>Decision</th>
+                <th>Confidence</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody id="opportunities-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Products -->
+      <section id="page-products" class="page">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Products</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;">Product shortlists and filter funnel performance</div>
+          </div>
+        </div>
+        <div id="products-content"></div>
+      </section>
+
+      <!-- Buyer Intelligence -->
+      <section id="page-buyers" class="page">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Buyer intelligence</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;">Watchlist with timing, action state, dossiers, and operator next steps</div>
+          </div>
+          <button class="btn secondary" id="export-buyers-btn">Export CSV</button>
+        </div>
+        <div class="controls" id="buyers-controls"></div>
+        <div id="kpi-buyers" style="margin-bottom:20px;"></div>
+        <div class="table-scroll">
+          <table class="table" id="buyers-table">
+            <thead>
+              <tr>
+                <th>Buyer</th>
+                <th style="width:190px;">Timing / priority</th>
+                <th style="width:150px;">Action state</th>
+                <th style="width:170px;">Next action</th>
+                <th style="width:260px;">Dossier</th>
+                <th style="width:210px;">Quick actions</th>
+              </tr>
+            </thead>
+            <tbody id="buyers-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Timing Intelligence -->
+      <section id="page-timing" class="page">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Timing intelligence</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;">Forecast windows with cadence confidence and actionability</div>
+          </div>
+          <button class="btn secondary" id="export-timing-btn">Export CSV</button>
+        </div>
+        <div id="kpi-timing" style="margin-bottom:20px;"></div>
+        <div class="controls" id="timing-controls"></div>
+        <div class="table-scroll">
+          <table class="table" id="timing-table">
+            <thead>
+              <tr>
+                <th>Buyer</th>
+                <th>Status</th>
+                <th>Window</th>
+                <th>Cadence</th>
+                <th>Confidence</th>
+                <th>Fit</th>
+                <th>Label</th>
+                <th>Action note</th>
+              </tr>
+            </thead>
+            <tbody id="timing-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Commercial Radar -->
+      <section id="page-radar" class="page">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Commercial radar</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;">Decision-ready buyer intelligence — who to chase, who to watch, who to ignore</div>
+          </div>
+          <button class="btn secondary" id="export-radar-btn">Export focus list CSV</button>
+        </div>
+        <div id="radar-content"></div>
+      </section>
+
+      <!-- Outreach Queue -->
+      <section id="page-outreach" class="page">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Outreach queue</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;">Ranked commercial contacts — who to reach out to, why, and how</div>
+          </div>
+          <button class="btn secondary" id="export-outreach-btn">Export CSV</button>
+        </div>
+        <div id="outreach-kpis" style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:20px;"></div>
+        <div id="outreach-workbench"></div>
+        <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center;">
+          <input type="text" id="outreach-search" placeholder="Search buyers…" style="padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;width:220px;" oninput="state.outreachSearch=this.value;renderOutreachTable();">
+          <select id="outreach-filter-priority" style="padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;" onchange="state.outreachFilterPriority=this.value;renderOutreachTable();">
+            <option value="all">All priorities</option>
+            <option value="Hot">Hot</option>
+            <option value="Warm">Warm</option>
+            <option value="Monitor">Monitor</option>
+            <option value="Low">Low</option>
+          </select>
+          <select id="outreach-filter-status" style="padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;" onchange="state.outreachFilterStatus=this.value;renderOutreachTable();">
+            <option value="all">All statuses</option>
+            <option value="not_contacted">Not contacted</option>
+            <option value="drafted">Drafted</option>
+            <option value="contacted">Contacted</option>
+            <option value="follow_up_due">Follow-up due</option>
+            <option value="paused">Paused</option>
+          </select>
+        </div>
+        <div class="table-scroll">
+          <table class="table" id="outreach-table">
+            <thead>
+              <tr>
+                <th>Buyer</th>
+                <th>Priority</th>
+                <th>Score</th>
+                <th>Timing</th>
+                <th>Fit</th>
+                <th>Activity 90d</th>
+                <th>Typical value</th>
+                <th>Channel</th>
+                <th>Status</th>
+                <th>Next window</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="outreach-body"></tbody>
+          </table>
+        </div>
+        <div id="outreach-empty" style="display:none;text-align:center;padding:40px;color:var(--muted);font-size:14px;">No buyers match current filters.</div>
+      </section>
+
+      <!-- Mailbox -->
+      <section id="page-mailbox" class="page">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Mailbox</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;">Open your ProcessEd Civils webmail from the portal</div>
+          </div>
+          <a class="btn secondary" href="https://mail.hostinger.com/" target="_blank" rel="noopener">Open webmail</a>
+        </div>
+        <div id="mailbox-content"></div>
+      </section>
+
+      <!-- Pipeline History -->
+      <section id="page-history" class="page">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Pipeline history</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;">Run logs and ingest counts</div>
+          </div>
+        </div>
+        <div class="table-scroll">
+          <table class="table" id="history-table">
+            <thead>
+              <tr>
+                <th>Run ID</th>
+                <th>Status</th>
+                <th>Ingested</th>
+                <th>Shortlist</th>
+                <th>New</th>
+                <th>Duration</th>
+                <th>Run time</th>
+              </tr>
+            </thead>
+            <tbody id="history-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Clients -->
+      <section id="page-clients" class="page">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Clients</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;">Per-client filtered shortlists, novelty, and notification state</div>
+          </div>
+        </div>
+        <div id="clients-content"></div>
+      </section>
+
+      <section id="page-avatar" class="page">
+        <div class="section-header">
+          <div>
+            <div class="section-title">Avatar builder</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;">Customise your 3D profile avatar</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:24px;height:calc(100vh - 160px);">
+          <div class="card" style="width:280px;flex-shrink:0;padding:20px;overflow-y:auto;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin-bottom:10px;">Body type</div>
+            <div id="avatar-body-opts" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;"></div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin-bottom:10px;">Skin tone</div>
+            <div id="avatar-color-opts" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:20px;"></div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin-bottom:10px;">Outfit</div>
+            <div id="avatar-outfit-opts" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:28px;"></div>
+            <button onclick="avatarDownload()" style="width:100%;padding:14px;background:var(--navy);color:#fff;font-weight:600;border:none;border-radius:12px;cursor:pointer;font-size:13px;letter-spacing:0.01em;">
+              ⬇ Download .VRM
+            </button>
+            <p style="font-size:11px;color:var(--muted);margin-top:10px;text-align:center;">Fully interoperable, owned by you.</p>
+          </div>
+          <div style="flex:1;background:#0a1a2e;border-radius:var(--radius);overflow:hidden;position:relative;">
+            <canvas id="avatar-canvas" style="width:100%;height:100%;display:block;"></canvas>
+            <div style="position:absolute;top:14px;right:16px;background:rgba(0,0,0,0.5);color:#fff;padding:6px 14px;border-radius:20px;font-size:11px;letter-spacing:0.04em;">OPEN AVATAR v0.1-alpha</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-title"></div>
+        <button class="modal-close" onclick="closeTenderModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <script>
+    // SHA-256 credentials: { username -> hash_of_password }
+    const CREDS = {
+      "admin": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+      "user":  "04f8996da763b7a969b1028ee3007569eaf3a635486ddab211d512c85b9df8fb"
+    };
+    const SESSION_KEY = "pe_auth";
+    const PORTAL_SESSION_KEY = "processed_auth";
+    const PORTAL_SESSION_TOKEN = "pc_portal_2026";
+
+    async function sha256(str) {
+      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    function hasValidSession() {
+      return sessionStorage.getItem(SESSION_KEY) === "1" ||
+        sessionStorage.getItem(PORTAL_SESSION_KEY) === PORTAL_SESSION_TOKEN;
+    }
+
+    function rememberSession() {
+      sessionStorage.setItem(SESSION_KEY, "1");
+      sessionStorage.setItem(PORTAL_SESSION_KEY, PORTAL_SESSION_TOKEN);
+    }
+
+    function unlock() {
+      rememberSession();
+      const overlay = document.getElementById("login-overlay");
+      if (overlay) overlay.classList.add("hidden");
+    }
+
+    async function tryLogin() {
+      const user = document.getElementById("lb-user").value.trim().toLowerCase();
+      const pass = document.getElementById("lb-pass").value;
+      const err  = document.getElementById("lb-error");
+      if (!user || !pass) { err.textContent = "Please enter your credentials."; return; }
+      const hash = await sha256(pass);
+      if (CREDS[user] && CREDS[user] === hash) {
+        unlock();
+      } else {
+        err.textContent = "Incorrect username or password.";
+        document.getElementById("lb-pass").value = "";
+      }
+    }
+
+    if (hasValidSession()) {
+      unlock();
+    } else {
+      window.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("lb-btn").addEventListener("click", tryLogin);
+        document.addEventListener("keydown", e => { if (e.key === "Enter") tryLogin(); });
+        document.getElementById("lb-user").focus();
+      });
+    }
+  </script>
+  <script src="dashboard_data.js"></script>
+  <script>
+    // State
+    const state = {
+      page: 'dashboard',
+      viewMode: 'buyer',
+      selectedClient: 'all',
+      opportunitiesSearch: '',
+      opportunitiesFilter: 'all',
+      opportunitiesSort: 'score',
+      watchlistSearch: '',
+      watchlistSort: 'priority',
+      timingTab: 'all',
+      timingSearch: '',
+      timingSort: 'days',
+      radarTab: 'focus',
+      outreachSearch: '',
+      outreachFilterPriority: 'all',
+      outreachFilterStatus: 'all',
+      expandedClients: {},
+      expandedProducts: {}
+    };
+
+    // Load data bundle
+    let data = {
+      generatedAt: new Date().toISOString(),
+      latestRunId: '',
+      latestRun: { manifest: {}, tenders: [], buyerCards: [], buyerTiming: { signals: [] }, commercialRadar: {}, buyerTimingBacktest: {}, outreachQueue: { records: [], counts: {} } },
+      runHistory: [],
+      tierConfig: { tiers: {}, clients: [] }
+    };
+
+    // Load from dashboard bundle if available
+    if (typeof window.PROCESSED_DASHBOARD_DATA !== 'undefined') {
+      data = window.PROCESSED_DASHBOARD_DATA;
+    } else if (typeof window.dashboardData !== 'undefined') {
+      data = window.dashboardData;
+    } else if (typeof window.ProcessEdDashboardData !== 'undefined') {
+      data = window.ProcessEdDashboardData;
+    } else if (typeof window.DASHBOARD_DATA !== 'undefined') {
+      data = window.DASHBOARD_DATA;
+    }
+    data.latestRunId = data.latestRunId || ((data.latestRun || {}).runId || '');
+    if (!data.latestRun.tenders && Array.isArray(data.latestRun.opportunities)) {
+      data.latestRun.tenders = data.latestRun.opportunities;
+    }
+    if (!data.latestRun.tenders && data.latestRun.shortlist) {
+      data.latestRun.tenders = data.latestRun.shortlist;
+    }
+
+    function resolveDashboardMapping() {
+      const DATA =
+        window.PROCESSED_DASHBOARD_DATA ||
+        window.dashboardData ||
+        window.DASHBOARD_DATA ||
+        data ||
+        {};
+      const kpis = DATA.kpis || {};
+      const summary = DATA.latestRun?.summary || {};
+      const pipeline = DATA.pipeline_model || DATA.pipelineModel || {};
+
+      const hotOutreachCount =
+        DATA.hot_outreach_count ??
+        DATA.hotOutreachCount ??
+        kpis.hot_outreach_count ??
+        kpis.hotOutreachCount ??
+        DATA.hot_outreach?.length ??
+        DATA.outreach_queue?.length ??
+        0;
+
+      const warmBuyersCount =
+        DATA.warm_buyers_count ??
+        DATA.warmBuyersCount ??
+        kpis.warm_buyers_count ??
+        kpis.warmBuyersCount ??
+        kpis.warm_buyers ??
+        DATA.warm_buyers?.length ??
+        DATA.buyerCards?.length ??
+        0;
+
+      const timingReadyCount =
+        DATA.timing_ready_count ??
+        DATA.timingReadyCount ??
+        kpis.timing_ready_count ??
+        kpis.timingReadyCount ??
+        kpis.timing_ready ??
+        DATA.timing_ready?.length ??
+        0;
+
+      const avgFitScore =
+        DATA.avg_fit_score ??
+        DATA.avgFitScore ??
+        kpis.avg_fit_score ??
+        kpis.avgFitScore ??
+        summary.avg_fit_score ??
+        0;
+
+      const loopSteps =
+        DATA.loop_steps ??
+        DATA.loopSteps ??
+        pipeline.loop_steps ??
+        pipeline.loopSteps ??
+        0;
+
+      const postRunSteps =
+        DATA.post_run_steps ??
+        DATA.postRunSteps ??
+        pipeline.post_run_steps ??
+        pipeline.postRunSteps ??
+        0;
+
+      const fatalSteps =
+        DATA.fatal_steps ??
+        DATA.fatalSteps ??
+        pipeline.fatal_steps ??
+        pipeline.fatalSteps ??
+        0;
+
+      const supplierSource =
+        DATA.supplier_source ??
+        DATA.supplierSource ??
+        pipeline.supplier_source ??
+        pipeline.supplierSource ??
+        "unknown";
+
+      const notifierChannels =
+        DATA.notifier_channels ??
+        DATA.notifierChannels ??
+        pipeline.notifier_channels ??
+        pipeline.notifierChannels ??
+        [];
+
+      const mapped = {
+        hotOutreachCount,
+        warmBuyersCount,
+        timingReadyCount,
+        avgFitScore,
+        loopSteps,
+        postRunSteps,
+        fatalSteps,
+        supplierSource,
+        notifierChannels,
+      };
+      console.log("[ProcessEd dashboard mapping]", mapped);
+      return mapped;
+    }
+    const MAILBOX_EMAIL = 'info@processedcivils.com';
+    const MAILBOX_WEBMAIL_URL = 'https://mail.hostinger.com/';
+
+    // Helpers
+    function buyerFitScore(buyer) {
+      const raw = Number(buyer.fit_to_client);
+      if (!Number.isFinite(raw)) return 0;
+      return raw <= 1 ? Math.round(raw * 100) : Math.round(raw);
+    }
+
+    function outreachPriority(buyer) {
+      const priority = buyer.outreach_priority || 'watch';
+      return priority.charAt(0).toUpperCase() + priority.slice(1);
+    }
+
+    function priorityLabel(buyer) {
+      const p = buyer.outreach_priority || 'watch';
+      return p === 'hot' ? 'red' : p === 'warm' ? 'amber' : 'navy';
+    }
+
+    function formatValue(v) {
+      if (!v) return '—';
+      if (v >= 1000000) return '£' + (v / 1000000).toFixed(1) + 'M';
+      if (v >= 1000) return '£' + (v / 1000).toFixed(0) + 'K';
+      return '£' + v;
+    }
+
+    function daysUntil(dateStr) {
+      if (!dateStr) return null;
+      const d = new Date(dateStr);
+      const now = new Date();
+      return Math.ceil((d - now) / (1000 * 60 * 60 * 24));
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '—';
+      return new Date(dateStr).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: '2-digit' });
+    }
+
+    function formatDatetime(dateStr) {
+      if (!dateStr) return '—';
+      return new Date(dateStr).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: '2-digit', hour: '2-digit', minute: '2-digit' });
+    }
+
+    function exportCsv(filename, data) {
+      if (!data || data.length === 0) {
+        alert('No data to export');
+        return;
+      }
+      const keys = Object.keys(data[0]);
+      const csv = [keys.join(','), ...data.map(row => keys.map(k => {
+        const v = row[k];
+        const s = String(v === null || v === undefined ? '' : v).replace(/"/g, '""');
+        return s.includes(',') || s.includes('"') ? `"${s}"` : s;
+      }).join(','))].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function copyText(value, label = 'Copied') {
+      const text = String(value || '').trim();
+      if (!text) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast(label + ' copied');
+        }).catch(() => {
+          window.prompt(label, text);
+        });
+        return;
+      }
+      window.prompt(label, text);
+    }
+
+    function showToast(message) {
+      let toast = document.getElementById('toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toast';
+        toast.className = 'toast';
+        document.body.appendChild(toast);
+      }
+      toast.textContent = message;
+      toast.classList.add('visible');
+      window.clearTimeout(showToast._timer);
+      showToast._timer = window.setTimeout(() => toast.classList.remove('visible'), 1800);
+    }
+
+    function safePct(value) {
+      const num = Number(value);
+      if (!Number.isFinite(num)) return '—';
+      return (num <= 1 ? Math.round(num * 100) : Math.round(num)) + '%';
+    }
+
+    function confidenceLabel(value) {
+      if (value === null || value === undefined || value === '') return '—';
+      if (typeof value === 'string') return value;
+      return safePct(value);
+    }
+
+    function escapeHtml(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function jsArg(value) {
+      return JSON.stringify(String(value || '')).replace(/"/g, '&quot;');
+    }
+
+    function actionStateMeta(buyer) {
+      const state = String(buyer.action_state || buyer.outreach_status || 'not_started').toLowerCase();
+      if (state === 'drafted') return { text: '✏️ Drafted', cls: 'drafted' };
+      if (state === 'sent') return { text: '✅ Sent', cls: 'sent' };
+      if (state === 'ignored') return { text: '🚫 Ignored', cls: 'ignored' };
+      return { text: '⬜ Not started', cls: 'not_started' };
+    }
+
+    function dossierMeta(buyer) {
+      return {
+        path: buyer.dossier_path || '',
+        uri: buyer.dossier_uri || '',
+        exists: Boolean(buyer.dossier_exists)
+      };
+    }
+
+    function renderDossierLinks(buyer) {
+      const dossier = dossierMeta(buyer);
+      if (!dossier.path) {
+        return '<div class="micro-note">No dossier path available</div>';
+      }
+      const openLink = dossier.exists && dossier.uri
+        ? `<a class="mini-link" href="${escapeHtml(dossier.uri)}">Open dossier</a>`
+        : '<span class="micro-note">Dossier pending</span>';
+      return `
+        <div class="action-stack">
+          <div>${openLink}</div>
+          <button class="mini-btn" onclick="copyText(${JSON.stringify(dossier.path)}, 'Dossier path')">Copy dossier path</button>
+          <div class="mono-path">${escapeHtml(dossier.path)}</div>
+        </div>
+      `;
+    }
+
+    function renderCommandChips(buyer) {
+      const commands = [
+        { label: 'Draft', value: buyer.cli_mark_drafted || '' },
+        { label: 'Mark sent', value: buyer.cli_mark_sent || '' },
+        { label: 'Ignore', value: buyer.cli_mark_ignored || '' }
+      ].filter(c => c.value);
+      if (commands.length === 0) {
+        return '<div class="micro-note">No quick actions available</div>';
+      }
+      return `
+        <div class="cmd-chip-row">
+          ${commands.map(cmd => `
+            <button class="cmd-chip" onclick="copyText(${JSON.stringify(cmd.value)}, '${escapeHtml(cmd.label)} command')">${cmd.label}</button>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function scoreValue(value) {
+      const raw = Number(value);
+      if (!Number.isFinite(raw)) return '—';
+      return raw <= 1 ? Math.round(raw * 100) : Math.round(raw);
+    }
+
+    function statusBadgeClass(status) {
+      const value = String(status || '').toLowerCase();
+      if (value === 'ok') return 'green';
+      if (value === 'empty') return 'muted';
+      if (value === 'error') return 'red';
+      return 'amber';
+    }
+
+    function toggleClientExpand(clientId) {
+      state.expandedClients[clientId] = !state.expandedClients[clientId];
+      render();
+    }
+
+    function toggleProductExpand(productId) {
+      state.expandedProducts[productId] = !state.expandedProducts[productId];
+      render();
+    }
+
+    // Navigation
+    function renderNav() {
+      const nav = document.getElementById('sidebar-nav');
+      const latestRun = data.latestRun || {};
+      const manifest = latestRun.manifest || {};
+      const counts = {
+        opportunities: manifest.shortlist_count || (latestRun.tenders || []).length || 0,
+        products: (latestRun.products || []).length || 0,
+        clients: (latestRun.clients || []).length || 0,
+        buyers: (latestRun.buyerCards || []).length || 0,
+        timing: ((latestRun.buyerTiming || {}).signals || []).length || 0,
+        radar: ((latestRun.commercialRadar || {}).focus_summary || []).length || 0,
+        outreach: getOutreachRecords().length,
+        history: (data.runHistory || []).length || 0
+      };
+      const pages = [
+        { id: 'dashboard', label: 'Overview', caption: 'Command view', icon: '⬢' },
+        { id: 'opportunities', label: 'Opportunities', caption: 'Tender flow', icon: '◫', count: counts.opportunities },
+        { id: 'products', label: 'Products', caption: 'Filter rails', icon: '◧', count: counts.products },
+        { id: 'clients', label: 'Clients', caption: 'Operator feeds', icon: '◩', count: counts.clients },
+        { id: 'buyers', label: 'Buyer intelligence', caption: 'Accounts', icon: '◎', count: counts.buyers },
+        { id: 'timing', label: 'Timing intelligence', caption: 'Cadence', icon: '◔', count: counts.timing },
+        { id: 'radar', label: 'Commercial radar', caption: 'Focus', icon: '◉', count: counts.radar },
+        { id: 'outreach', label: 'Outreach queue', caption: 'Execution', icon: '✦', count: counts.outreach },
+        { id: 'mailbox', label: 'Mailbox', caption: 'Webmail', icon: '@' },
+        { id: 'history', label: 'Pipeline history', caption: 'Runs', icon: '⋯', count: counts.history },
+        { id: 'avatar', label: 'Avatar builder', caption: 'Profile', icon: '◈' }
+      ];
+
+      nav.innerHTML = pages.map(p => `
+        <a href="#" class="nav-item ${state.page === p.id ? 'active' : ''}" onclick="event.preventDefault(); state.page='${p.id}'; render();">
+          <span class="nav-item-content">
+            <span class="nav-item-main">
+              <span class="nav-icon">${p.icon}</span>
+              <span class="nav-text">
+                <span class="nav-title">${p.label}</span>
+                <span class="nav-caption">${p.caption}</span>
+              </span>
+            </span>
+            ${typeof p.count === 'number' ? `<span class="nav-pill">${p.count}</span>` : ''}
+          </span>
+        </a>
+      `).join('') + '<div class="nav-divider" style="margin-top:20px;"></div>';
+
+      const footer = document.getElementById('sidebar-footer');
+      const runStatus = latestRun.status || manifest.status || 'ready';
+      footer.innerHTML = `
+        <div class="sidebar-footer-card">
+          <div class="sidebar-footer-label">Live workspace</div>
+          <div class="sidebar-footer-title">${(data.latestRunId || '—').substring(0, 12)}</div>
+          <div class="sidebar-footer-subtitle">${escapeHtml(runStatus)} · ${formatDatetime(manifest.finished_at || latestRun.finished_at || data.generatedAt)}</div>
+          <div class="sidebar-footer-stats">
+            <div class="sidebar-footer-stat">
+              <div class="sidebar-footer-stat-label">Tenders</div>
+              <div class="sidebar-footer-stat-value">${manifest.ingest_total_count || 0}</div>
+            </div>
+            <div class="sidebar-footer-stat">
+              <div class="sidebar-footer-stat-label">Shortlist</div>
+              <div class="sidebar-footer-stat-value">${manifest.shortlist_count || 0}</div>
+            </div>
+            <div class="sidebar-footer-stat">
+              <div class="sidebar-footer-stat-label">Buyers</div>
+              <div class="sidebar-footer-stat-value">${(latestRun.buyerCards || []).length || 0}</div>
+            </div>
+            <div class="sidebar-footer-stat">
+              <div class="sidebar-footer-stat-label">Clients</div>
+              <div class="sidebar-footer-stat-value">${(latestRun.clients || []).length || 0}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderTopbar() {
+      const topbar = document.getElementById('topbar');
+      const titles = {
+        dashboard: 'Overview',
+        opportunities: 'All opportunities',
+        products: 'Products',
+        buyers: 'Buyer intelligence',
+        timing: 'Timing intelligence',
+        radar: 'Commercial radar',
+        outreach: 'Outreach queue',
+        mailbox: 'Mailbox',
+        history: 'Pipeline history',
+        clients: 'Clients',
+        avatar: 'Avatar builder'
+      };
+      const title = titles[state.page] || 'Dashboard';
+
+      const isAdmin = state.viewMode === 'admin';
+      const clientOptions = [{ id: 'all', display_name: 'All clients' }].concat((data.latestRun || {}).clients || []);
+      const manifest = (data.latestRun || {}).manifest || {};
+      const latestRun = data.latestRun || {};
+      const runStatus = latestRun.status || manifest.status || 'ready';
+      const pageCounts = {
+        dashboard: `${manifest.shortlist_count || 0} shortlisted`,
+        opportunities: `${(latestRun.tenders || []).length || 0} rows loaded`,
+        products: `${(latestRun.products || []).length || 0} product feeds`,
+        buyers: `${(latestRun.buyerCards || []).length || 0} buyers tracked`,
+        timing: `${((latestRun.buyerTiming || {}).signals || []).length || 0} timing signals`,
+        radar: `${((latestRun.commercialRadar || {}).focus_summary || []).length || 0} focus buyers`,
+        outreach: `${getOutreachRecords().length} outreach targets`,
+        mailbox: MAILBOX_EMAIL,
+        history: `${(data.runHistory || []).length || 0} logged runs`,
+        clients: `${(latestRun.clients || []).length || 0} active client feeds`,
+        avatar: 'Design your profile'
+      };
+      topbar.innerHTML = `
+        <div class="topbar-left">
+          <div>
+            <div class="topbar-title">${title}</div>
+            <div class="topbar-subtitle">Generated ${formatDatetime(data.generatedAt)}</div>
+            <div class="topbar-meta">
+              <span class="meta-chip">Run <strong>${escapeHtml((data.latestRunId || '—').substring(0, 12))}</strong></span>
+              <span class="meta-chip">Status <strong>${escapeHtml(runStatus)}</strong></span>
+              <span class="meta-chip">${pageCounts[state.page] || 'Live dashboard'}</span>
+              <span class="meta-chip">New <strong>${manifest.new_count || 0}</strong></span>
+            </div>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <a class="btn secondary" href="${MAILBOX_WEBMAIL_URL}" target="_blank" rel="noopener">Mailbox</a>
+          <div class="toggle-group">
+            <button class="toggle-btn ${state.viewMode === 'buyer' ? 'active' : ''}" onclick="state.viewMode='buyer'; render();">Buyer view</button>
+            <button class="toggle-btn ${state.viewMode === 'admin' ? 'active' : ''}" onclick="state.viewMode='admin'; render();">Admin</button>
+          </div>
+          ${isAdmin ? `<select class="select-client" onchange="state.selectedClient=this.value; render();">${clientOptions.map(c => `<option value="${escapeHtml(c.id)}" ${state.selectedClient === c.id ? 'selected' : ''}>${escapeHtml(c.display_name || c.id)}</option>`).join('')}</select>` : ''}
+        </div>
+      `;
+    }
+
+    function renderKpis() {
+      const manifest = (data.latestRun || {}).manifest || {};
+      const buyers = (data.latestRun || {}).buyerCards || [];
+      const timing = (data.latestRun || {}).buyerTiming || {};
+      const clients = (data.latestRun || {}).clients || [];
+      const products = (data.latestRun || {}).products || [];
+      const mapping = resolveDashboardMapping();
+
+      const actionableCount = (timing.signals || []).filter(s => s.timing_label === 'Actionable').length;
+      const hotCount = buyers.filter(b => b.outreach_priority === 'hot').length;
+      const warmCount = buyers.filter(b => b.outreach_priority === 'warm').length;
+      const active90d = buyers.filter(b => (b.activity_90d || 0) > 0).length;
+      const displayHotCount = mapping.hotOutreachCount;
+      const displayWarmCount = mapping.warmBuyersCount;
+      const displayActionableCount = mapping.timingReadyCount;
+      const displayAvgFit = mapping.avgFitScore;
+      const newClientCount = clients.reduce((sum, client) => sum + Number(client.new_count || 0), 0);
+      const shortlisted = manifest.shortlist_count || 0;
+      const nextMove = displayActionableCount > 0
+        ? 'Move on timing-ready buyers before the next notice cycle.'
+        : newClientCount > 0
+          ? 'Open client feeds and triage newly matched tenders.'
+          : displayHotCount > 0
+            ? 'Work the hot outreach queue and refresh dossiers.'
+            : shortlisted > 0
+              ? 'Review the shortlist and push the strongest dossiers forward.'
+              : 'Quiet run. Monitor timing signals and keep the workspace ready.';
+      const posture = shortlisted > 0 || displayActionableCount > 0 || displayHotCount > 0 ? 'Active cycle' : 'Quiet cycle';
+      document.getElementById('overview-banner').innerHTML = `
+        <div class="overview-banner-grid">
+          <div>
+            <div class="hero-kicker">Operator command surface</div>
+            <div class="hero-title">${escapeHtml(posture)}</div>
+            <div class="hero-subtitle">
+              ${escapeHtml(nextMove)}
+            </div>
+            <div class="hero-actions">
+              <span class="hero-chip">Shortlist ${shortlisted}</span>
+              <span class="hero-chip">Client novelty ${newClientCount}</span>
+              <span class="hero-chip">Hot outreach ${displayHotCount}</span>
+              <span class="hero-chip">Timing ready ${displayActionableCount}</span>
+            </div>
+          </div>
+          <div class="overview-side">
+            <div class="overview-side-card">
+              <div class="overview-side-label">Next operator move</div>
+              <div class="overview-side-value">${escapeHtml(nextMove)}</div>
+              <div class="overview-side-note">This summary is derived from the current run only. No hidden ranking, no manual override.</div>
+            </div>
+            <div class="overview-signal-grid">
+              <div class="overview-signal">
+                <div class="overview-signal-label">Products</div>
+                <div class="overview-signal-value">${products.length}</div>
+                <div class="overview-signal-note">Configured surfaces</div>
+              </div>
+              <div class="overview-signal">
+                <div class="overview-signal-label">Clients</div>
+                <div class="overview-signal-value">${clients.length}</div>
+                <div class="overview-signal-note">Subscribed feeds</div>
+              </div>
+              <div class="overview-signal">
+                <div class="overview-signal-label">Warm buyers</div>
+                <div class="overview-signal-value">${displayWarmCount}</div>
+                <div class="overview-signal-note">Watchlist momentum</div>
+              </div>
+              <div class="overview-signal">
+                <div class="overview-signal-label">Active 90d</div>
+                <div class="overview-signal-value">${active90d}</div>
+                <div class="overview-signal-note">Live buyer activity</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const avgFit = displayAvgFit;
+
+      document.getElementById('kpi-grid').innerHTML = `
+        <div class="kpi-card">
+          <div class="kpi-label">Tenders (30d)</div>
+          <div class="kpi-value">${manifest.ingest_total_count || 0}</div>
+          <div class="kpi-sub">Ingested</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Shortlisted</div>
+          <div class="kpi-value">${manifest.shortlist_count || 0}</div>
+          <div class="kpi-sub">New fit</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Buyers tracked</div>
+          <div class="kpi-value">${buyers.length}</div>
+          <div class="kpi-sub">In watchlist</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Hot outreach</div>
+          <div class="kpi-value">${displayHotCount}</div>
+          <div class="kpi-sub">Immediate priority</div>
+        </div>
+        <div class="kpi-card is-accent">
+          <div class="kpi-label">Avg fit score</div>
+          <div class="kpi-value">${avgFit}%</div>
+          <div class="kpi-sub"><strong>${active90d}</strong> buyers active in the last 90d</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Actionable now</div>
+          <div class="kpi-value">${displayActionableCount}</div>
+          <div class="kpi-sub">Timing ready</div>
+        </div>
+      `;
+
+      renderArchitectureFactCheck();
+    }
+
+    function renderArchitectureFactCheck() {
+      const fact = data.architectureFactCheck || {};
+      const mapping = resolveDashboardMapping();
+      const pipeline = data.pipeline_model || data.pipelineModel || {};
+      const loop = Array.isArray(fact.main_loop_steps) ? fact.main_loop_steps : [];
+      const post = Array.isArray(fact.post_pipeline_steps) ? fact.post_pipeline_steps : [];
+      const fatal = Array.isArray(fact.fatal_steps) ? fact.fatal_steps : [];
+      const nonfatal = Array.isArray(fact.nonfatal_steps) ? fact.nonfatal_steps : [];
+      const artifacts = Array.isArray(fact.artifacts) ? fact.artifacts : [];
+      const notes = Array.isArray(fact.truth_notes) ? fact.truth_notes : [];
+      const channels = Array.isArray(fact.notifier_channels) && fact.notifier_channels.length ? fact.notifier_channels : mapping.notifierChannels;
+      const supplierDemo = Boolean(fact.supplier_is_demo_source);
+      const supplierSourceLabel = supplierDemo
+        ? 'Demo fixture'
+        : (fact.supplier_source_kind || mapping.supplierSource || 'unknown').replace(/_/g, ' ');
+      const loopStepCount = loop.length || mapping.loopSteps;
+      const postRunStepCount = post.length || mapping.postRunSteps;
+      const fatalStepCount = fatal.length || mapping.fatalSteps;
+      const nonfatalSteps = nonfatal.length ? nonfatal : (Array.isArray(pipeline.non_fatal_steps) ? pipeline.non_fatal_steps : []);
+
+      const loopLine = loop.map(step => `${step.name}${step.fatal ? ' *' : ''}`).join(' → ');
+      const postLine = post.map(step => step.name).join(' → ');
+      const displayLoopLine = loopLine || `Static Hostinger export (${loopStepCount} loop step${loopStepCount === 1 ? '' : 's'})`;
+      const displayPostLine = postLine || `Post-run static bundle (${postRunStepCount} step${postRunStepCount === 1 ? '' : 's'})`;
+      const supplierPosition = fact.supplier_match_position || {};
+
+      document.getElementById('architecture-fact-check').innerHTML = `
+        <div class="section-header" style="margin-bottom:14px;">
+          <div>
+            <div class="section-title">Execution truth</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;">Website view generated from the real pipeline shape and current manifest, not a separate architecture narrative.</div>
+          </div>
+        </div>
+        <div class="ops-grid">
+          <div class="ops-card">
+            <div class="ops-card-head">
+              <div>
+                <div class="ops-card-title">${escapeHtml(fact.headline || 'Fact-checked execution model')}</div>
+                <div class="ops-card-subtitle">${escapeHtml(fact.summary || 'One live sequential pipeline drives this portal.')}</div>
+              </div>
+              <span class="badge navy">Live model</span>
+            </div>
+            <div class="ops-card-topline">
+              <span class="meta-chip">${loopStepCount} loop step${loopStepCount === 1 ? '' : 's'}</span>
+              <span class="meta-chip">${postRunStepCount} post-run step${postRunStepCount === 1 ? '' : 's'}</span>
+              <span class="meta-chip">${channels.join(', ').toUpperCase()} notifier</span>
+            </div>
+            <div class="ops-note" style="line-height:1.6;">${escapeHtml(displayLoopLine)}</div>
+            <div class="ops-note" style="margin-top:10px;line-height:1.6;">${escapeHtml(displayPostLine)}</div>
+          </div>
+          <div class="ops-card">
+            <div class="ops-card-head">
+              <div>
+                <div class="ops-card-title">Failure boundaries</div>
+                <div class="ops-card-subtitle">Core scoring and routing can stop the run. Enrichment, delivery, and reporting are allowed to fail without killing it.</div>
+              </div>
+              <span class="badge amber">${fatalStepCount} fatal</span>
+            </div>
+            <div class="ops-card-stats">
+              ${fatal.map(step => `<span class="stat-pill">${escapeHtml(step)}</span>`).join('')}
+            </div>
+            <div class="ops-note" style="line-height:1.6;">Non-fatal steps: ${escapeHtml(nonfatalSteps.join(', '))}</div>
+          </div>
+          <div class="ops-card">
+            <div class="ops-card-head">
+              <div>
+                <div class="ops-card-title">Live integrations</div>
+                <div class="ops-card-subtitle">Supplier matching is embedded in the main loop, and delivery is still Discord-first.</div>
+              </div>
+              <span class="badge ${supplierDemo ? 'amber' : 'green'}">${supplierDemo ? 'Demo supplier source' : 'Runtime verified'}</span>
+            </div>
+            <div class="ops-card-topline">
+              <span class="meta-chip">supplier source ${escapeHtml(supplierSourceLabel)}</span>
+              <span class="meta-chip">notifier ${escapeHtml(channels.join(', ') || 'none')}</span>
+            </div>
+            <div class="ops-note" style="line-height:1.6;">Supplier source: ${escapeHtml(supplierSourceLabel)}. Notifier channels: ${escapeHtml(channels.join(', '))}.</div>
+            <div class="ops-list" style="margin-top:12px;">
+              ${artifacts.slice(0, 9).map(item => `<span class="badge muted">${escapeHtml(item)}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+        <div class="ops-card" style="margin-top:16px;">
+          <div class="ops-card-head">
+            <div>
+              <div class="ops-card-title">Fact-check notes</div>
+              <div class="ops-card-subtitle">The portal calls out the places where documentation usually drifts away from execution.</div>
+            </div>
+          </div>
+          <div class="ops-note" style="line-height:1.7;">${notes.map(note => `• ${escapeHtml(note)}`).join('<br>')}</div>
+          <div class="ops-note" style="margin-top:10px;line-height:1.6;">* indicates a fatal loop step.</div>
+        </div>
+      `;
+    }
+
+    function renderTopOpportunities() {
+      const tenders = (data.latestRun || {}).tenders || [];
+      const sorted = tenders.slice().sort((a, b) => (b.score || 0) - (a.score || 0)).slice(0, 3);
+
+      const html = sorted.map((t, index) => {
+        const verdict = t.decision_verdict || '—';
+        const verdictBadge = {
+          'Excellent': 'green',
+          'Good': 'green',
+          'Maybe': 'amber',
+          'Not a fit': 'red',
+          'Reject': 'red'
+        }[verdict] || 'navy';
+        const summary = (t.description || '').trim();
+
+        return `
+          <div class="spotlight-card ${index === 0 ? 'featured' : ''}" onclick="openTenderModal('${t.id}')">
+            <div class="spotlight-head">
+              <div class="spotlight-title">${escapeHtml(t.title || t.id)}</div>
+              <div class="badge ${verdictBadge}">${verdict}</div>
+            </div>
+            <div class="spotlight-meta">
+              <span><strong>Buyer</strong> · ${escapeHtml(t.buyer_name || t.buyer || '—')}</span>
+              <span><strong>Deadline</strong> · ${formatDate(t.deadline_at || t.deadline)}</span>
+              <span><strong>Value</strong> · ${formatValue(t.value_amount || t.value)}</span>
+            </div>
+            <div class="spotlight-desc">${escapeHtml(summary ? `${summary.substring(0, index === 0 ? 220 : 140)}${summary.length > (index === 0 ? 220 : 140) ? '…' : ''}` : 'No summary available.')}</div>
+            <div class="spotlight-stats">
+              <span class="spotlight-stat">Score ${scoreValue(t.score)}</span>
+              <span class="spotlight-stat">${escapeHtml(t.region || 'Region unknown')}</span>
+              <span class="spotlight-stat">${escapeHtml(t.source || 'Source unknown')}</span>
+            </div>
+            <div class="spotlight-footer">
+              <div class="spotlight-footer-note">${escapeHtml(t.decision_why || 'Open the dossier to review the rationale and next step.')}</div>
+              <span class="spotlight-cta">Open tender brief</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('top-opportunities').innerHTML = html || '<div class="empty">No tenders available</div>';
+    }
+
+    function renderOpportunities() {
+      const tenders = (data.latestRun || {}).tenders || [];
+      let filtered = tenders;
+
+      if (state.opportunitiesSearch) {
+        const q = state.opportunitiesSearch.toLowerCase();
+        filtered = filtered.filter(t => (t.title || '').toLowerCase().includes(q) || (t.buyer_name || '').toLowerCase().includes(q));
+      }
+
+      if (state.opportunitiesFilter !== 'all') {
+        filtered = filtered.filter(t => (t.decision_verdict || '').toLowerCase() === state.opportunitiesFilter.toLowerCase());
+      }
+
+      filtered.sort((a, b) => {
+        if (state.opportunitiesSort === 'score') return (b.score || 0) - (a.score || 0);
+        if (state.opportunitiesSort === 'deadline') return new Date(a.deadline_at) - new Date(b.deadline_at);
+        if (state.opportunitiesSort === 'value') return (b.value_amount || 0) - (a.value_amount || 0);
+        return 0;
+      });
+
+      const controls = document.getElementById('opportunities-controls');
+      controls.innerHTML = `
+        <input type="text" class="search-box" placeholder="Search by tender or buyer..." value="${state.opportunitiesSearch}" onchange="state.opportunitiesSearch=this.value; render();" />
+        <select class="select-sort" onchange="state.opportunitiesFilter=this.value; render();">
+          <option value="all">All verdicts</option>
+          <option value="excellent">Excellent</option>
+          <option value="good">Good</option>
+          <option value="maybe">Maybe</option>
+          <option value="not a fit">Not a fit</option>
+          <option value="reject">Reject</option>
+        </select>
+        <select class="select-sort" onchange="state.opportunitiesSort=this.value; render();">
+          <option value="score">Sort: Score</option>
+          <option value="deadline">Sort: Deadline</option>
+          <option value="value">Sort: Value</option>
+        </select>
+      `;
+
+      const tbody = document.getElementById('opportunities-body');
+      tbody.innerHTML = filtered.map(t => {
+        const verdict = t.decision_verdict || '—';
+        const verdictBadge = {
+          'Excellent': 'green',
+          'Good': 'green',
+          'Maybe': 'amber',
+          'Not a fit': 'red',
+          'Reject': 'red'
+        }[verdict] || 'navy';
+
+        return `
+          <tr style="cursor:pointer;" onclick="openTenderModal('${t.id}')">
+            <td><div style="font-weight:600;color:var(--navy-dark);">${(t.title || '').substring(0, 50)}</div></td>
+            <td>${t.buyer_name || t.buyer || '—'}</td>
+            <td>${t.region || '—'}</td>
+            <td>${formatDate(t.deadline_at || t.deadline)}</td>
+            <td>${formatValue(t.value_amount || t.value)}</td>
+            <td><div class="badge ${verdictBadge}">${verdict}</div></td>
+            <td><div style="font-weight:700;color:var(--navy-dark);">${Math.round((t.decision_confidence || 0) * 100)}%</div></td>
+            <td><div style="font-weight:700;color:var(--green);">${Math.round((t.score || 0) * 100)}</div></td>
+          </tr>
+        `;
+      }).join('');
+
+      const exportBtn = document.getElementById('export-opportunities-btn');
+      if (exportBtn) {
+        exportBtn.onclick = () => exportCsv('opportunities.csv', filtered.map(t => ({
+          Title: t.title,
+          Buyer: t.buyer_name || t.buyer,
+          Region: t.region,
+          Deadline: formatDate(t.deadline_at || t.deadline),
+          Value: formatValue(t.value_amount || t.value),
+          Decision: t.decision_verdict,
+          Confidence: Math.round((t.decision_confidence || 0) * 100) + '%',
+          Score: Math.round((t.score || 0) * 100)
+        })));
+      }
+    }
+
+    function renderBuyerIntel() {
+      const buyers = (data.latestRun || {}).buyerCards || [];
+      let filtered = buyers;
+
+      if (state.watchlistSearch) {
+        const q = state.watchlistSearch.toLowerCase();
+        filtered = filtered.filter(b => (b.name || '').toLowerCase().includes(q));
+      }
+
+      filtered.sort((a, b) => {
+        if (state.watchlistSort === 'priority') {
+          const pOrder = { hot: 0, warm: 1, watch: 2, low: 3 };
+          return (pOrder[a.outreach_priority] || 3) - (pOrder[b.outreach_priority] || 3);
+        }
+        if (state.watchlistSort === 'fit') return (b.fit_to_client || 0) - (a.fit_to_client || 0);
+        if (state.watchlistSort === 'activity') return (b.activity_90d || 0) - (a.activity_90d || 0);
+        if (state.watchlistSort === 'timing') {
+          const tOrder = { 'Actionable': 0, 'Watch': 1, 'Tracking': 2 };
+          return (tOrder[a.timing_label] || 2) - (tOrder[b.timing_label] || 2) || (a.buyer_due_rank || 999) - (b.buyer_due_rank || 999);
+        }
+        if (state.watchlistSort === 'value') return (b.typical_value || 0) - (a.typical_value || 0);
+        return 0;
+      });
+
+      const hotCount = buyers.filter(b => b.outreach_priority === 'hot').length;
+      const warmCount = buyers.filter(b => b.outreach_priority === 'warm').length;
+      const active90d = buyers.filter(b => (b.activity_90d || 0) > 0).length;
+      const actionableCount = (data.latestRun || {}).buyerTiming ? ((data.latestRun.buyerTiming.signals || []).filter(s => s.timing_label === 'Actionable').length) : 0;
+      const mapping = resolveDashboardMapping();
+      const displayHotCount = mapping.hotOutreachCount;
+      const displayWarmCount = mapping.warmBuyersCount;
+      const displayActionableCount = mapping.timingReadyCount;
+      const avgFit = mapping.avgFitScore;
+
+      document.getElementById('kpi-buyers').innerHTML = `
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">Total buyers</div>
+            <div class="kpi-value">${buyers.length}</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Hot outreach</div>
+            <div class="kpi-value">${displayHotCount}</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Warm</div>
+            <div class="kpi-value">${displayWarmCount}</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Active 90d</div>
+            <div class="kpi-value">${active90d}</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Avg fit</div>
+            <div class="kpi-value">${avgFit}%</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Actionable now</div>
+            <div class="kpi-value">${displayActionableCount}</div>
+          </div>
+        </div>
+      `;
+
+      const controls = document.getElementById('buyers-controls');
+      controls.innerHTML = `
+        <input type="text" class="search-box" placeholder="Search buyers..." value="${state.watchlistSearch}" onchange="state.watchlistSearch=this.value; render();" />
+        <select class="select-sort" onchange="state.watchlistSort=this.value; render();">
+          <option value="priority">Sort: Priority</option>
+          <option value="fit">Sort: Fit</option>
+          <option value="activity">Sort: Activity</option>
+          <option value="timing">Sort: Timing</option>
+          <option value="value">Sort: Value</option>
+        </select>
+      `;
+
+      const tbody = document.getElementById('buyers-body');
+      tbody.innerHTML = filtered.map(b => {
+        const fit = buyerFitScore(b);
+        const priority = outreachPriority(b);
+        const priorityColor = priorityLabel(b);
+        const timingLabel = b.timing_label || 'Tracking';
+        const visibility = b.timing_visibility || 'visible';
+        const isHidden = visibility === 'hidden';
+        const isLimited = visibility === 'limited';
+        const actionState = actionStateMeta(b);
+
+        let windowText = '—';
+        if (!isHidden && b.predicted_next_start) {
+          const start = formatDate(b.predicted_next_start);
+          const end = b.predicted_next_end ? formatDate(b.predicted_next_end) : '';
+          windowText = end ? `${start} – ${end}` : start;
+        }
+
+        return `
+          <tr ${isHidden ? 'class="timing-row-hidden"' : isLimited ? 'class="timing-row-limited"' : ''}>
+            <td>
+              <div style="font-weight:600;color:var(--navy-dark);">${escapeHtml(b.name || 'Unknown buyer')}</div>
+              ${b.buyer_intel_summary ? `<div class="buyer-intel-note">${escapeHtml(b.buyer_intel_summary)}</div>` : ''}
+            </td>
+            <td>
+              <div class="action-stack">
+                <div><span class="label-badge ${timingLabel}">${timingLabel}</span> <span class="badge ${priorityColor}">${priority}</span></div>
+                <div class="micro-note">${isHidden ? 'Tracking only' : isLimited ? 'Some signal' : escapeHtml(windowText)}</div>
+                <div class="micro-note">Fit ${fit}% • ${escapeHtml(confidenceLabel(b.timing_confidence || '—'))}</div>
+              </div>
+            </td>
+            <td>
+              <div class="action-state-line">
+                <span class="badge ${actionState.cls}">${actionState.text}</span>
+              </div>
+            </td>
+            <td><div class="next-action">${escapeHtml(b.next_action || 'Review dossier')}</div></td>
+            <td>${renderDossierLinks(b)}</td>
+            <td>${renderCommandChips(b)}</td>
+          </tr>
+        `;
+      }).join('');
+
+      const exportBtn = document.getElementById('export-buyers-btn');
+      if (exportBtn) {
+        exportBtn.onclick = () => exportCsv('buyer-watchlist.csv', filtered.map(b => ({
+          Buyer: b.name,
+          Fit_Score: buyerFitScore(b),
+          Timing_Label: b.timing_label || 'Tracking',
+          Timing_Visibility: b.timing_visibility || 'visible',
+          Timing_Status: b.timing_status || '—',
+          Window_Start: b.predicted_next_start || '',
+          Window_End: b.predicted_next_end || '',
+          Priority: outreachPriority(b),
+          Action_State: b.action_state_label || 'Not started',
+          Next_Action: b.next_action || 'Review dossier',
+          Dossier_Path: b.dossier_path || '',
+          CLI_Draft: b.cli_mark_drafted || '',
+          CLI_Sent: b.cli_mark_sent || '',
+          CLI_Ignored: b.cli_mark_ignored || '',
+          Buyer_Intel: b.buyer_intel_summary || ''
+        })));
+      }
+    }
+
+    function renderTiming() {
+      const timing = (data.latestRun || {}).buyerTiming || {};
+      const signals = timing.signals || [];
+      let filtered = signals.slice();
+
+      if (state.timingSearch) {
+        const q = state.timingSearch.toLowerCase();
+        filtered = filtered.filter(s => (s.buyer_name || '').toLowerCase().includes(q));
+      }
+
+      const now = new Date();
+      const in14d = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
+      const in30d = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+
+      if (state.timingTab === 'due-soon') {
+        filtered = filtered.filter(s => {
+          const next = new Date(s.predicted_next_central);
+          return next <= in14d && next >= now;
+        });
+      } else if (state.timingTab === 'due-month') {
+        filtered = filtered.filter(s => {
+          const next = new Date(s.predicted_next_central);
+          return next <= in30d && next >= now;
+        });
+      } else if (state.timingTab === 'overdue') {
+        filtered = filtered.filter(s => {
+          const next = new Date(s.predicted_next_central);
+          return next < now;
+        });
+      } else if (state.timingTab === 'watch-only') {
+        filtered = filtered.filter(s => s.timing_label === 'Watch');
+      }
+
+      filtered.sort((a, b) => {
+        if (state.timingSort === 'days') {
+          const daysA = daysUntil(a.predicted_next_central) || 999;
+          const daysB = daysUntil(b.predicted_next_central) || 999;
+          return daysA - daysB;
+        }
+        if (state.timingSort === 'confidence') {
+          const order = { High: 0, Medium: 1, Weak: 2, None: 3 };
+          return (order[a.timing_confidence] ?? 9) - (order[b.timing_confidence] ?? 9);
+        }
+        if (state.timingSort === 'name') return (a.buyer_name || '').localeCompare(b.buyer_name || '');
+        if (state.timingSort === 'fit') return (b.fit_to_client || 0) - (a.fit_to_client || 0);
+        return 0;
+      });
+
+      const due14d = signals.filter(s => {
+        const next = new Date(s.predicted_next_central);
+        return next <= in14d && next >= now;
+      }).length;
+      const due30d = signals.filter(s => {
+        const next = new Date(s.predicted_next_central);
+        return next <= in30d && next >= now;
+      }).length;
+      const overdue = signals.filter(s => {
+        const next = new Date(s.predicted_next_central);
+        return next < now;
+      }).length;
+      const actionableCount = signals.filter(s => s.timing_label === 'Actionable').length;
+
+      document.getElementById('kpi-timing').innerHTML = `
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">Due in 14d</div>
+            <div class="kpi-value">${due14d}</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Due in 30d</div>
+            <div class="kpi-value">${due30d}</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Overdue/Slipped</div>
+            <div class="kpi-value">${overdue}</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Tracked total</div>
+            <div class="kpi-value">${signals.length}</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Actionable</div>
+            <div class="kpi-value">${actionableCount}</div>
+          </div>
+        </div>
+      `;
+
+      const controls = document.getElementById('timing-controls');
+      controls.innerHTML = `
+        <input type="text" class="search-box" placeholder="Search by buyer..." value="${state.timingSearch}" onchange="state.timingSearch=this.value; render();" />
+        <select class="select-sort" onchange="state.timingTab=this.value; render();">
+          <option value="all">All</option>
+          <option value="due-soon">Due soon (14d)</option>
+          <option value="due-month">Due (30d)</option>
+          <option value="overdue">Overdue/Slipped</option>
+          <option value="watch-only">Watch only</option>
+        </select>
+        <select class="select-sort" onchange="state.timingSort=this.value; render();">
+          <option value="days">Sort: Soonest</option>
+          <option value="confidence">Sort: Confidence</option>
+          <option value="name">Sort: Name</option>
+          <option value="fit">Sort: Fit</option>
+        </select>
+      `;
+
+      const tbody = document.getElementById('timing-body');
+      tbody.innerHTML = filtered.map(s => {
+        const isHidden = (s.timing_visibility || 'visible') === 'hidden';
+        const isLimited = (s.timing_visibility || 'visible') === 'limited';
+        const timingLabel = s.timing_label || 'Tracking';
+        const daysVal = daysUntil(s.predicted_next_central);
+        const daysStr = daysVal === null ? '—' : daysVal < 0 ? `${Math.abs(daysVal)}d ago` : `${daysVal}d`;
+
+        let windowText = '—';
+        if (!isHidden) {
+          if (s.predicted_next_start && s.predicted_next_end) {
+            windowText = `${formatDate(s.predicted_next_start)} – ${formatDate(s.predicted_next_end)}`;
+          } else if (s.predicted_next_start) {
+            windowText = formatDate(s.predicted_next_start);
+          }
+        } else {
+          windowText = 'Tracking only';
+        }
+
+        if (isLimited && windowText !== 'Tracking only') {
+          windowText = `<em style="color:var(--muted);">Some signal</em>`;
+        }
+
+        let statusBadge = 'navy';
+        if (timingLabel === 'Actionable') statusBadge = 'green';
+        else if (timingLabel === 'Watch') statusBadge = 'amber';
+
+        const confPips = (value) => {
+          const label = confidenceLabel(value);
+          const filled = label === 'High' ? 5 : label === 'Medium' ? 3 : label === 'Weak' ? 2 : 1;
+          return Array(5).fill(0).map((_, i) => `<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${i < filled ? 'var(--navy)' : 'var(--border)'};margin-right:2px;"></span>`).join('');
+        };
+
+        return `
+          <tr ${isHidden ? 'class="timing-row-hidden"' : isLimited ? 'class="timing-row-limited"' : ''}>
+            <td><div style="font-weight:600;color:var(--navy-dark);">${s.buyer_name}</div></td>
+            <td><div class="badge ${statusBadge}">${s.timing_status || '—'}</div></td>
+            <td>${windowText}</td>
+            <td><div style="font-size:12px;color:var(--muted);">${s.median_gap_days ? s.median_gap_days + 'd median' : '—'}</div></td>
+            <td><div style="font-size:11px;">${confPips(s.timing_confidence)} <span class="micro-note">${escapeHtml(confidenceLabel(s.timing_confidence))}</span></div></td>
+            <td><div style="font-weight:700;color:var(--green);">${safePct(s.fit_to_client)}</div></td>
+            <td><span class="label-badge ${timingLabel}">${timingLabel}</span></td>
+            <td><div style="font-size:12px;color:var(--muted);">${s.action_note || '—'}</div></td>
+          </tr>
+        `;
+      }).join('');
+
+      const exportBtn = document.getElementById('export-timing-btn');
+      if (exportBtn) {
+        exportBtn.onclick = () => exportCsv('timing-intelligence.csv', filtered.map(s => ({
+          Buyer: s.buyer_name,
+          Status: s.timing_status || '—',
+          Window_Start: s.predicted_next_start || '',
+          Window_End: s.predicted_next_end || '',
+          Cadence_Days: s.median_gap_days || '',
+          Confidence: confidenceLabel(s.timing_confidence),
+          Fit: safePct(s.fit_to_client),
+          Timing_Label: s.timing_label || 'Tracking',
+          Timing_Visibility: s.timing_visibility || 'visible',
+          Action_Note: s.action_note || ''
+        })));
+      }
+    }
+
+    function renderCommercialRadar() {
+      const container = document.getElementById('radar-content');
+      const radar = (data.latestRun || {}).commercialRadar || {};
+      const actionable = radar.actionable_buyers || [];
+      const watchers = radar.high_fit_watchers || [];
+      const slipped = radar.slipped_buyers || [];
+      const emerging = radar.emerging_buyers || [];
+      const focus = radar.focus_summary || [];
+      const sector = radar.sector_radar || {};
+      const counts = radar.counts || {};
+
+      const exportBtn = document.getElementById('export-radar-btn');
+      if (exportBtn) {
+        exportBtn.onclick = () => exportCsv('commercial-radar-focus.csv', focus.map(b => ({
+          Buyer: b.name,
+          Timing_Label: b.timing_label,
+          Timing_Status: b.timing_status,
+          Confidence: confidenceLabel(b.timing_confidence),
+          Fit_Score: safePct(b.fit_to_client),
+          Priority: b.outreach_priority,
+          Action_State: b.action_state_label || 'Not started',
+          Next_Action: b.next_action || 'Review dossier',
+          Action_Note: b.action_note || '',
+          Window_Start: b.predicted_next_start || '',
+          Window_End: b.predicted_next_end || '',
+          Due_Rank: b.buyer_due_rank || '',
+          Dossier_Path: b.dossier_path || '',
+          CLI_Draft: b.cli_mark_drafted || '',
+          CLI_Sent: b.cli_mark_sent || '',
+          CLI_Ignored: b.cli_mark_ignored || ''
+        })));
+      }
+
+      if (!counts.total_tracked) {
+        container.innerHTML = '<div class="empty">No buyer data available yet. Run the pipeline to populate buyer intelligence.</div>';
+        return;
+      }
+
+      const focusSorted = focus.slice().sort((a, b) => {
+        const aOrder = a.timing_label === 'Actionable' ? 0 : 1;
+        const bOrder = b.timing_label === 'Actionable' ? 0 : 1;
+        if (aOrder !== bOrder) return aOrder - bOrder;
+        return (a.buyer_due_rank || 999) - (b.buyer_due_rank || 999);
+      }).slice(0, 5);
+
+      const focusCardClass = (b) => {
+        if (b.timing_label === 'Actionable') {
+          return (b.timing_confidence || 0) > 0.75 ? 'actionable-high' : 'actionable-medium';
+        }
+        if (b.timing_label === 'Watch') return 'watch';
+        return 'tracking';
+      };
+
+      const focusCardsHtml = focusSorted.map(b => {
+        const fit = safePct(b.fit_to_client);
+        const actionState = actionStateMeta(b);
+        let windowStr = '';
+        if (b.predicted_next_start && b.predicted_next_end) {
+          windowStr = `${formatDate(b.predicted_next_start)} – ${formatDate(b.predicted_next_end)}`;
+        } else if (b.predicted_next_start) {
+          windowStr = formatDate(b.predicted_next_start);
+        }
+
+        return `
+          <div class="radar-focus-card ${focusCardClass(b)}">
+            <div class="radar-focus-card-header">
+              <div class="radar-focus-card-name">${b.name}</div>
+              <span class="label-badge ${b.timing_label}">${b.timing_label}</span>
+            </div>
+            <div class="radar-focus-card-meta">
+              <span class="status-dot ${b.timing_label === 'Actionable' ? 'green' : b.timing_label === 'Watch' ? 'amber' : 'gray'}"></span>
+              <span>${b.timing_status}</span>
+              <span>•</span>
+              <span>${confidenceLabel(b.timing_confidence)} conf</span>
+              <span>•</span>
+              <span>${fit} fit</span>
+            </div>
+            <div class="radar-action-strip">
+              <span class="badge ${actionState.cls}">${actionState.text}</span>
+              <span class="next-action">${escapeHtml(b.next_action || 'Review dossier')}</span>
+            </div>
+            ${windowStr ? `<div class="radar-focus-card-window">${windowStr}</div>` : ''}
+            ${b.action_note ? `<div class="radar-focus-card-action">${b.action_note}</div>` : ''}
+            <div style="margin-top:10px;">${renderDossierLinks(b)}</div>
+            <div style="margin-top:8px;">${renderCommandChips(b)}</div>
+          </div>
+        `;
+      }).join('');
+
+      const radarRowHtml = (buyers, limit = 99) => buyers.slice(0, limit).map(b => {
+        const actionState = actionStateMeta(b);
+        return `
+        <div class="radar-row">
+          <div>
+            <div class="radar-row-name">${b.name}</div>
+            <div class="radar-row-meta">${safePct(b.fit_to_client)} fit • ${confidenceLabel(b.timing_confidence)} conf</div>
+            <div class="radar-action-strip">
+              <span class="badge ${actionState.cls}">${actionState.text}</span>
+              <span class="micro-note">${escapeHtml(b.next_action || 'Review dossier')}</span>
+            </div>
+            ${b.dossier_uri && b.dossier_exists ? `<div><a class="mini-link" href="${escapeHtml(b.dossier_uri)}">Open dossier</a></div>` : b.dossier_path ? `<div class="mono-path">${escapeHtml(b.dossier_path)}</div>` : ''}
+          </div>
+        </div>
+      `;
+      }).join('');
+
+      const colsHtml = `
+        <div class="radar-three-col">
+          <div class="radar-col">
+            <div class="radar-col-header">Actionable this week</div>
+            <div class="radar-col-body">${radarRowHtml(actionable)}</div>
+          </div>
+          <div class="radar-col">
+            <div class="radar-col-header">Watch closely</div>
+            <div class="radar-col-body">${radarRowHtml(watchers)}</div>
+          </div>
+          <div class="radar-col">
+            <div class="radar-col-header">Slipped / overdue</div>
+            <div class="radar-col-body">${radarRowHtml(slipped)}</div>
+          </div>
+        </div>
+      `;
+
+      const emergingHtml = emerging.length > 0 ? `
+        <div style="margin-bottom:24px;">
+          <div class="section-title" style="margin-bottom:12px;">Emerging activity</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
+            ${emerging.slice(0, 6).map(b => `
+              <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px;">
+                <div style="font-weight:600;color:var(--navy-dark);font-size:13px;margin-bottom:6px;">${b.name}</div>
+                <div style="font-size:11px;color:var(--muted);">${b.activity_30d || 0} notices in 30d</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      ` : '';
+
+      const sectorHtml = (sector.top_categories && sector.top_categories.length > 0) || (sector.top_regions && sector.top_regions.length > 0) ? `
+        <div style="background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:16px;">
+          <div class="section-title" style="margin-bottom:12px;">Sector radar</div>
+          ${sector.top_categories && sector.top_categories.length > 0 ? `
+            <div style="margin-bottom:12px;">
+              <div style="font-size:12px;font-weight:600;color:var(--navy-dark);margin-bottom:6px;">Top categories</div>
+              <div>${sector.top_categories.slice(0, 8).map(c => `<span class="sector-tag cat">${c}</span>`).join('')}</div>
+            </div>
+          ` : ''}
+          ${sector.top_regions && sector.top_regions.length > 0 ? `
+            <div>
+              <div style="font-size:12px;font-weight:600;color:var(--navy-dark);margin-bottom:6px;">Top regions</div>
+              <div>${sector.top_regions.slice(0, 8).map(r => `<span class="sector-tag region">${r}</span>`).join('')}</div>
+            </div>
+          ` : ''}
+        </div>
+      ` : '';
+
+      container.innerHTML = `
+        <div class="radar-chips" style="margin-bottom:20px;">
+          <div class="radar-chip actionable">Actionable: ${counts.actionable || 0}</div>
+          <div class="radar-chip watch">Watch: ${counts.watchers || 0}</div>
+          <div class="radar-chip slipped">Slipped: ${counts.slipped || 0}</div>
+          <div class="radar-chip emerging">Emerging: ${counts.emerging || 0}</div>
+        </div>
+
+        ${focusSorted.length > 0 ? `
+          <div style="margin-bottom:24px;">
+            <div class="section-title" style="margin-bottom:12px;">Where to focus now</div>
+            <div class="radar-focus-grid">${focusCardsHtml}</div>
+          </div>
+        ` : ''}
+
+        ${colsHtml}
+
+        ${emergingHtml}
+
+        ${sectorHtml}
+      `;
+    }
+
+    // ── Outreach Queue ──────────────────────────────────────────────────────
+
+    const _OUTREACH_PRIORITY_COLORS = {
+      Hot:     { bg: '#d32f2f', text: '#fff' },
+      Warm:    { bg: 'var(--gold)', text: '#1a3c5e' },
+      Monitor: { bg: 'var(--navy)', text: '#fff' },
+      Low:     { bg: '#e0e0e0', text: '#555' },
+    };
+
+    const _CHANNEL_ICONS = {
+      email:        '✉️ Email',
+      linkedin:     '💼 LinkedIn',
+      phone:        '📞 Phone',
+      monitor_only: '👁 Monitor',
+    };
+
+    const _STATUS_STYLES = {
+      not_contacted:  { label: 'Not contacted', color: '#9e9e9e' },
+      drafted:        { label: 'Drafted',        color: '#1565c0' },
+      contacted:      { label: 'Contacted',      color: '#2e7d32' },
+      follow_up_due:  { label: 'Follow-up due',  color: '#e65100' },
+      paused:         { label: 'Paused',          color: '#6d4c41' },
+    };
+
+    const OUTREACH_STATE_KEY = 'processed_outreach_action_state';
+    let currentOutreachRecords = [];
+    let outreachState = loadOutreachState();
+
+    function loadOutreachState() {
+      try {
+        return JSON.parse(localStorage.getItem(OUTREACH_STATE_KEY) || '{}') || {};
+      } catch (_) {
+        return {};
+      }
+    }
+
+    function saveOutreachState() {
+      localStorage.setItem(OUTREACH_STATE_KEY, JSON.stringify(outreachState));
+    }
+
+    function outreachRecordId(record) {
+      return String(record.key || record.buyer_key || record.buyer_slug || record.buyer_name || record.name || '').toLowerCase();
+    }
+
+    function normalizePriority(priority) {
+      const raw = String(priority || 'Low').toLowerCase();
+      if (raw === 'hot') return 'Hot';
+      if (raw === 'warm') return 'Warm';
+      if (raw === 'monitor' || raw === 'watch') return 'Monitor';
+      return 'Low';
+    }
+
+    function normalizeContactStatus(status) {
+      const raw = String(status || 'not_contacted').toLowerCase();
+      if (raw === 'sent' || raw === 'contacted') return 'contacted';
+      if (raw === 'drafted') return 'drafted';
+      if (raw === 'follow_up_due') return 'follow_up_due';
+      if (raw === 'ignored' || raw === 'paused') return 'paused';
+      return 'not_contacted';
+    }
+
+    function buildDraftSubject(record) {
+      return record.draft_subject || `Construction works interest - ${record.buyer_name || 'procurement team'}`;
+    }
+
+    function buildDraftMessage(record) {
+      if (record.draft_message) return record.draft_message;
+      const buyer = record.buyer_name || 'your team';
+      const latest = record.latest_notice_title
+        ? `I noticed your recent notice, "${record.latest_notice_title}"${record.latest_notice_date ? `, published ${record.latest_notice_date}` : ''}.`
+        : 'I am reviewing upcoming public sector construction opportunities in your area.';
+      const windowText = record.predicted_next_start
+        ? `Your next procurement window appears to sit around ${record.predicted_next_start}${record.predicted_next_end ? ` to ${record.predicted_next_end}` : ''}.`
+        : 'I wanted to make contact ahead of any suitable upcoming works.';
+      const valueText = record.typical_value_label ? `Your recent activity sits around ${record.typical_value_label}.` : '';
+      return [
+        'Dear Procurement Team,',
+        '',
+        latest,
+        '',
+        'I am reaching out from ProcessEd Civils. We support civils, refurbishment, enabling works, drainage, maintenance, and public sector construction packages.',
+        '',
+        [windowText, valueText].filter(Boolean).join(' '),
+        '',
+        `Would you be able to point me towards the right supplier route or procurement contact for ${buyer}?`,
+        '',
+        'Kind regards,',
+        'Bilal',
+        'ProcessEd Civils',
+        MAILBOX_EMAIL
+      ].join('\n');
+    }
+
+    function normalizeOutreachRecord(record, index) {
+      const buyerName = record.buyer_name || record.name || record.key || `Buyer ${index + 1}`;
+      const id = outreachRecordId({ ...record, buyer_name: buyerName }) || `buyer-${index}`;
+      const local = outreachState[id] || {};
+      const score = Number(record.outreach_score ?? record.timing_score ?? record.fit_score ?? record.fit_to_client ?? 0);
+      return {
+        ...record,
+        _id: id,
+        buyer_name: buyerName,
+        outreach_priority: normalizePriority(record.outreach_priority),
+        outreach_score: Number.isFinite(score) ? Math.round(score) : 0,
+        recommended_channel: record.recommended_channel || 'email',
+        contact_status: local.status || normalizeContactStatus(record.contact_status || record.outreach_status || record.action_state),
+        last_contacted_at: local.last_contacted_at || record.last_contacted_at || '',
+        fit_to_client: record.fit_to_client ?? record.fit_score ?? '—',
+        activity_90d: record.activity_90d ?? record.buyer_activity_90d ?? 0,
+        top_categories: record.top_categories || record.categories || [],
+        outreach_reason: record.outreach_reason || record.timing_reason || record.action_note || '',
+        action_note: record.action_note || record.timing_action_note || record.next_action || '',
+        draft_subject: buildDraftSubject({ ...record, buyer_name: buyerName }),
+        draft_message: buildDraftMessage({ ...record, buyer_name: buyerName })
+      };
+    }
+
+    function getOutreachRecords() {
+      const latestRun = data.latestRun || {};
+      const oq = latestRun.outreachQueue || {};
+      const source = (Array.isArray(oq.records) && oq.records.length && oq.records) ||
+        (Array.isArray(oq.buyers) && oq.buyers.length && oq.buyers) ||
+        (Array.isArray(latestRun.buyerCards) && latestRun.buyerCards.length && latestRun.buyerCards) ||
+        [];
+      return source.map(normalizeOutreachRecord);
+    }
+
+    function findOutreachRecord(id) {
+      return currentOutreachRecords.find(r => r._id === id) ||
+        getOutreachRecords().find(r => r._id === id);
+    }
+
+    function draftText(record) {
+      return `Subject: ${record.draft_subject}\n\n${record.draft_message}`;
+    }
+
+    function mailtoUrl(record) {
+      const to = record.contact_email || record.email || '';
+      return `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(record.draft_subject)}&body=${encodeURIComponent(record.draft_message)}`;
+    }
+
+    function copyDraftById(id) {
+      const record = findOutreachRecord(id);
+      if (!record) return;
+      copyText(draftText(record), 'Draft');
+      setOutreachStatus(id, 'drafted', true);
+    }
+
+    function openDraftEmailById(id) {
+      const record = findOutreachRecord(id);
+      if (!record) return;
+      copyText(draftText(record), 'Draft');
+      setOutreachStatus(id, 'drafted', true);
+      window.location.href = mailtoUrl(record);
+    }
+
+    function setOutreachStatus(id, status, silent = false) {
+      outreachState[id] = {
+        ...(outreachState[id] || {}),
+        status,
+        last_contacted_at: new Date().toISOString()
+      };
+      saveOutreachState();
+      currentOutreachRecords = getOutreachRecords();
+      renderOutreachKpis(currentOutreachRecords);
+      renderOutreachWorkbench(currentOutreachRecords);
+      renderOutreachTable();
+      if (!silent) showToast(_STATUS_STYLES[status]?.label || 'Status updated');
+    }
+
+    function _outreachBadge(priority) {
+      const c = _OUTREACH_PRIORITY_COLORS[priority] || _OUTREACH_PRIORITY_COLORS.Low;
+      return `<span style="display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:700;background:${c.bg};color:${c.text};letter-spacing:0.04em;">${priority}</span>`;
+    }
+
+    function _timingBadge(label, conf) {
+      const colors = { Actionable: '#2e7d32', Watch: '#1565c0', Tracking: '#546e7a', Weak: '#9e9e9e' };
+      const bg = colors[label] || '#ccc';
+      const confStr = conf && conf !== 'None' ? ` · ${conf}` : '';
+      return `<span style="display:inline-block;padding:2px 9px;border-radius:10px;font-size:11px;background:${bg};color:#fff;">${label}${confStr}</span>`;
+    }
+
+    function renderOutreachKpis(records) {
+      const oq = (data.latestRun || {}).outreachQueue || {};
+      const counts = oq.counts || {};
+      const hot      = counts.hot          ?? records.filter(r => r.outreach_priority === 'Hot').length;
+      const warm     = counts.warm         ?? records.filter(r => r.outreach_priority === 'Warm').length;
+      const action   = counts.actionable   ?? records.filter(r => r.timing_label === 'Actionable').length;
+      const followUp = counts.follow_up_due ?? records.filter(r => r.contact_status === 'follow_up_due').length;
+      const total    = counts.total        ?? records.length;
+
+      document.getElementById('outreach-kpis').innerHTML = [
+        { label: 'Hot accounts',     value: hot,      color: '#d32f2f' },
+        { label: 'Warm accounts',    value: warm,      color: 'var(--gold)' },
+        { label: 'Actionable timing',value: action,   color: '#2e7d32' },
+        { label: 'Follow-up due',    value: followUp,  color: '#e65100' },
+        { label: 'Total queued',     value: total,     color: 'var(--navy)' },
+      ].map(k => `
+        <div class="kpi-card" style="min-width:120px;flex:1;">
+          <div class="kpi-value" style="color:${k.color};font-size:28px;">${k.value}</div>
+          <div class="kpi-label">${k.label}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderOutreachWorkbench(records) {
+      const el = document.getElementById('outreach-workbench');
+      if (!el) return;
+      const sorted = records.slice().sort((a, b) => {
+        const priorityRank = { Hot: 4, Warm: 3, Monitor: 2, Low: 1 };
+        return (priorityRank[b.outreach_priority] || 0) - (priorityRank[a.outreach_priority] || 0) ||
+          (Number(b.outreach_score || 0) - Number(a.outreach_score || 0));
+      });
+      const next = sorted.find(r => r.contact_status === 'not_contacted') || sorted[0];
+      if (!next) {
+        el.innerHTML = '';
+        return;
+      }
+      const drafted = records.filter(r => r.contact_status === 'drafted').length;
+      const contacted = records.filter(r => r.contact_status === 'contacted').length;
+      el.innerHTML = `
+        <div class="draft-workbench">
+          <div class="draft-panel primary">
+            <div>
+              <div class="draft-panel-label">Next draft</div>
+              <div class="draft-panel-title">${escapeHtml(next.buyer_name)}</div>
+              <div class="draft-panel-copy">${escapeHtml(next.action_note || next.outreach_reason || 'Review this buyer and send a short procurement introduction.')}</div>
+            </div>
+            <div class="mailbox-actions" style="margin-top:16px;">
+              <button class="btn secondary" onclick="openDraftEmailById(${jsArg(next._id)})">Draft email</button>
+              <button class="btn secondary" onclick="copyDraftById(${jsArg(next._id)})">Copy draft</button>
+              <a class="btn secondary" href="${MAILBOX_WEBMAIL_URL}" target="_blank" rel="noopener">Mailbox</a>
+            </div>
+          </div>
+          <div class="draft-panel">
+            <div class="draft-panel-label">Outreach progress</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+              <div>
+                <div class="kpi-value" style="font-size:28px;">${records.length}</div>
+                <div class="kpi-label">Queued</div>
+              </div>
+              <div>
+                <div class="kpi-value" style="font-size:28px;color:var(--amber);">${drafted}</div>
+                <div class="kpi-label">Drafted</div>
+              </div>
+              <div>
+                <div class="kpi-value" style="font-size:28px;color:var(--green);">${contacted}</div>
+                <div class="kpi-label">Sent</div>
+              </div>
+            </div>
+            <div class="draft-panel-copy">Draft and sent states are saved in this browser so the portal stays tidy while the pipeline remains static.</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderOutreachTable() {
+      let records = getOutreachRecords();
+
+      const search   = (state.outreachSearch || '').toLowerCase();
+      const filterP  = state.outreachFilterPriority || 'all';
+      const filterS  = state.outreachFilterStatus   || 'all';
+
+      let filtered = records.filter(r => {
+        if (search && !((r.buyer_name || '').toLowerCase().includes(search) ||
+                        (r.outreach_reason || '').toLowerCase().includes(search))) return false;
+        if (filterP !== 'all' && r.outreach_priority !== filterP) return false;
+        if (filterS !== 'all' && r.contact_status !== filterS)    return false;
+        return true;
+      });
+      currentOutreachRecords = filtered;
+
+      const tbody = document.getElementById('outreach-body');
+      const empty = document.getElementById('outreach-empty');
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+
+      tbody.innerHTML = filtered.map(r => {
+        const statusStyle = _STATUS_STYLES[r.contact_status] || _STATUS_STYLES.not_contacted;
+        const channel = _CHANNEL_ICONS[r.recommended_channel] || r.recommended_channel || '—';
+        const window  = r.predicted_next_start
+          ? `${r.predicted_next_start}${r.predicted_next_end ? ' → ' + r.predicted_next_end : ''}`
+          : '—';
+        const lastContacted = r.last_contacted_at
+          ? `<div style="font-size:11px;color:var(--muted);margin-top:2px;">${r.last_contacted_at.substring(0,10)}</div>` : '';
+
+        return `<tr onclick="openOutreachModalById(${jsArg(r._id)})" style="cursor:pointer;">
+          <td>
+            <div style="font-weight:700;color:var(--navy-dark);">${escapeHtml(r.buyer_name)}</div>
+            <div style="font-size:11px;color:var(--muted);">${escapeHtml((r.top_categories || []).slice(0,2).join(', ') || '—')}</div>
+          </td>
+          <td>${_outreachBadge(r.outreach_priority)}</td>
+          <td><span style="font-weight:700;font-size:15px;color:var(--navy-dark);">${r.outreach_score}</span><span style="font-size:11px;color:var(--muted);">/100</span></td>
+          <td>${_timingBadge(r.timing_label || 'Tracking', r.timing_confidence)}</td>
+          <td><span style="font-weight:700;">${r.fit_to_client ?? '—'}</span></td>
+          <td>${r.activity_90d ?? 0}</td>
+          <td style="font-size:12px;">${escapeHtml(r.typical_value_label || '—')}</td>
+          <td style="font-size:12px;">${escapeHtml(channel)}</td>
+          <td>
+            <span style="color:${statusStyle.color};font-size:12px;font-weight:600;">${statusStyle.label}</span>
+            ${lastContacted}
+          </td>
+          <td style="font-size:12px;color:var(--muted);">${escapeHtml(window)}</td>
+          <td>
+            <div class="row-actions">
+              <button class="mini-btn primary" onclick="event.stopPropagation(); openDraftEmailById(${jsArg(r._id)})">Draft</button>
+              <button class="mini-btn" onclick="event.stopPropagation(); copyDraftById(${jsArg(r._id)})">Copy</button>
+              <button class="mini-btn success" onclick="event.stopPropagation(); setOutreachStatus(${jsArg(r._id)}, 'contacted')">Sent</button>
+            </div>
+          </td>
+        </tr>`;
+      }).join('');
+    }
+
+    function openOutreachModalById(id) {
+      const record = findOutreachRecord(id);
+      if (record) openOutreachModal(record);
+    }
+
+    function openOutreachModal(r) {
+      document.getElementById('modal-title').textContent = r.buyer_name;
+      const statusStyle = _STATUS_STYLES[r.contact_status] || _STATUS_STYLES.not_contacted;
+      document.getElementById('modal-body').innerHTML = `
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
+          ${_outreachBadge(r.outreach_priority)}
+          ${_timingBadge(r.timing_label || 'Tracking', r.timing_confidence)}
+          <span style="font-size:12px;padding:3px 10px;border-radius:10px;background:#f5f5f5;color:${statusStyle.color};font-weight:600;">${statusStyle.label}</span>
+        </div>
+        <div class="modal-section">
+          <div class="modal-section-title">Signal summary</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;">
+            <div>Score: <strong>${r.outreach_score}/100</strong></div>
+            <div>Fit: <strong>${escapeHtml(r.fit_to_client)}</strong></div>
+            <div>Activity 90d: <strong>${r.activity_90d}</strong></div>
+            <div>Typical value: <strong>${escapeHtml(r.typical_value_label || '—')}</strong></div>
+            <div>Timing visibility: <strong>${escapeHtml(r.timing_visibility || '—')}</strong></div>
+            <div>Recommended channel: <strong>${escapeHtml(_CHANNEL_ICONS[r.recommended_channel] || r.recommended_channel)}</strong></div>
+          </div>
+        </div>
+        ${r.outreach_reason ? `<div class="modal-section"><div class="modal-section-title">Why now</div><p style="font-size:13px;line-height:1.6;margin:0;">${escapeHtml(r.outreach_reason)}</p></div>` : ''}
+        ${r.buyer_intel_summary ? `<div class="modal-section"><div class="modal-section-title">Buyer intel</div><p style="font-size:13px;line-height:1.6;margin:0;">${escapeHtml(r.buyer_intel_summary)}</p></div>` : ''}
+        ${r.predicted_next_start ? `<div class="modal-section"><div class="modal-section-title">Predicted window</div><div style="font-size:13px;">${escapeHtml(r.predicted_next_start)} to ${escapeHtml(r.predicted_next_end || '?')}</div></div>` : ''}
+        ${r.latest_notice_title ? `<div class="modal-section"><div class="modal-section-title">Latest notice</div><div style="font-size:13px;"><strong>${escapeHtml(r.latest_notice_date || '')}</strong> - ${escapeHtml(r.latest_notice_title)}</div></div>` : ''}
+        <div class="modal-section">
+          <div class="modal-section-title">Draft outreach</div>
+          <div class="mailbox-actions" style="margin-bottom:12px;">
+            <button class="btn primary" onclick="openDraftEmailById(${jsArg(r._id)})">Open draft</button>
+            <button class="btn secondary" onclick="copyDraftById(${jsArg(r._id)})">Copy draft</button>
+            <button class="btn secondary" onclick="setOutreachStatus(${jsArg(r._id)}, 'contacted')">Mark sent</button>
+            <a class="btn secondary" href="${MAILBOX_WEBMAIL_URL}" target="_blank" rel="noopener">Mailbox</a>
+          </div>
+          <div class="draft-preview">
+            <strong>Subject: ${escapeHtml(r.draft_subject)}</strong>
+
+${escapeHtml(r.draft_message)}
+          </div>
+        </div>
+        ${r.notes ? `<div class="modal-section"><div class="modal-section-title">Notes</div><p style="font-size:13px;margin:0;">${escapeHtml(r.notes)}</p></div>` : ''}
+      `;
+      const overlay = document.getElementById('modal-overlay');
+      overlay.style.display = '';
+      overlay.classList.add('active');
+    }
+
+    function renderOutreachQueue() {
+      const records = getOutreachRecords();
+      renderOutreachKpis(records);
+      renderOutreachWorkbench(records);
+      renderOutreachTable();
+
+      // Export CSV
+      const exportBtn = document.getElementById('export-outreach-btn');
+      if (exportBtn) {
+        exportBtn.onclick = () => {
+          const rows = getOutreachRecords();
+          if (!rows.length) return;
+          const fields = ['buyer_name','outreach_priority','outreach_score','timing_label','timing_confidence','fit_to_client','activity_90d','typical_value_label','recommended_channel','contact_status','last_contacted_at','outreach_reason','action_note','draft_subject','draft_message'];
+          const csv = [fields.join(','), ...rows.map(r => fields.map(f => JSON.stringify(r[f] ?? '')).join(','))].join('\n');
+          const a = document.createElement('a');
+          a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+          a.download = 'outreach_queue.csv';
+          a.click();
+        };
+      }
+    }
+
+    function renderMailbox() {
+      const el = document.getElementById('mailbox-content');
+      const composeUrl = `mailto:${MAILBOX_EMAIL}`;
+      el.innerHTML = `
+        <div class="mailbox-grid">
+          <a class="mailbox-card primary" href="${escapeHtml(MAILBOX_WEBMAIL_URL)}" target="_blank" rel="noopener">
+            <div>
+              <div class="mailbox-kicker">Hostinger webmail</div>
+              <div class="mailbox-title">Open inbox</div>
+              <div class="mailbox-copy">Sign in with the full mailbox address and its email password.</div>
+            </div>
+            <span class="mailbox-address">mail.hostinger.com</span>
+          </a>
+
+          <div class="mailbox-card">
+            <div>
+              <div class="mailbox-kicker">Mailbox</div>
+              <div class="mailbox-title">${escapeHtml(MAILBOX_EMAIL)}</div>
+              <div class="mailbox-copy">Use this address for portal enquiries, tender replies, and client messages.</div>
+            </div>
+            <div class="mailbox-actions">
+              <button class="btn secondary" onclick="copyText('${escapeHtml(MAILBOX_EMAIL)}', 'Mailbox address')">Copy address</button>
+            </div>
+          </div>
+
+          <div class="mailbox-card">
+            <div>
+              <div class="mailbox-kicker">Compose</div>
+              <div class="mailbox-title">New email</div>
+              <div class="mailbox-copy">Start a message from your device mail app when you are already set up locally.</div>
+            </div>
+            <div class="mailbox-actions">
+              <a class="btn secondary" href="${escapeHtml(composeUrl)}">Compose</a>
+              <a class="mailbox-link" href="${escapeHtml(MAILBOX_WEBMAIL_URL)}" target="_blank" rel="noopener">Use webmail</a>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderHistory() {
+      const history = (data.runHistory || []).slice(0, 50);
+      const tbody = document.getElementById('history-body');
+      tbody.innerHTML = history.map(run => {
+        const status = run.status || '—';
+        const notifyStatus = run.notify_status || '—';
+        const statusBadge = status === 'completed' ? 'green' : status === 'failed' ? 'red' : 'amber';
+
+        return `
+          <tr>
+            <td><div style="font-family:monospace;font-size:12px;color:var(--muted);">${(run.run_id || '—').substring(0, 12)}</div></td>
+            <td><div class="badge ${statusBadge}">${status}</div></td>
+            <td><div style="font-weight:600;color:var(--navy-dark);">${run.ingest_total_count || 0}</div></td>
+            <td><div style="font-weight:600;color:var(--green);">${run.shortlist_count || 0}</div></td>
+            <td><div style="font-weight:600;color:var(--gold);">${run.new_count || 0}</div></td>
+            <td><div style="font-size:12px;color:var(--muted);">${run.duration_s ? run.duration_s.toFixed(1) + 's' : '—'}</div></td>
+            <td><div style="font-size:12px;color:var(--muted);">${formatDatetime(run.run_time || run.finished_at)}</div></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderProducts() {
+      const container = document.getElementById('products-content');
+      const products = ((data.latestRun || {}).products || []).map(p => ({ ...p }));
+
+      if (!products.length) {
+        container.innerHTML = '<div class="empty">No product configs found.</div>';
+        return;
+      }
+
+      products.sort((a, b) => (b.item_count || 0) - (a.item_count || 0) || String(a.display_name || a.id).localeCompare(String(b.display_name || b.id)));
+
+      container.innerHTML = `
+        <div class="ops-grid">
+          ${products.map(product => {
+            const expanded = Boolean(state.expandedProducts[product.id]);
+            const rows = Array.isArray(product.tenders) ? [...product.tenders] : [];
+            rows.sort((a, b) => scoreValue(b.product_rank ?? b.score) - scoreValue(a.product_rank ?? a.score));
+            const shown = rows.slice(0, 20);
+            const hiddenCount = Math.max(0, rows.length - shown.length);
+            const stages = product.filter_stages || {};
+            const funnelStart = stages.input ?? 0;
+            const funnelMiddle = stages.after_include_keywords ?? funnelStart;
+            const funnelEnd = stages.after_min_score ?? product.item_count ?? rows.length;
+            const shortlistHtml = !expanded ? '' : `
+              <div class="ops-inline">
+                ${rows.length ? `
+                  <div class="table-scroll">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Title</th>
+                          <th>Buyer</th>
+                          <th>Value</th>
+                          <th>Score</th>
+                          <th>Impact Type</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${shown.map(t => `
+                          <tr>
+                            <td><div style="font-weight:600;color:var(--navy-dark);">${escapeHtml((t.title || 'Untitled').substring(0, 90))}</div></td>
+                            <td>${escapeHtml(t.buyer_name || t.buyer || '—')}</td>
+                            <td>${formatValue(t.value_amount || t.value)}</td>
+                            <td>${scoreValue(t.product_rank ?? t.score)}</td>
+                            <td>${escapeHtml(t.impact_type || t.decision_verdict || t.source || '—')}</td>
+                          </tr>
+                        `).join('')}
+                      </tbody>
+                    </table>
+                  </div>
+                  ${hiddenCount > 0 ? `<div class="ops-truncation">${hiddenCount} more not shown</div>` : ''}
+                ` : `
+                  <div class="ops-note">No tenders matched this product's filters.</div>
+                `}
+              </div>
+            `;
+
+            return `
+              <div class="ops-card">
+                <div class="ops-card-head">
+                  <div>
+                    <div class="ops-card-title">${escapeHtml(product.display_name || product.id)}</div>
+                    <div class="ops-card-subtitle">Filter funnel: <strong>${funnelStart}</strong> &rarr; <strong>${funnelMiddle}</strong> &rarr; <strong>${funnelEnd}</strong></div>
+                  </div>
+                  <span class="badge ${statusBadgeClass(product.status)}">${escapeHtml(product.status || 'unknown')}</span>
+                </div>
+                <div class="ops-card-topline">
+                  <span class="meta-chip">Filter funnel</span>
+                  <span class="meta-chip">${funnelStart} input</span>
+                  <span class="meta-chip">${funnelEnd} output</span>
+                </div>
+                <div class="ops-rail">
+                  <div class="ops-rail-label">Pipeline compression</div>
+                  <div class="ops-funnel">
+                    <div class="ops-funnel-stage">
+                      <div class="ops-funnel-stage-value">${funnelStart}</div>
+                      <div class="ops-funnel-stage-label">Initial pool</div>
+                    </div>
+                    <div class="ops-funnel-stage">
+                      <div class="ops-funnel-stage-value">${funnelMiddle}</div>
+                      <div class="ops-funnel-stage-label">After include</div>
+                    </div>
+                    <div class="ops-funnel-stage">
+                      <div class="ops-funnel-stage-value">${funnelEnd}</div>
+                      <div class="ops-funnel-stage-label">After min score</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="ops-card-stats">
+                  <span class="stat-pill">Items ${product.item_count || 0}</span>
+                  <span class="stat-pill">Input ${funnelStart}</span>
+                  <span class="stat-pill">After include ${funnelMiddle}</span>
+                  <span class="stat-pill">After min score ${funnelEnd}</span>
+                </div>
+                <div class="ops-footer">
+                  <div class="ops-note">${rows.length ? `Showing ${Math.min(rows.length, 20)} of ${rows.length} shortlisted tenders when expanded.` : 'No tenders matched this product\'s filters.'}</div>
+                  <button class="btn secondary" onclick="toggleProductExpand(${JSON.stringify(product.id)})">${expanded ? 'Hide shortlist' : 'View shortlist'}</button>
+                </div>
+                ${shortlistHtml}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function renderClients() {
+      const content = document.getElementById('clients-content');
+      let clients = ((data.latestRun || {}).clients || []).map(c => ({ ...c }));
+      if (state.selectedClient && state.selectedClient !== 'all') {
+        clients = clients.filter(c => c.id === state.selectedClient);
+      }
+
+      if (!clients.length) {
+        content.innerHTML = '<div class="empty">No client configs found. Add a config to config/clients/</div>';
+        return;
+      }
+
+      clients.sort((a, b) => (b.new_count || 0) - (a.new_count || 0) || (b.item_count || 0) - (a.item_count || 0) || String(a.display_name || a.id).localeCompare(String(b.display_name || b.id)));
+
+      content.innerHTML = `
+        <div class="ops-grid">
+          ${clients.map(client => {
+            const expanded = Boolean(state.expandedClients[client.id]);
+            const rows = Array.isArray(client.tenders) ? [...client.tenders] : [];
+            rows.sort((a, b) => {
+              const newDelta = Number(Boolean(b.is_new)) - Number(Boolean(a.is_new));
+              if (newDelta !== 0) return newDelta;
+              return scoreValue(b.product_rank ?? b.score) - scoreValue(a.product_rank ?? a.score);
+            });
+            const shown = rows.slice(0, 20);
+            const hiddenCount = Math.max(0, rows.length - shown.length);
+            const products = Array.isArray(client.subscribed_products) ? client.subscribed_products : [];
+            const shortlistHtml = !expanded ? '' : `
+              <div class="ops-inline">
+                ${rows.length ? `
+                  <div class="table-scroll">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Title</th>
+                          <th>Buyer</th>
+                          <th>Value</th>
+                          <th>Score</th>
+                          <th>New?</th>
+                          <th>Product</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${shown.map(t => `
+                          <tr>
+                            <td><div style="font-weight:600;color:var(--navy-dark);">${escapeHtml((t.title || 'Untitled').substring(0, 90))}</div></td>
+                            <td>${escapeHtml(t.buyer_name || t.buyer || '—')}</td>
+                            <td>${formatValue(t.value_amount || t.value)}</td>
+                            <td>${scoreValue(t.product_rank ?? t.score)}</td>
+                            <td>${t.is_new ? '<span class="badge green">NEW</span>' : ''}</td>
+                            <td>${escapeHtml(String(t.product_id || '—').replace(/_/g, ' '))}</td>
+                          </tr>
+                        `).join('')}
+                      </tbody>
+                    </table>
+                  </div>
+                  ${hiddenCount > 0 ? `<div class="ops-truncation">${hiddenCount} more not shown</div>` : ''}
+                ` : `
+                  <div class="ops-note">No tenders matched this client's filters in this run.</div>
+                `}
+              </div>
+            `;
+
+            return `
+              <div class="ops-card">
+                <div class="ops-card-head">
+                  <div>
+                    <div class="ops-card-title">${escapeHtml(client.display_name || client.id)}</div>
+                    <div class="ops-card-subtitle">Notified: <strong>${client.notified ? 'Yes' : 'No'}</strong>${client.notify_status ? ` · ${escapeHtml(client.notify_status)}` : ''}</div>
+                  </div>
+                  <span class="badge ${statusBadgeClass(client.status)}">${escapeHtml(client.status || 'unknown')}</span>
+                </div>
+                <div class="ops-card-topline">
+                  <span class="meta-chip">Client feed</span>
+                  <span class="meta-chip">${products.length} subscribed product${products.length === 1 ? '' : 's'}</span>
+                  <span class="meta-chip">${client.notified ? 'Notified' : 'Not notified'}</span>
+                </div>
+                <div class="ops-card-stats">
+                  <span class="stat-pill">Items ${client.item_count || 0}</span>
+                  ${client.new_count > 0 ? `<span class="badge green">New ${client.new_count || 0}</span>` : `<span class="stat-pill">New ${client.new_count || 0}</span>`}
+                  <span class="stat-pill">${client.notified ? 'Notified' : 'Not notified'}</span>
+                </div>
+                <div class="ops-list" style="margin-bottom:12px;">
+                  ${products.length ? products.map(product => `<span class="badge navy">${escapeHtml(String(product).replace(/_/g, ' '))}</span>`).join('') : '<span class="ops-note">No subscribed products recorded.</span>'}
+                </div>
+                <div class="ops-footer">
+                  <div class="ops-note">${rows.length ? `${client.new_count || 0} new tenders flagged in this run.` : 'No tenders matched this client\'s filters in this run.'}</div>
+                  <button class="btn secondary" onclick="toggleClientExpand(${JSON.stringify(client.id)})">${expanded ? 'Hide shortlist' : 'View shortlist'}</button>
+                </div>
+                ${shortlistHtml}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function openTenderModal(tenderId) {
+      const tenders = (data.latestRun || {}).tenders || [];
+      const tender = tenders.find(t => t.id === tenderId);
+      if (!tender) return;
+
+      const title = tender.title || tenderId;
+      const verdict = tender.decision_verdict || '—';
+      const verdictBadge = {
+        'Excellent': 'green',
+        'Good': 'green',
+        'Maybe': 'amber',
+        'Not a fit': 'red',
+        'Reject': 'red'
+      }[verdict] || 'navy';
+
+      const risks = (tender.risk_flags || []).map(r => `<span class="risk-flag">${r}</span>`).join('');
+
+      const reasonsHtml = tender.decision_reasons ? tender.decision_reasons.map(r => `<li style="margin-bottom:4px;">${r}</li>`).join('') : '<li style="color:var(--muted);">No reasoning provided</li>';
+
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-body').innerHTML = `
+        <div class="modal-section">
+          <div style="display:flex;gap:12px;margin-bottom:8px;align-items:flex-start;">
+            <div class="badge ${verdictBadge}" style="margin-top:2px;">${verdict}</div>
+            <div style="flex:1;">
+              <div class="tender-title">${title}</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:2px;">${tender.id}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tender-meta">
+          <div class="tender-meta-item">
+            <div class="tender-meta-label">Buyer</div>
+            <div class="tender-meta-value">${tender.buyer_name || tender.buyer || '—'}</div>
+          </div>
+          <div class="tender-meta-item">
+            <div class="tender-meta-label">Region</div>
+            <div class="tender-meta-value">${tender.region || '—'}</div>
+          </div>
+          <div class="tender-meta-item">
+            <div class="tender-meta-label">Deadline</div>
+            <div class="tender-meta-value">${formatDate(tender.deadline_at || tender.deadline)}</div>
+          </div>
+          <div class="tender-meta-item">
+            <div class="tender-meta-label">Value</div>
+            <div class="tender-meta-value">${formatValue(tender.value_amount || tender.value)}</div>
+          </div>
+          <div class="tender-meta-item">
+            <div class="tender-meta-label">Score</div>
+            <div class="tender-meta-value">${Math.round((tender.score || 0) * 100)}</div>
+          </div>
+          <div class="tender-meta-item">
+            <div class="tender-meta-label">Confidence</div>
+            <div class="tender-meta-value">${Math.round((tender.decision_confidence || 0) * 100)}%</div>
+          </div>
+        </div>
+
+        ${tender.description ? `
+          <div class="modal-section">
+            <div class="modal-section-title">Description</div>
+            <div class="tender-description">${tender.description}</div>
+          </div>
+        ` : ''}
+
+        ${risks ? `
+          <div class="modal-section">
+            <div class="modal-section-title">Risk flags</div>
+            <div>${risks}</div>
+          </div>
+        ` : ''}
+
+        ${tender.decision_reasons && tender.decision_reasons.length > 0 ? `
+          <div class="modal-section">
+            <div class="modal-section-title">Decision reasoning</div>
+            <ul style="padding-left:16px;margin:0;">
+              ${reasonsHtml}
+            </ul>
+          </div>
+        ` : ''}
+
+        ${tender.buyer_intel_summary ? `
+          <div class="modal-section">
+            <div class="modal-section-title">Buyer intelligence</div>
+            <div class="tender-description">${tender.buyer_intel_summary}</div>
+          </div>
+        ` : ''}
+      `;
+
+      document.getElementById('modal-overlay').classList.add('active');
+    }
+
+    function closeTenderModal() {
+      const overlay = document.getElementById('modal-overlay');
+      overlay.classList.remove('active');
+      overlay.style.display = '';
+    }
+
+    function render() {
+      renderNav();
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + state.page).classList.add('active');
+      renderTopbar();
+
+      if (state.page === 'dashboard') {
+        renderKpis();
+        renderTopOpportunities();
+      } else if (state.page === 'opportunities') {
+        renderOpportunities();
+      } else if (state.page === 'products') {
+        renderProducts();
+      } else if (state.page === 'clients') {
+        renderClients();
+      } else if (state.page === 'buyers') {
+        renderBuyerIntel();
+      } else if (state.page === 'timing') {
+        renderTiming();
+      } else if (state.page === 'radar') {
+        renderCommercialRadar();
+      } else if (state.page === 'outreach') {
+        renderOutreachQueue();
+      } else if (state.page === 'mailbox') {
+        renderMailbox();
+      } else if (state.page === 'history') {
+        renderHistory();
+      } else if (state.page === 'avatar') {
+        if (window.initAvatarPage) initAvatarPage();
+      }
+    }
+
+    // Init
+    window.addEventListener('DOMContentLoaded', () => {
+      render();
+    });
+  </script>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.178.0/build/three.module.min.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.178.0/examples/jsm/"
+    }
+  }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    const TRAITS = {
+      bodies: [
+        { id: 'masculine', label: 'Masculine', url: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/RiggedFigure/glTF-Binary/RiggedFigure.glb' },
+        { id: 'feminine',  label: 'Feminine',  url: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/CesiumMan/glTF-Binary/CesiumMan.glb' }
+      ],
+      colors: [
+        { id: 'fair', label: 'Fair', value: '#f5d0c5' },
+        { id: 'tan',  label: 'Tan',  value: '#d8a08a' },
+        { id: 'dark', label: 'Deep', value: '#5c3d2e' }
+      ],
+      outfits: [
+        { id: 'default', label: 'Basic Suit' },
+        { id: 'casual',  label: 'Casual' }
+      ]
+    };
+
+    let scene, camera, renderer, controls, mixer, clock, currentModel;
+    let avatarReady = false;
+
+    const sel = { body: TRAITS.bodies[0].url, color: TRAITS.colors[0].value, outfit: 'default' };
+
+    function initThree() {
+      const canvas = document.getElementById('avatar-canvas');
+      if (!canvas || avatarReady) return;
+
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0a1a2e);
+
+      const w = canvas.parentElement.clientWidth;
+      const h = canvas.parentElement.clientHeight;
+
+      camera = new THREE.PerspectiveCamera(35, w / h, 0.1, 100);
+      camera.position.set(0, 1.2, 4.5);
+
+      renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+      renderer.setSize(w, h);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+      const spot = new THREE.SpotLight(0xffffff, 1.4);
+      spot.position.set(3, 5, 3);
+      spot.castShadow = true;
+      scene.add(spot);
+
+      const plane = new THREE.Mesh(
+        new THREE.CircleGeometry(3, 32),
+        new THREE.ShadowMaterial({ opacity: 0.25 })
+      );
+      plane.rotation.x = -Math.PI / 2;
+      plane.position.y = -1;
+      plane.receiveShadow = true;
+      scene.add(plane);
+
+      controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.target.set(0, 0.6, 0);
+      controls.minPolarAngle = 0.2;
+      controls.maxPolarAngle = Math.PI / 2;
+
+      clock = new THREE.Clock();
+
+      new ResizeObserver(() => {
+        if (!canvas.parentElement) return;
+        const w2 = canvas.parentElement.clientWidth;
+        const h2 = canvas.parentElement.clientHeight;
+        camera.aspect = w2 / h2;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w2, h2);
+      }).observe(canvas.parentElement);
+
+      avatarReady = true;
+      animate();
+      loadModel(sel.body);
+    }
+
+    function loadModel(url) {
+      if (currentModel) { scene.remove(currentModel); currentModel = null; }
+      if (mixer) { mixer.stopAllAction(); mixer = null; }
+      new GLTFLoader().load(url, (gltf) => {
+        currentModel = gltf.scene;
+        currentModel.position.set(0, -1, 0);
+        currentModel.scale.set(1.5, 1.5, 1.5);
+        currentModel.traverse((child) => {
+          if (!child.isMesh) return;
+          child.castShadow = true;
+          child.receiveShadow = true;
+          const n = child.name.toLowerCase();
+          if ((n.includes('body') || n.includes('skin')) && child.material) {
+            child.material.color.set(sel.color);
+          }
+        });
+        scene.add(currentModel);
+        if (gltf.animations.length) {
+          mixer = new THREE.AnimationMixer(currentModel);
+          mixer.clipAction(gltf.animations[0]).play();
+        }
+      });
+    }
+
+    function applyColor(hex) {
+      sel.color = hex;
+      if (!currentModel) return;
+      currentModel.traverse((child) => {
+        if (!child.isMesh) return;
+        const n = child.name.toLowerCase();
+        if ((n.includes('body') || n.includes('skin')) && child.material) {
+          child.material.color.set(hex);
+        }
+      });
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (mixer) mixer.update(clock.getDelta());
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    function updateBtns() {
+      document.querySelectorAll('[data-av-body]').forEach(b =>
+        b.classList.toggle('av-active', b.dataset.avBody === sel.body));
+      document.querySelectorAll('[data-av-color]').forEach(b =>
+        b.classList.toggle('av-active', b.dataset.avColor === sel.color));
+      document.querySelectorAll('[data-av-outfit]').forEach(b =>
+        b.classList.toggle('av-active', b.dataset.avOutfit === sel.outfit));
+    }
+
+    window.avatarSelectBody = (url) => { sel.body = url; loadModel(url); updateBtns(); };
+    window.avatarSelectColor = (hex) => { applyColor(hex); updateBtns(); };
+    window.avatarSelectOutfit = (id) => { sel.outfit = id; updateBtns(); };
+    window.avatarDownload = () => alert('VRM export coming soon.');
+
+    window.initAvatarPage = () => {
+      const bodyEl   = document.getElementById('avatar-body-opts');
+      const colorEl  = document.getElementById('avatar-color-opts');
+      const outfitEl = document.getElementById('avatar-outfit-opts');
+      if (!bodyEl) return;
+
+      bodyEl.innerHTML = TRAITS.bodies.map(b => `
+        <button data-av-body="${b.url}" onclick="avatarSelectBody('${b.url}')"
+          style="padding:10px 8px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);font-size:12px;cursor:pointer;transition:all .18s;"
+          class="${sel.body === b.url ? 'av-active' : ''}">${b.label}</button>
+      `).join('');
+
+      colorEl.innerHTML = TRAITS.colors.map(c => `
+        <button data-av-color="${c.value}" onclick="avatarSelectColor('${c.value}')"
+          style="padding:8px 6px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);font-size:11px;cursor:pointer;transition:all .18s;text-align:center;"
+          class="${sel.color === c.value ? 'av-active' : ''}">
+          <div style="width:100%;height:20px;border-radius:5px;background:${c.value};margin-bottom:4px;"></div>${c.label}
+        </button>
+      `).join('');
+
+      outfitEl.innerHTML = TRAITS.outfits.map(o => `
+        <button data-av-outfit="${o.id}" onclick="avatarSelectOutfit('${o.id}')"
+          style="padding:10px 8px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);font-size:12px;cursor:pointer;transition:all .18s;"
+          class="${sel.outfit === o.id ? 'av-active' : ''}">${o.label}</button>
+      `).join('');
+
+      if (!avatarReady) setTimeout(initThree, 80);
+    };
+
+    // Active button style via injected rule
+    const style = document.createElement('style');
+    style.textContent = '.av-active { background: var(--navy) !important; color: #fff !important; border-color: var(--navy) !important; }';
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>
