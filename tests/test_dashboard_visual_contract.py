@@ -57,6 +57,24 @@ def test_dashboard_remains_static_without_app_framework_dependency() -> None:
     assert "from flask" not in html
 
 
+def test_dashboard_clarifies_buyer_watchlist_not_sales_outreach() -> None:
+    html = read_dashboard()
+
+    assert "Buyer watchlist" in html
+    assert "public-sector buyer accounts" in html
+    assert "client sales prospects" in html
+    assert "Tracked public buyers" in html
+    assert "Outreach queue" not in html
+
+
+def test_dashboard_login_hashes_remain_present() -> None:
+    html = read_dashboard()
+
+    assert "SHA-256 credentials" in html
+    assert "async function sha256" in html
+    assert "crypto.subtle.digest" in html
+
+
 def test_hostinger_bundle_dashboard_matches_source_dashboard() -> None:
     assert BUNDLE_DASHBOARD.exists()
     assert BUNDLE_DASHBOARD.read_text(encoding="utf-8") == read_dashboard()

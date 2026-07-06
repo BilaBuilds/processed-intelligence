@@ -1622,12 +1622,13 @@
         <div id="radar-content"></div>
       </section>
 
-      <!-- Outreach Queue -->
+      <!-- Buyer Watchlist -->
       <section id="page-outreach" class="page">
         <div class="section-header">
           <div>
-            <div class="section-title">Outreach queue</div>
-            <div style="font-size:13px;color:var(--muted);margin-top:4px;">Ranked commercial contacts — who to reach out to, why, and how</div>
+            <div class="section-title">Buyer watchlist</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;">Tracked public buyers — who is publishing, what signals exist, and what to monitor</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:8px;padding:8px 10px;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,0.72);max-width:720px;">These are public-sector buyer accounts for intelligence tracking, not client sales prospects.</div>
           </div>
           <button class="btn secondary" id="export-outreach-btn">Export CSV</button>
         </div>
@@ -1644,10 +1645,10 @@
           </select>
           <select id="outreach-filter-status" style="padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;" onchange="state.outreachFilterStatus=this.value;renderOutreachTable();">
             <option value="all">All statuses</option>
-            <option value="not_contacted">Not contacted</option>
-            <option value="drafted">Drafted</option>
-            <option value="contacted">Contacted</option>
-            <option value="follow_up_due">Follow-up due</option>
+            <option value="not_contacted">Not reviewed</option>
+            <option value="drafted">Note created</option>
+            <option value="contacted">Reviewed</option>
+            <option value="follow_up_due">Watchlist item</option>
             <option value="paused">Paused</option>
           </select>
         </div>
@@ -1662,7 +1663,7 @@
                 <th>Fit</th>
                 <th>Activity 90d</th>
                 <th>Typical value</th>
-                <th>Channel</th>
+                <th>Research route</th>
                 <th>Status</th>
                 <th>Next window</th>
                 <th>Actions</th>
@@ -2083,8 +2084,8 @@
 
     function actionStateMeta(buyer) {
       const state = String(buyer.action_state || buyer.outreach_status || 'not_started').toLowerCase();
-      if (state === 'drafted') return { text: '✏️ Drafted', cls: 'drafted' };
-      if (state === 'sent') return { text: '✅ Sent', cls: 'sent' };
+      if (state === 'drafted') return { text: 'Note created', cls: 'drafted' };
+      if (state === 'sent') return { text: 'Reviewed', cls: 'sent' };
       if (state === 'ignored') return { text: '🚫 Ignored', cls: 'ignored' };
       return { text: '⬜ Not started', cls: 'not_started' };
     }
@@ -2116,8 +2117,8 @@
 
     function renderCommandChips(buyer) {
       const commands = [
-        { label: 'Draft', value: buyer.cli_mark_drafted || '' },
-        { label: 'Mark sent', value: buyer.cli_mark_sent || '' },
+        { label: 'Note', value: buyer.cli_mark_drafted || '' },
+        { label: 'Mark reviewed', value: buyer.cli_mark_sent || '' },
         { label: 'Ignore', value: buyer.cli_mark_ignored || '' }
       ].filter(c => c.value);
       if (commands.length === 0) {
@@ -2179,7 +2180,7 @@
         { id: 'buyers', label: 'Buyer intelligence', caption: 'Accounts', icon: '◎', count: counts.buyers },
         { id: 'timing', label: 'Timing intelligence', caption: 'Cadence', icon: '◔', count: counts.timing },
         { id: 'radar', label: 'Commercial radar', caption: 'Focus', icon: '◉', count: counts.radar },
-        { id: 'outreach', label: 'Outreach queue', caption: 'Execution', icon: '✦', count: counts.outreach },
+        { id: 'outreach', label: 'Buyer watchlist', caption: 'Tracking', icon: '✦', count: counts.outreach },
         { id: 'mailbox', label: 'Mailbox', caption: 'Webmail', icon: '@' },
         { id: 'history', label: 'Pipeline history', caption: 'Runs', icon: '⋯', count: counts.history },
         { id: 'avatar', label: 'Avatar builder', caption: 'Profile', icon: '◈' }
@@ -2238,7 +2239,7 @@
         buyers: 'Buyer intelligence',
         timing: 'Timing intelligence',
         radar: 'Commercial radar',
-        outreach: 'Outreach queue',
+        outreach: 'Buyer watchlist',
         mailbox: 'Mailbox',
         history: 'Pipeline history',
         clients: 'Clients',
@@ -2258,7 +2259,7 @@
         buyers: `${(latestRun.buyerCards || []).length || 0} buyers tracked`,
         timing: `${((latestRun.buyerTiming || {}).signals || []).length || 0} timing signals`,
         radar: `${((latestRun.commercialRadar || {}).focus_summary || []).length || 0} focus buyers`,
-        outreach: `${getOutreachRecords().length} outreach targets`,
+        outreach: `${getOutreachRecords().length} buyer accounts tracked`,
         mailbox: MAILBOX_EMAIL,
         history: `${(data.runHistory || []).length || 0} logged runs`,
         clients: `${(latestRun.clients || []).length || 0} active client feeds`,
@@ -3113,17 +3114,17 @@
     };
 
     const _CHANNEL_ICONS = {
-      email:        '✉️ Email',
+      email:        'Public records / portal',
       linkedin:     '💼 LinkedIn',
       phone:        '📞 Phone',
       monitor_only: '👁 Monitor',
     };
 
     const _STATUS_STYLES = {
-      not_contacted:  { label: 'Not contacted', color: '#9e9e9e' },
-      drafted:        { label: 'Drafted',        color: '#1565c0' },
-      contacted:      { label: 'Contacted',      color: '#2e7d32' },
-      follow_up_due:  { label: 'Follow-up due',  color: '#e65100' },
+      not_contacted:  { label: 'Not reviewed',   color: '#9e9e9e' },
+      drafted:        { label: 'Note created',   color: '#1565c0' },
+      contacted:      { label: 'Reviewed',       color: '#2e7d32' },
+      follow_up_due:  { label: 'Watchlist item', color: '#e65100' },
       paused:         { label: 'Paused',          color: '#6d4c41' },
     };
 
@@ -3165,34 +3166,26 @@
     }
 
     function buildDraftSubject(record) {
-      return record.draft_subject || `Construction works interest - ${record.buyer_name || 'procurement team'}`;
+      return record.draft_subject || `Buyer intelligence note - ${record.buyer_name || 'public buyer'}`;
     }
 
     function buildDraftMessage(record) {
       if (record.draft_message) return record.draft_message;
       const buyer = record.buyer_name || 'your team';
       const latest = record.latest_notice_title
-        ? `I noticed your recent notice, "${record.latest_notice_title}"${record.latest_notice_date ? `, published ${record.latest_notice_date}` : ''}.`
-        : 'I am reviewing upcoming public sector construction opportunities in your area.';
+        ? `Latest public notice: "${record.latest_notice_title}"${record.latest_notice_date ? `, published ${record.latest_notice_date}` : ''}.`
+        : 'No latest public notice title is available in the current export.';
       const windowText = record.predicted_next_start
-        ? `Your next procurement window appears to sit around ${record.predicted_next_start}${record.predicted_next_end ? ` to ${record.predicted_next_end}` : ''}.`
-        : 'I wanted to make contact ahead of any suitable upcoming works.';
-      const valueText = record.typical_value_label ? `Your recent activity sits around ${record.typical_value_label}.` : '';
+        ? `Potential monitoring window: ${record.predicted_next_start}${record.predicted_next_end ? ` to ${record.predicted_next_end}` : ''}.`
+        : 'No actionable timing window is available yet.';
+      const valueText = record.typical_value_label ? `Typical published value signal: ${record.typical_value_label}.` : 'Typical value signal is not available.';
       return [
-        'Dear Procurement Team,',
+        `Buyer intelligence note: ${buyer}`,
+        [windowText, valueText].filter(Boolean).join(' '),
         '',
         latest,
         '',
-        'I am reaching out from ProcessEd Civils. We support civils, refurbishment, enabling works, drainage, maintenance, and public sector construction packages.',
-        '',
-        [windowText, valueText].filter(Boolean).join(' '),
-        '',
-        `Would you be able to point me towards the right supplier route or procurement contact for ${buyer}?`,
-        '',
-        'Kind regards,',
-        'Bilal',
-        'ProcessEd Civils',
-        MAILBOX_EMAIL
+        record.outreach_reason || record.timing_reason || record.action_note || 'Monitor public procurement portals and published notices. Do not treat this buyer as a client sales prospect without a separate commercial qualification step.'
       ].join('\n');
     }
 
@@ -3247,16 +3240,15 @@
     function copyDraftById(id) {
       const record = findOutreachRecord(id);
       if (!record) return;
-      copyText(draftText(record), 'Draft');
+      copyText(draftText(record), 'Buyer note');
       setOutreachStatus(id, 'drafted', true);
     }
 
     function openDraftEmailById(id) {
       const record = findOutreachRecord(id);
       if (!record) return;
-      copyText(draftText(record), 'Draft');
+      copyText(draftText(record), 'Buyer note');
       setOutreachStatus(id, 'drafted', true);
-      window.location.href = mailtoUrl(record);
     }
 
     function setOutreachStatus(id, status, silent = false) {
@@ -3285,6 +3277,33 @@
       return `<span style="display:inline-block;padding:2px 9px;border-radius:10px;font-size:11px;background:${bg};color:#fff;">${label}${confStr}</span>`;
     }
 
+    function hasUsableOutreachScore(record) {
+      const score = Number(record.outreach_score);
+      return Number.isFinite(score) && score > 0;
+    }
+
+    function outreachPriorityDisplay(record) {
+      return hasUsableOutreachScore(record) ? record.outreach_priority : 'Monitor';
+    }
+
+    function outreachScoreDisplay(record) {
+      return hasUsableOutreachScore(record)
+        ? `<span style="font-weight:700;font-size:15px;color:var(--navy-dark);">${record.outreach_score}</span><span style="font-size:11px;color:var(--muted);">/100</span>`
+        : '<span style="font-weight:700;font-size:13px;color:var(--navy-dark);">Tracking</span>';
+    }
+
+    function outreachFitDisplay(record) {
+      return hasUsableOutreachScore(record) && record.fit_to_client !== undefined && record.fit_to_client !== null && record.fit_to_client !== '—'
+        ? escapeHtml(record.fit_to_client)
+        : 'Not scored yet';
+    }
+
+    function outreachValueDisplay(record) {
+      return hasUsableOutreachScore(record) && record.typical_value_label
+        ? escapeHtml(record.typical_value_label)
+        : 'Not available';
+    }
+
     function renderOutreachKpis(records) {
       const oq = (data.latestRun || {}).outreachQueue || {};
       const counts = oq.counts || {};
@@ -3295,11 +3314,11 @@
       const total    = counts.total        ?? records.length;
 
       document.getElementById('outreach-kpis').innerHTML = [
-        { label: 'Hot accounts',     value: hot,      color: '#d32f2f' },
-        { label: 'Warm accounts',    value: warm,      color: 'var(--gold)' },
-        { label: 'Actionable timing',value: action,   color: '#2e7d32' },
-        { label: 'Follow-up due',    value: followUp,  color: '#e65100' },
-        { label: 'Total queued',     value: total,     color: 'var(--navy)' },
+        { label: 'High-signal buyers', value: hot,      color: '#d32f2f' },
+        { label: 'Tracked buyers',     value: warm,     color: 'var(--gold)' },
+        { label: 'Timing signals',     value: action,   color: '#2e7d32' },
+        { label: 'Watchlist items',    value: followUp, color: '#e65100' },
+        { label: 'Total tracked',      value: total,    color: 'var(--navy)' },
       ].map(k => `
         <div class="kpi-card" style="min-width:120px;flex:1;">
           <div class="kpi-value" style="color:${k.color};font-size:28px;">${k.value}</div>
@@ -3327,33 +3346,33 @@
         <div class="draft-workbench">
           <div class="draft-panel primary">
             <div>
-              <div class="draft-panel-label">Next draft</div>
+              <div class="draft-panel-label">Next buyer note</div>
               <div class="draft-panel-title">${escapeHtml(next.buyer_name)}</div>
-              <div class="draft-panel-copy">${escapeHtml(next.action_note || next.outreach_reason || 'Review this buyer and send a short procurement introduction.')}</div>
+              <div class="draft-panel-copy">${escapeHtml(next.action_note || next.outreach_reason || 'Review this public-sector buyer account and monitor the relevant public records or procurement portal.')}</div>
             </div>
             <div class="mailbox-actions" style="margin-top:16px;">
-              <button class="btn secondary" onclick="openDraftEmailById(${jsArg(next._id)})">Draft email</button>
-              <button class="btn secondary" onclick="copyDraftById(${jsArg(next._id)})">Copy draft</button>
+              <button class="btn secondary" onclick="openDraftEmailById(${jsArg(next._id)})">Buyer note</button>
+              <button class="btn secondary" onclick="copyDraftById(${jsArg(next._id)})">Copy note</button>
               <a class="btn secondary" href="${MAILBOX_WEBMAIL_URL}" target="_blank" rel="noopener">Mailbox</a>
             </div>
           </div>
           <div class="draft-panel">
-            <div class="draft-panel-label">Outreach progress</div>
+            <div class="draft-panel-label">Watchlist progress</div>
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
               <div>
                 <div class="kpi-value" style="font-size:28px;">${records.length}</div>
-                <div class="kpi-label">Queued</div>
+                <div class="kpi-label">Tracked</div>
               </div>
               <div>
                 <div class="kpi-value" style="font-size:28px;color:var(--amber);">${drafted}</div>
-                <div class="kpi-label">Drafted</div>
+                <div class="kpi-label">Notes</div>
               </div>
               <div>
                 <div class="kpi-value" style="font-size:28px;color:var(--green);">${contacted}</div>
-                <div class="kpi-label">Sent</div>
+                <div class="kpi-label">Reviewed</div>
               </div>
             </div>
-            <div class="draft-panel-copy">Draft and sent states are saved in this browser so the portal stays tidy while the pipeline remains static.</div>
+            <div class="draft-panel-copy">Note and reviewed states are saved in this browser so the portal stays tidy while the pipeline remains static.</div>
           </div>
         </div>
       `;
@@ -3388,6 +3407,7 @@
       tbody.innerHTML = filtered.map(r => {
         const statusStyle = _STATUS_STYLES[r.contact_status] || _STATUS_STYLES.not_contacted;
         const channel = _CHANNEL_ICONS[r.recommended_channel] || r.recommended_channel || '—';
+        const displayPriority = outreachPriorityDisplay(r);
         const window  = r.predicted_next_start
           ? `${r.predicted_next_start}${r.predicted_next_end ? ' → ' + r.predicted_next_end : ''}`
           : '—';
@@ -3399,12 +3419,12 @@
             <div style="font-weight:700;color:var(--navy-dark);">${escapeHtml(r.buyer_name)}</div>
             <div style="font-size:11px;color:var(--muted);">${escapeHtml((r.top_categories || []).slice(0,2).join(', ') || '—')}</div>
           </td>
-          <td>${_outreachBadge(r.outreach_priority)}</td>
-          <td><span style="font-weight:700;font-size:15px;color:var(--navy-dark);">${r.outreach_score}</span><span style="font-size:11px;color:var(--muted);">/100</span></td>
+          <td>${_outreachBadge(displayPriority)}</td>
+          <td>${outreachScoreDisplay(r)}</td>
           <td>${_timingBadge(r.timing_label || 'Tracking', r.timing_confidence)}</td>
-          <td><span style="font-weight:700;">${r.fit_to_client ?? '—'}</span></td>
+          <td><span style="font-weight:700;">${outreachFitDisplay(r)}</span></td>
           <td>${r.activity_90d ?? 0}</td>
-          <td style="font-size:12px;">${escapeHtml(r.typical_value_label || '—')}</td>
+          <td style="font-size:12px;">${outreachValueDisplay(r)}</td>
           <td style="font-size:12px;">${escapeHtml(channel)}</td>
           <td>
             <span style="color:${statusStyle.color};font-size:12px;font-weight:600;">${statusStyle.label}</span>
@@ -3413,9 +3433,9 @@
           <td style="font-size:12px;color:var(--muted);">${escapeHtml(window)}</td>
           <td>
             <div class="row-actions">
-              <button class="mini-btn primary" onclick="event.stopPropagation(); openDraftEmailById(${jsArg(r._id)})">Draft</button>
-              <button class="mini-btn" onclick="event.stopPropagation(); copyDraftById(${jsArg(r._id)})">Copy</button>
-              <button class="mini-btn success" onclick="event.stopPropagation(); setOutreachStatus(${jsArg(r._id)}, 'contacted')">Sent</button>
+              <button class="mini-btn primary" onclick="event.stopPropagation(); openDraftEmailById(${jsArg(r._id)})">Note</button>
+              <button class="mini-btn" onclick="event.stopPropagation(); copyDraftById(${jsArg(r._id)})">Copy note</button>
+              <button class="mini-btn success" onclick="event.stopPropagation(); setOutreachStatus(${jsArg(r._id)}, 'contacted')">Reviewed</button>
             </div>
           </td>
         </tr>`;
@@ -3430,21 +3450,22 @@
     function openOutreachModal(r) {
       document.getElementById('modal-title').textContent = r.buyer_name;
       const statusStyle = _STATUS_STYLES[r.contact_status] || _STATUS_STYLES.not_contacted;
+      const displayPriority = outreachPriorityDisplay(r);
       document.getElementById('modal-body').innerHTML = `
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
-          ${_outreachBadge(r.outreach_priority)}
+          ${_outreachBadge(displayPriority)}
           ${_timingBadge(r.timing_label || 'Tracking', r.timing_confidence)}
           <span style="font-size:12px;padding:3px 10px;border-radius:10px;background:#f5f5f5;color:${statusStyle.color};font-weight:600;">${statusStyle.label}</span>
         </div>
         <div class="modal-section">
           <div class="modal-section-title">Signal summary</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;">
-            <div>Score: <strong>${r.outreach_score}/100</strong></div>
-            <div>Fit: <strong>${escapeHtml(r.fit_to_client)}</strong></div>
+            <div>Score: <strong>${hasUsableOutreachScore(r) ? `${r.outreach_score}/100` : 'Tracking'}</strong></div>
+            <div>Fit: <strong>${outreachFitDisplay(r)}</strong></div>
             <div>Activity 90d: <strong>${r.activity_90d}</strong></div>
-            <div>Typical value: <strong>${escapeHtml(r.typical_value_label || '—')}</strong></div>
+            <div>Typical value: <strong>${outreachValueDisplay(r)}</strong></div>
             <div>Timing visibility: <strong>${escapeHtml(r.timing_visibility || '—')}</strong></div>
-            <div>Recommended channel: <strong>${escapeHtml(_CHANNEL_ICONS[r.recommended_channel] || r.recommended_channel)}</strong></div>
+            <div>Research route: <strong>${escapeHtml(_CHANNEL_ICONS[r.recommended_channel] || r.recommended_channel)}</strong></div>
           </div>
         </div>
         ${r.outreach_reason ? `<div class="modal-section"><div class="modal-section-title">Why now</div><p style="font-size:13px;line-height:1.6;margin:0;">${escapeHtml(r.outreach_reason)}</p></div>` : ''}
@@ -3452,11 +3473,11 @@
         ${r.predicted_next_start ? `<div class="modal-section"><div class="modal-section-title">Predicted window</div><div style="font-size:13px;">${escapeHtml(r.predicted_next_start)} to ${escapeHtml(r.predicted_next_end || '?')}</div></div>` : ''}
         ${r.latest_notice_title ? `<div class="modal-section"><div class="modal-section-title">Latest notice</div><div style="font-size:13px;"><strong>${escapeHtml(r.latest_notice_date || '')}</strong> - ${escapeHtml(r.latest_notice_title)}</div></div>` : ''}
         <div class="modal-section">
-          <div class="modal-section-title">Draft outreach</div>
+          <div class="modal-section-title">Buyer note</div>
           <div class="mailbox-actions" style="margin-bottom:12px;">
-            <button class="btn primary" onclick="openDraftEmailById(${jsArg(r._id)})">Open draft</button>
-            <button class="btn secondary" onclick="copyDraftById(${jsArg(r._id)})">Copy draft</button>
-            <button class="btn secondary" onclick="setOutreachStatus(${jsArg(r._id)}, 'contacted')">Mark sent</button>
+            <button class="btn primary" onclick="openDraftEmailById(${jsArg(r._id)})">Buyer note</button>
+            <button class="btn secondary" onclick="copyDraftById(${jsArg(r._id)})">Copy note</button>
+            <button class="btn secondary" onclick="setOutreachStatus(${jsArg(r._id)}, 'contacted')">Mark reviewed</button>
             <a class="btn secondary" href="${MAILBOX_WEBMAIL_URL}" target="_blank" rel="noopener">Mailbox</a>
           </div>
           <div class="draft-preview">

@@ -28,6 +28,21 @@ Timestamped backups were created before editing:
 - Styled intelligence and radar sections as dark navy blocks for stronger contrast.
 - Added responsive rules to prevent horizontal page overflow on mobile while preserving scrollable data tables.
 
+## Buyer Watchlist Clarification
+
+The former outreach page is now labelled as a buyer intelligence watchlist. This keeps public-sector buyer accounts separate from client sales prospects and avoids implying that councils, NHS bodies, housing providers, or other public buyers are paying outreach targets.
+
+Copy and UI mappings were updated:
+
+- `Outreach queue` is now `Buyer watchlist`.
+- `outreach targets` is now `buyer accounts tracked`.
+- hot/warm/actionable/follow-up cards are now high-signal buyers, tracked buyers, timing signals, watchlist items, and total tracked.
+- draft email actions are now buyer note actions.
+- sent/contacted states are now reviewed states.
+- zero or missing scores show `Tracking`, `Monitor`, `Not scored yet`, and `Not available` instead of misleading `0/100`, `Low`, or blank values.
+
+This change only affects static dashboard presentation. It does not modify `run_pipeline.py`, `dashboard_data.json`, the dashboard data schema, or Hostinger upload architecture.
+
 ## Data Compatibility Preserved
 
 The dashboard still reads:
