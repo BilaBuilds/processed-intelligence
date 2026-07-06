@@ -103,6 +103,20 @@ def test_buyer_intelligence_table_uses_public_demo_language() -> None:
     assert "Admin" not in html
 
 
+def test_overview_system_status_uses_public_demo_language() -> None:
+    html = read_dashboard()
+
+    assert "Procurement intelligence summary" in html
+    assert "Data source and update status" in html
+    assert "Current demo data model" in html
+    assert "Static Hostinger export completed" in html
+    assert "Operator command surface" not in html
+    assert "Execution truth" not in html
+    assert "Failure boundaries" not in html
+    assert "0 fatal" not in html
+    assert "Non-fatal steps" not in html
+
+
 def test_hostinger_bundle_dashboard_matches_source_dashboard() -> None:
     assert BUNDLE_DASHBOARD.exists()
     assert BUNDLE_DASHBOARD.read_text(encoding="utf-8") == read_dashboard()

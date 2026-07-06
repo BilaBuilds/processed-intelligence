@@ -72,6 +72,20 @@ The Buyer intelligence page was tightened again for public Hostinger demos so un
 - the topbar demo toggle is labelled `Demo mode` rather than `Admin`
 - weak internal strings such as `No dossier path available`, `No quick actions available`, `Fit 0%`, `Not started`, and `Action state` were removed from the public dashboard source
 
+## Overview System Status Copy
+
+The Overview page system-status section was polished for public demo use while keeping the same static data bindings and source/export truth.
+
+- `Operator command surface` is now `Procurement intelligence summary`
+- `Active cycle` is now `Current review cycle`
+- `Execution truth` is now `Data source and update status`
+- `Fact-checked execution model` is now `Current demo data model`
+- `One live sequential pipeline drives this portal.` is now `This portal is generated from the current static TenderNed demo export.`
+- `Failure boundaries` is now `Processing notes`
+- empty fatal status is now `No blocking export issues reported`
+- `static_hostinger_export` is rendered publicly as `Static Hostinger export completed`
+- the fatal loop-step footnote was removed from the public dashboard source
+
 ## Data Compatibility Preserved
 
 The dashboard still reads:

@@ -2313,11 +2313,11 @@
             : shortlisted > 0
               ? 'Review the shortlist and push the strongest dossiers forward.'
               : 'Quiet run. Monitor public-sector buyer signals and keep the workspace ready.';
-      const posture = shortlisted > 0 || displayActionableCount > 0 || displayHotCount > 0 ? 'Active cycle' : 'Quiet cycle';
+      const posture = shortlisted > 0 || displayActionableCount > 0 || displayHotCount > 0 ? 'Current review cycle' : 'Quiet review cycle';
       document.getElementById('overview-banner').innerHTML = `
         <div class="overview-banner-grid">
           <div>
-            <div class="hero-kicker">Operator command surface</div>
+            <div class="hero-kicker">Procurement intelligence summary</div>
             <div class="hero-title">${escapeHtml(posture)}</div>
             <div class="hero-subtitle">
               ${escapeHtml(nextMove)}
@@ -2418,6 +2418,12 @@
       const postRunStepCount = post.length || mapping.postRunSteps;
       const fatalStepCount = fatal.length || mapping.fatalSteps;
       const nonfatalSteps = nonfatal.length ? nonfatal : (Array.isArray(pipeline.non_fatal_steps) ? pipeline.non_fatal_steps : []);
+      const processingNoteText = nonfatalSteps.includes('static_hostinger_export')
+        ? 'Static Hostinger export completed'
+        : (nonfatalSteps.length ? escapeHtml(nonfatalSteps.map(step => String(step || '').replace(/_/g, ' ')).join(', ')) : 'No processing notes reported');
+      const blockingIssueText = fatalStepCount > 0
+        ? `${fatalStepCount} blocking export issue${fatalStepCount === 1 ? '' : 's'} reported`
+        : 'No blocking export issues reported';
 
       const loopLine = loop.map(step => `${step.name}${step.fatal ? ' *' : ''}`).join(' → ');
       const postLine = post.map(step => step.name).join(' → ');
@@ -2428,18 +2434,18 @@
       document.getElementById('architecture-fact-check').innerHTML = `
         <div class="section-header" style="margin-bottom:14px;">
           <div>
-            <div class="section-title">Execution truth</div>
-            <div style="font-size:13px;color:var(--muted);margin-top:4px;">Website view generated from the real pipeline shape and current manifest, not a separate architecture narrative.</div>
+            <div class="section-title">Data source and update status</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;">This section explains which source and export mode generated the current demo.</div>
           </div>
         </div>
         <div class="ops-grid">
           <div class="ops-card">
             <div class="ops-card-head">
               <div>
-                <div class="ops-card-title">${escapeHtml(fact.headline || 'Fact-checked execution model')}</div>
-                <div class="ops-card-subtitle">${escapeHtml(fact.summary || 'One live sequential pipeline drives this portal.')}</div>
+                <div class="ops-card-title">Current demo data model</div>
+                <div class="ops-card-subtitle">This portal is generated from the current static TenderNed demo export.</div>
               </div>
-              <span class="badge navy">Live model</span>
+              <span class="badge navy">Demo export</span>
             </div>
             <div class="ops-card-topline">
               <span class="meta-chip">${loopStepCount} loop step${loopStepCount === 1 ? '' : 's'}</span>
@@ -2452,15 +2458,15 @@
           <div class="ops-card">
             <div class="ops-card-head">
               <div>
-                <div class="ops-card-title">Failure boundaries</div>
-                <div class="ops-card-subtitle">Core scoring and routing can stop the run. Enrichment, delivery, and reporting are allowed to fail without killing it.</div>
+                <div class="ops-card-title">Processing notes</div>
+                <div class="ops-card-subtitle">Current export status for the public Hostinger demo.</div>
               </div>
-              <span class="badge amber">${fatalStepCount} fatal</span>
+              <span class="badge amber">${escapeHtml(blockingIssueText)}</span>
             </div>
             <div class="ops-card-stats">
               ${fatal.map(step => `<span class="stat-pill">${escapeHtml(step)}</span>`).join('')}
             </div>
-            <div class="ops-note" style="line-height:1.6;">Non-fatal steps: ${escapeHtml(nonfatalSteps.join(', '))}</div>
+            <div class="ops-note" style="line-height:1.6;">${processingNoteText}</div>
           </div>
           <div class="ops-card">
             <div class="ops-card-head">
@@ -2484,11 +2490,10 @@
           <div class="ops-card-head">
             <div>
               <div class="ops-card-title">Fact-check notes</div>
-              <div class="ops-card-subtitle">The portal calls out the places where documentation usually drifts away from execution.</div>
+              <div class="ops-card-subtitle">This section explains which source and export mode generated the current demo.</div>
             </div>
           </div>
           <div class="ops-note" style="line-height:1.7;">${notes.map(note => `• ${escapeHtml(note)}`).join('<br>')}</div>
-          <div class="ops-note" style="margin-top:10px;line-height:1.6;">* indicates a fatal loop step.</div>
         </div>
       `;
     }
