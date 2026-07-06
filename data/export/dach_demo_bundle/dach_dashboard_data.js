@@ -1,5 +1,5 @@
 window.PROCESSED_DACH_DASHBOARD_DATA = {
-  "generated_at": "2026-07-06T14:56:50.334974+00:00",
+  "generated_at": "2026-07-06T15:18:31.616431+00:00",
   "summary": {
     "total_tenders": 9,
     "count_by_country": {
@@ -16,7 +16,7 @@ window.PROCESSED_DACH_DASHBOARD_DATA = {
     "average_fit_score": 67.22,
     "high_signal_count": 4,
     "timing_ready_count": 3,
-    "generated_at": "2026-07-06T14:56:50.334974+00:00",
+    "generated_at": "2026-07-06T15:18:31.616431+00:00",
     "scoring_version": "dach_fixture_scoring_v0_2",
     "disclaimer": "DACH scoring demo generated from fixture data. No live scraping performed. Not bid advice."
   },
