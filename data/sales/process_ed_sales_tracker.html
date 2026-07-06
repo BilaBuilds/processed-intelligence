@@ -1,0 +1,742 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ProcessEd Sales Tracker</title>
+  <script src="process_ed_sales_tracker_data.js"></script>
+  <style>
+    :root {
+      --navy: #07182f;
+      --navy-2: #0c2444;
+      --panel: rgba(255, 255, 255, 0.09);
+      --panel-strong: rgba(255, 255, 255, 0.14);
+      --gold: #d8ad55;
+      --gold-2: #f1d58c;
+      --text: #f6f2e8;
+      --muted: #b7c4d6;
+      --line: rgba(255, 255, 255, 0.14);
+      --danger: #ffb0a5;
+      --ok: #89e4bd;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+      color-scheme: dark;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 12%, rgba(216, 173, 85, 0.14), transparent 32rem),
+        linear-gradient(145deg, #061225 0%, #0a1b34 42%, #0f2948 100%);
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 1px solid rgba(216, 173, 85, 0.42);
+      border-radius: 8px;
+      padding: 0.62rem 0.82rem;
+      color: #07182f;
+      background: linear-gradient(180deg, var(--gold-2), var(--gold));
+      cursor: pointer;
+      font-weight: 750;
+    }
+
+    button.secondary {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--line);
+    }
+
+    button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--gold-2);
+      outline-offset: 2px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      min-width: 8rem;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      padding: 0.55rem 0.62rem;
+      color: var(--text);
+      background: rgba(2, 10, 24, 0.42);
+    }
+
+    textarea {
+      min-height: 4.5rem;
+      resize: vertical;
+    }
+
+    .shell {
+      width: min(1480px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 1.2rem 0 2rem;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.95rem 0 1.2rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .mark {
+      display: grid;
+      place-items: center;
+      width: 2.65rem;
+      height: 2.65rem;
+      border: 1px solid rgba(216, 173, 85, 0.58);
+      border-radius: 8px;
+      color: var(--gold-2);
+      background: rgba(216, 173, 85, 0.10);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+      font-weight: 900;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+
+    h1 {
+      font-size: clamp(1.55rem, 2.5vw, 2.65rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .subtle {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 0.6rem;
+    }
+
+    .grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .kpis {
+      grid-template-columns: repeat(8, minmax(8.5rem, 1fr));
+      margin-bottom: 1rem;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .kpi {
+      padding: 1rem;
+      min-height: 6.6rem;
+    }
+
+    .kpi span {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 750;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .kpi strong {
+      display: block;
+      margin-top: 0.5rem;
+      color: var(--gold-2);
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    .main-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 22rem;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .main-layout > .grid {
+      min-width: 0;
+    }
+
+    .section {
+      padding: 1rem;
+      min-width: 0;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .section h2 {
+      font-size: 1.05rem;
+      line-height: 1.2;
+    }
+
+    .pipeline {
+      display: flex;
+      gap: 0.75rem;
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      padding-bottom: 0.4rem;
+    }
+
+    .lane {
+      flex: 0 0 10.5rem;
+      min-height: 10rem;
+      padding: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.16);
+    }
+
+    .lane h3 {
+      min-height: 2.4rem;
+      color: var(--gold-2);
+      font-size: 0.82rem;
+      line-height: 1.25;
+    }
+
+    .lane-count {
+      display: inline-flex;
+      margin: 0.45rem 0 0.55rem;
+      padding: 0.16rem 0.5rem;
+      border: 1px solid rgba(216, 173, 85, 0.35);
+      border-radius: 999px;
+      color: var(--gold-2);
+      font-size: 0.76rem;
+      font-weight: 750;
+    }
+
+    .mini-card {
+      margin-top: 0.45rem;
+      padding: 0.52rem;
+      border-radius: 8px;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 0.8rem;
+      line-height: 1.35;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      min-width: 1720px;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    th, td {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.62rem;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      color: var(--gold-2);
+      background: rgba(7, 24, 47, 0.96);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    td.company-cell {
+      min-width: 13rem;
+      font-weight: 800;
+    }
+
+    td.narrow {
+      min-width: 8.2rem;
+    }
+
+    td.notes-cell, td.suppression-cell {
+      min-width: 15rem;
+    }
+
+    .check-cell {
+      display: flex;
+      justify-content: center;
+      padding-top: 0.95rem;
+    }
+
+    .check-cell input, .goal-row input {
+      width: 1.05rem;
+      min-width: 1.05rem;
+      height: 1.05rem;
+      accent-color: var(--gold);
+    }
+
+    .side-stack {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .goal-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+      padding: 0.72rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text);
+      line-height: 1.35;
+    }
+
+    .goal-row:last-child { border-bottom: 0; }
+
+    .note {
+      border-color: rgba(216, 173, 85, 0.38);
+      background: linear-gradient(135deg, rgba(216, 173, 85, 0.16), rgba(255, 255, 255, 0.07));
+    }
+
+    .templates {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .template-box {
+      padding: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.16);
+    }
+
+    .template-box h3 {
+      margin-bottom: 0.45rem;
+      color: var(--gold-2);
+      font-size: 0.9rem;
+    }
+
+    .template-box pre {
+      margin: 0.5rem 0 0;
+      overflow: auto;
+      white-space: pre-wrap;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.86rem;
+      line-height: 1.45;
+    }
+
+    .copy-status {
+      min-height: 1.4rem;
+      color: var(--ok);
+      font-size: 0.86rem;
+      margin-top: 0.5rem;
+    }
+
+    .role-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.4rem;
+      margin-top: 0.7rem;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .avoid {
+      color: var(--danger);
+      margin-top: 0.7rem;
+    }
+
+    @media (max-width: 1180px) {
+      .kpis { grid-template-columns: repeat(4, 1fr); }
+      .main-layout { grid-template-columns: 1fr; }
+      .side-stack { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 760px) {
+      .shell { width: min(100% - 1rem, 1480px); padding-top: 0.6rem; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .actions { justify-content: flex-start; width: 100%; }
+      .actions button { flex: 1 1 10rem; }
+      .kpis { grid-template-columns: repeat(2, 1fr); }
+      .split, .side-stack { grid-template-columns: 1fr; }
+      .section { padding: 0.82rem; }
+      .role-list { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark" aria-hidden="true">PE</div>
+        <div>
+          <h1>ProcessEd Sales Tracker</h1>
+          <p class="subtle">Live working tracker for targeted construction and civils outreach.</p>
+        </div>
+      </div>
+      <div class="actions">
+        <button id="exportCsv">Export current CSV</button>
+        <button class="secondary" id="resetLocal">Reset local changes</button>
+      </div>
+    </header>
+
+    <section class="grid kpis" id="kpis" aria-label="Sales outreach KPIs"></section>
+
+    <div class="main-layout">
+      <div class="grid">
+        <section class="card section">
+          <div class="section-head">
+            <div>
+              <h2>Pipeline board</h2>
+              <p class="subtle">Move rows with the status dropdown; the board updates instantly.</p>
+            </div>
+          </div>
+          <template id="pipelineStatusLabels">
+            Target identified
+            Contact found
+            Message drafted
+            Sent
+            Replied
+            Call booked
+            Pilot candidate
+            Closed / not now
+          </template>
+          <div class="pipeline" id="pipelineBoard"></div>
+        </section>
+
+        <section class="card section">
+          <div class="section-head">
+            <div>
+              <h2>Company table</h2>
+              <p class="subtle">Edits save to this browser only. Export when you want a portable copy.</p>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Company</th>
+                  <th>Priority</th>
+                  <th>Contact name</th>
+                  <th>Role</th>
+                  <th>LinkedIn URL</th>
+                  <th>Email</th>
+                  <th>Channel</th>
+                  <th>Status</th>
+                  <th>Last touch</th>
+                  <th>Next follow-up</th>
+                  <th>Sentiment</th>
+                  <th>Notes</th>
+                  <th>Demo link sent</th>
+                  <th>Call booked</th>
+                  <th>Next step</th>
+                  <th>Opt out</th>
+                  <th>Suppression note</th>
+                  <th>Copy</th>
+                </tr>
+              </thead>
+              <tbody id="companyRows"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <aside class="side-stack">
+        <section class="card section">
+          <div class="section-head">
+            <div>
+              <h2>Today's outreach goals</h2>
+              <p class="subtle">Checklist state is saved in localStorage.</p>
+            </div>
+          </div>
+          <div id="goalRows"></div>
+        </section>
+
+        <section class="card section note">
+          <h2>Compliance and targeting note</h2>
+          <p class="subtle" style="margin-top:0.6rem;">Use this tracker for manual, targeted B2B outreach. Keep opt-outs and do-not-contact requests out of future sends.</p>
+          <div class="role-list" aria-label="Target roles">
+            <span>Bid Manager</span>
+            <span>Preconstruction Manager</span>
+            <span>Commercial Director</span>
+            <span>Frameworks Manager</span>
+            <span>Business Development Manager</span>
+            <span>Estimating Manager</span>
+            <span>Head of Work Winning</span>
+            <span>Head of Frameworks</span>
+          </div>
+          <p class="subtle avoid">Avoid HR, generic procurement-only contacts unless they clearly influence bids/work-winning, and public-sector buyers as paying clients.</p>
+        </section>
+
+        <section class="card section">
+          <div class="section-head">
+            <div>
+              <h2>Outreach templates</h2>
+              <p class="subtle">Use the row buttons to copy with company/contact merged.</p>
+            </div>
+          </div>
+          <div class="templates">
+            <div class="template-box">
+              <h3>LinkedIn connection note</h3>
+              <button class="secondary" data-template="linkedin">Copy outreach message</button>
+              <pre id="linkedinTemplate">Hi {name}, I’m building ProcessEd Intelligence — a procurement intelligence demo for construction and civils teams. It turns public tender notices into shortlisted opportunities, buyer watchlists, timing signals, and review actions. Would you be open to a 15-minute look?</pre>
+            </div>
+            <div class="template-box">
+              <h3>First email</h3>
+              <button class="secondary" data-template="email">Copy first email</button>
+              <pre id="emailTemplate">Subject: Tender intelligence demo for {company}
+
+Hi {name},
+
+I’m building ProcessEd Intelligence — a procurement intelligence system for construction and civils teams.
+
+The current demo turns public tender notices into shortlisted opportunities, buyer watchlists, timing-ready review actions, and source/rationale notes.
+
+Current demo snapshot:
+• 50 tenders ingested
+• 21 shortlisted opportunities
+• 45 public buyers tracked
+• 7 timing-ready reviews
+
+I’m speaking with bid, preconstruction, and commercial teams to see where this would be useful before turning it into a paid pilot.
+
+Would you be open to a 15-minute look this week?
+
+Kind regards,
+Bilal
+ProcessEd Intelligence</pre>
+            </div>
+            <div class="template-box">
+              <h3>Follow-up</h3>
+              <button class="secondary" data-template="followup">Copy follow-up message</button>
+              <pre id="followupTemplate">Hi {name}, quick follow-up — would it be useful to see how ProcessEd turns public tender notices into a prioritised review list for construction/civils teams? Happy to send the demo link or walk through it in 15 minutes.</pre>
+            </div>
+            <div class="copy-status" id="copyStatus" role="status" aria-live="polite"></div>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "processed_sales_tracker_state_v1";
+    const GOALS_KEY = "processed_sales_tracker_goals_v1";
+    const DATA = window.PROCESSED_SALES_TRACKER_DATA;
+    const statuses = DATA.pipeline_statuses;
+    const sentiments = ["interested", "maybe", "not_now", "no_response", "negative"];
+    const fields = ["company", "priority", "contact_name", "role", "linkedin_url", "email", "channel", "status", "last_touch", "next_follow_up", "response_sentiment", "notes", "demo_link_sent", "call_booked", "next_step", "opt_out", "suppression_note"];
+    const todayGoals = [
+      "10 LinkedIn profile reviews",
+      "5 contact names identified",
+      "5 personalised messages drafted",
+      "3 messages sent",
+      "1 demo/call ask"
+    ];
+    let companies = loadCompanies();
+
+    function loadCompanies() {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+      if (!saved || !Array.isArray(saved)) return structuredClone(DATA.companies);
+      return DATA.companies.map((company) => ({ ...company, ...(saved.find((row) => row.company === company.company) || {}) }));
+    }
+
+    function saveCompanies() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(companies));
+      renderAll();
+    }
+
+    function valueForTemplate(row, key) {
+      if (key === "name") return row.contact_name || "there";
+      return row[key] || "";
+    }
+
+    function templateText(type, row = companies[0]) {
+      const map = {
+        linkedin: document.getElementById("linkedinTemplate").textContent,
+        email: document.getElementById("emailTemplate").textContent,
+        followup: document.getElementById("followupTemplate").textContent
+      };
+      return map[type].replaceAll("{name}", valueForTemplate(row, "name")).replaceAll("{company}", valueForTemplate(row, "company"));
+    }
+
+    async function copyText(text, label) {
+      await navigator.clipboard.writeText(text);
+      document.getElementById("copyStatus").textContent = `${label} copied.`;
+    }
+
+    function renderKpis() {
+      const today = new Date().toISOString().slice(0, 10);
+      const metricDefs = [
+        ["Total target companies", companies.length],
+        ["Contacts identified", companies.filter((row) => row.contact_name.trim()).length],
+        ["Messages sent", companies.filter((row) => ["Sent", "Replied", "Call booked", "Pilot candidate"].includes(row.status)).length],
+        ["Replies received", companies.filter((row) => ["Replied", "Call booked", "Pilot candidate"].includes(row.status)).length],
+        ["Calls booked", companies.filter((row) => row.call_booked || row.status === "Call booked").length],
+        ["Interested leads", companies.filter((row) => row.response_sentiment === "interested" || row.status === "Pilot candidate").length],
+        ["Not interested", companies.filter((row) => row.response_sentiment === "negative" || row.status === "Closed / not now").length],
+        ["Follow-ups due today", companies.filter((row) => row.next_follow_up && row.next_follow_up <= today && !row.opt_out).length]
+      ];
+      document.getElementById("kpis").innerHTML = metricDefs.map(([label, value]) => `<article class="card kpi"><span>${label}</span><strong>${value}</strong></article>`).join("");
+    }
+
+    function renderPipeline() {
+      document.getElementById("pipelineBoard").innerHTML = statuses.map((status) => {
+        const rows = companies.filter((row) => row.status === status);
+        const cards = rows.map((row) => `<div class="mini-card"><strong>${escapeHtml(row.company)}</strong><br>${escapeHtml(row.contact_name || "Contact not found")}<br>${escapeHtml(row.next_step || "Set next step")}</div>`).join("");
+        return `<section class="lane"><h3>${status}</h3><span class="lane-count">${rows.length}</span>${cards || '<div class="mini-card">No companies yet</div>'}</section>`;
+      }).join("");
+    }
+
+    function inputCell(row, index, field, type = "text") {
+      const value = row[field] || "";
+      return `<td class="${field === "notes" ? "notes-cell" : field === "suppression_note" ? "suppression-cell" : "narrow"}"><input data-index="${index}" data-field="${field}" type="${type}" value="${escapeAttr(value)}"></td>`;
+    }
+
+    function renderRows() {
+      document.getElementById("companyRows").innerHTML = companies.map((row, index) => `
+        <tr>
+          <td class="company-cell">${escapeHtml(row.company)}</td>
+          <td class="narrow"><select data-index="${index}" data-field="priority">${optionSet(["High", "Medium", "Low"], row.priority)}</select></td>
+          ${inputCell(row, index, "contact_name")}
+          ${inputCell(row, index, "role")}
+          ${inputCell(row, index, "linkedin_url", "url")}
+          ${inputCell(row, index, "email", "email")}
+          <td class="narrow"><select data-index="${index}" data-field="channel">${optionSet(["LinkedIn", "Email", "Phone", "Referral"], row.channel)}</select></td>
+          <td class="narrow"><select data-index="${index}" data-field="status">${optionSet(statuses, row.status)}</select></td>
+          ${inputCell(row, index, "last_touch", "date")}
+          ${inputCell(row, index, "next_follow_up", "date")}
+          <td class="narrow"><select data-index="${index}" data-field="response_sentiment">${optionSet(sentiments, row.response_sentiment)}</select></td>
+          <td class="notes-cell"><textarea data-index="${index}" data-field="notes">${escapeHtml(row.notes || "")}</textarea></td>
+          <td><label class="check-cell"><input data-index="${index}" data-field="demo_link_sent" type="checkbox" ${row.demo_link_sent ? "checked" : ""}></label></td>
+          <td><label class="check-cell"><input data-index="${index}" data-field="call_booked" type="checkbox" ${row.call_booked ? "checked" : ""}></label></td>
+          ${inputCell(row, index, "next_step")}
+          <td><label class="check-cell"><input data-index="${index}" data-field="opt_out" type="checkbox" ${row.opt_out ? "checked" : ""}></label></td>
+          <td class="suppression-cell"><textarea data-index="${index}" data-field="suppression_note">${escapeHtml(row.suppression_note || "")}</textarea></td>
+          <td class="narrow">
+            <button class="secondary row-copy" data-index="${index}" data-template="linkedin">Intro</button>
+            <button class="secondary row-copy" data-index="${index}" data-template="followup" style="margin-top:0.45rem;">Follow-up</button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function renderGoals() {
+      const saved = JSON.parse(localStorage.getItem(GOALS_KEY) || "{}");
+      document.getElementById("goalRows").innerHTML = todayGoals.map((goal, index) => `
+        <label class="goal-row">
+          <input type="checkbox" data-goal="${index}" ${saved[index] ? "checked" : ""}>
+          <span>${goal}</span>
+        </label>
+      `).join("");
+    }
+
+    function optionSet(options, selected) {
+      return options.map((option) => `<option value="${escapeAttr(option)}" ${option === selected ? "selected" : ""}>${escapeHtml(option)}</option>`).join("");
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[char]));
+    }
+
+    function escapeAttr(value) {
+      return escapeHtml(value).replace(/`/g, "&#096;");
+    }
+
+    function csvEscape(value) {
+      const text = String(value ?? "");
+      return /[",\n]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
+    }
+
+    function exportCsv() {
+      const rows = [fields.join(","), ...companies.map((row) => fields.map((field) => csvEscape(row[field])).join(","))];
+      const blob = new Blob([rows.join("\n")], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "process_ed_sales_tracker_export.csv";
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function renderAll() {
+      renderKpis();
+      renderPipeline();
+      renderRows();
+      bindEditableFields();
+      bindRowCopy();
+    }
+
+    function bindEditableFields() {
+      document.querySelectorAll("[data-index][data-field]").forEach((field) => {
+        field.addEventListener("change", updateField);
+        field.addEventListener("input", updateField);
+      });
+    }
+
+    function updateField(event) {
+      const target = event.target;
+      const index = Number(target.dataset.index);
+      const field = target.dataset.field;
+      companies[index][field] = target.type === "checkbox" ? target.checked : target.value;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(companies));
+      renderKpis();
+      renderPipeline();
+    }
+
+    function bindRowCopy() {
+      document.querySelectorAll(".row-copy").forEach((button) => {
+        button.addEventListener("click", () => copyText(templateText(button.dataset.template, companies[Number(button.dataset.index)]), `${button.textContent} message`));
+      });
+    }
+
+    document.getElementById("exportCsv").addEventListener("click", exportCsv);
+    document.getElementById("resetLocal").addEventListener("click", () => {
+      localStorage.removeItem(STORAGE_KEY);
+      companies = structuredClone(DATA.companies);
+      renderAll();
+      document.getElementById("copyStatus").textContent = "Local company edits reset.";
+    });
+    document.querySelectorAll("[data-template]").forEach((button) => {
+      button.addEventListener("click", () => copyText(templateText(button.dataset.template), button.textContent));
+    });
+    document.addEventListener("change", (event) => {
+      if (!event.target.matches("[data-goal]")) return;
+      const saved = JSON.parse(localStorage.getItem(GOALS_KEY) || "{}");
+      saved[event.target.dataset.goal] = event.target.checked;
+      localStorage.setItem(GOALS_KEY, JSON.stringify(saved));
+    });
+
+    renderGoals();
+    renderAll();
+  </script>
+</body>
+</html>
