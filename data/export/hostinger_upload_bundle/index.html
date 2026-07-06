@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ProcessEd Intelligence monitors public procurement feeds, scores tender signals, and surfaces timing-ready opportunities for construction and infrastructure teams.">
+  <title>ProcessEd Intelligence | Tender timing for construction teams</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2315263A'/%3E%3Cpath d='M16 43 42 17h12v12L29 54H16z' fill='%23F4B247'/%3E%3Cpath d='M13 19h22v9H22v14h-9z' fill='%23EDF1F2'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      --mist: #EDF1F2;
+      --ice: #E5EAEC;
+      --navy: #172A3E;
+      --navy-deep: #15263A;
+      --navy-dark: #142437;
+      --navy-panel: #182B40;
+      --amber: #F4B247;
+      --amber-deep: #F2A93B;
+      --muted: #8195A8;
+      --teal: #1EAFA4;
+      --green: #2F8B61;
+      --surface: rgba(255, 255, 255, 0.66);
+      --surface-strong: rgba(255, 255, 255, 0.86);
+      --border: rgba(21, 38, 58, 0.10);
+      --border-light: rgba(255, 255, 255, 0.72);
+      --shadow: 0 28px 90px rgba(21, 38, 58, 0.13);
+      --shadow-soft: 0 16px 42px rgba(21, 38, 58, 0.08);
+      --radius: 24px;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(244, 178, 71, 0.16), transparent 26%),
+        radial-gradient(circle at 86% 4%, rgba(30, 175, 164, 0.12), transparent 28%),
+        linear-gradient(180deg, var(--mist) 0%, var(--ice) 100%);
+      color: var(--navy-deep);
+      font-family: "Aptos", "Segoe UI Variable Text", "Segoe UI", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.45), transparent 22%, transparent 78%, rgba(255,255,255,0.34)),
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,0.62), transparent 34%);
+    }
+    a { color: inherit; text-decoration: none; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+
+    .shell {
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+    }
+    .site-header {
+      position: sticky;
+      top: 16px;
+      z-index: 30;
+      margin-top: 16px;
+    }
+    .nav-shell {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--border-light);
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.58);
+      box-shadow: 0 20px 60px rgba(21, 38, 58, 0.11);
+      backdrop-filter: blur(22px);
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      min-width: max-content;
+      font-weight: 850;
+      letter-spacing: -0.04em;
+      font-size: 22px;
+    }
+    .brand svg { width: 38px; height: 38px; flex: 0 0 auto; }
+    .brand span span { color: var(--amber); }
+    .nav-links {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .nav-links::-webkit-scrollbar { display: none; }
+    .nav-links a {
+      flex: 0 0 auto;
+      padding: 10px 12px;
+      border-radius: 999px;
+      color: rgba(21, 38, 58, 0.72);
+      font-size: 13px;
+      font-weight: 750;
+    }
+    .nav-links a:hover {
+      color: var(--navy-deep);
+      background: rgba(255, 255, 255, 0.68);
+    }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: max-content;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 18px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 850;
+      letter-spacing: 0;
+      transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary {
+      color: #fff;
+      background: var(--navy-deep);
+      box-shadow: 0 16px 32px rgba(21, 38, 58, 0.18);
+    }
+    .btn-amber {
+      color: var(--navy-deep);
+      background: linear-gradient(135deg, var(--amber), var(--amber-deep));
+      box-shadow: 0 16px 36px rgba(244, 178, 71, 0.28);
+    }
+    .btn-secondary {
+      color: var(--navy-deep);
+      background: rgba(255, 255, 255, 0.70);
+      border-color: rgba(21, 38, 58, 0.12);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 0.94fr) minmax(420px, 1.06fr);
+      gap: 44px;
+      align-items: center;
+      padding: 88px 0 46px;
+    }
+    .hero h1 {
+      max-width: 720px;
+      color: var(--navy-deep);
+      font-size: clamp(54px, 7vw, 104px);
+      line-height: 0.88;
+      letter-spacing: -0.055em;
+      font-weight: 900;
+    }
+    .hero h1 strong {
+      color: var(--amber);
+      font-weight: inherit;
+    }
+    .hero-copy {
+      margin-top: 28px;
+      max-width: 660px;
+      color: rgba(21, 38, 58, 0.74);
+      font-size: clamp(18px, 2vw, 22px);
+      line-height: 1.55;
+      font-weight: 520;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 34px;
+    }
+    .hero-proof {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 36px;
+      max-width: 620px;
+    }
+    .proof-tile {
+      padding: 16px;
+      border: 1px solid var(--border-light);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.52);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(16px);
+    }
+    .proof-value {
+      color: var(--navy-deep);
+      font-size: 26px;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .proof-label,
+    .micro-label,
+    .metric-label,
+    .card-label,
+    .footer-label {
+      color: var(--muted);
+      font-family: "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+      font-size: 10px;
+      font-weight: 850;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+    .proof-label { margin-top: 8px; }
+
+    .preview-frame {
+      position: relative;
+      min-width: 0;
+      padding: 16px;
+      border: 1px solid var(--border-light);
+      border-radius: 34px;
+      background: rgba(255,255,255,0.50);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(24px);
+    }
+    .preview-frame::before {
+      content: "";
+      position: absolute;
+      inset: 26px auto auto -8px;
+      width: 4px;
+      height: 124px;
+      border-radius: 999px;
+      background: var(--amber);
+      box-shadow: 0 0 28px rgba(244,178,71,0.45);
+    }
+    .dashboard-mock {
+      overflow: hidden;
+      border: 1px solid rgba(21,38,58,0.10);
+      border-radius: 24px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.86), rgba(255,255,255,0.58)),
+        var(--mist);
+    }
+    .mock-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 18px 18px 14px;
+      border-bottom: 1px solid rgba(21,38,58,0.08);
+    }
+    .mock-title {
+      color: var(--navy-deep);
+      font-size: 17px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+    .mock-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      color: #1D6F4A;
+      background: rgba(47,139,97,0.12);
+      font-size: 11px;
+      font-weight: 850;
+    }
+    .mock-status::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 99px;
+      background: var(--green);
+    }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      padding: 16px 18px 6px;
+    }
+    .metric {
+      min-height: 82px;
+      padding: 13px;
+      border: 1px solid rgba(21,38,58,0.09);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.58);
+      position: relative;
+    }
+    .metric::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 14px;
+      width: 3px;
+      height: calc(100% - 28px);
+      border-radius: 0 999px 999px 0;
+      background: var(--amber);
+    }
+    .metric-value {
+      margin-top: 10px;
+      color: var(--navy-deep);
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 900;
+    }
+    .opportunity-stack {
+      display: grid;
+      gap: 10px;
+      padding: 14px 18px 18px;
+    }
+    .opportunity-card {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+      padding: 14px;
+      border: 1px solid rgba(21,38,58,0.09);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.62);
+    }
+    .opportunity-name {
+      color: var(--navy-deep);
+      font-size: 15px;
+      font-weight: 900;
+    }
+    .opportunity-meta {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .score-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 58px;
+      height: 34px;
+      border-radius: 999px;
+      color: var(--navy-deep);
+      background: rgba(244,178,71,0.20);
+      border: 1px solid rgba(244,178,71,0.36);
+      font-family: "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .preview-cta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      padding: 16px 18px 18px;
+      border-top: 1px solid rgba(21,38,58,0.08);
+    }
+    .preview-cta p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .ticker {
+      margin: 18px 0 0;
+      overflow: hidden;
+      border-radius: 22px;
+      background: linear-gradient(135deg, var(--navy-dark), var(--navy-panel));
+      color: #fff;
+      box-shadow: 0 28px 70px rgba(21,38,58,0.18);
+    }
+    .ticker-track {
+      display: flex;
+      gap: 10px;
+      width: max-content;
+      padding: 13px 16px;
+      animation: ticker 30s linear infinite;
+    }
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.10);
+      color: rgba(255,255,255,0.78);
+      font-family: "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .ticker-item::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--amber);
+    }
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    .section {
+      padding: 96px 0;
+    }
+    .section-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+      gap: 54px;
+      align-items: start;
+    }
+    .section h2 {
+      color: var(--navy-deep);
+      font-size: clamp(36px, 5vw, 66px);
+      line-height: 0.96;
+      letter-spacing: -0.045em;
+      font-weight: 900;
+    }
+    .section-intro {
+      margin-top: 22px;
+      max-width: 560px;
+      color: rgba(21,38,58,0.72);
+      font-size: 18px;
+      line-height: 1.62;
+      font-weight: 520;
+    }
+    .manual-list {
+      display: grid;
+      gap: 12px;
+    }
+    .manual-row {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      padding: 17px;
+      border: 1px solid var(--border-light);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.56);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(18px);
+    }
+    .row-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: var(--navy-deep);
+      color: #fff;
+      font-family: "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .manual-row h3 {
+      color: var(--navy-deep);
+      font-size: 17px;
+      font-weight: 900;
+      letter-spacing: -0.01em;
+    }
+    .manual-row p {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .capabilities {
+      padding: 96px 0;
+      border-radius: 34px;
+      background:
+        linear-gradient(180deg, rgba(24,43,64,0.98), rgba(20,36,55,0.98)),
+        var(--navy-dark);
+      color: #fff;
+      box-shadow: 0 28px 90px rgba(21,38,58,0.22);
+    }
+    .capabilities .section h2,
+    .capabilities h2 { color: #fff; }
+    .capabilities .section-intro { color: rgba(255,255,255,0.68); }
+    .capability-head {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+      gap: 40px;
+      align-items: end;
+      margin-bottom: 34px;
+    }
+    .capability-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .capability-card {
+      min-height: 250px;
+      padding: 22px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 22px;
+      background: rgba(255,255,255,0.07);
+      position: relative;
+      overflow: hidden;
+    }
+    .capability-card::before {
+      content: "";
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      top: 0;
+      height: 3px;
+      border-radius: 999px;
+      background: var(--amber);
+    }
+    .capability-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      margin-bottom: 28px;
+      border-radius: 14px;
+      color: var(--amber);
+      background: rgba(244,178,71,0.12);
+      border: 1px solid rgba(244,178,71,0.20);
+    }
+    .capability-card h3 {
+      color: #fff;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+    .capability-card p {
+      margin-top: 12px;
+      color: rgba(255,255,255,0.66);
+      font-size: 14px;
+      line-height: 1.62;
+    }
+
+    .pilot {
+      padding: 96px 0 88px;
+    }
+    .pilot-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 30px;
+      align-items: center;
+      padding: clamp(28px, 5vw, 56px);
+      border: 1px solid var(--border-light);
+      border-radius: 34px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.78), rgba(255,255,255,0.45)),
+        rgba(255,255,255,0.56);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(22px);
+      position: relative;
+      overflow: hidden;
+    }
+    .pilot-card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 40px;
+      bottom: 40px;
+      width: 5px;
+      border-radius: 0 999px 999px 0;
+      background: var(--amber);
+    }
+    .pilot-card h2 {
+      max-width: 720px;
+      color: var(--navy-deep);
+      font-size: clamp(34px, 5vw, 62px);
+      line-height: 0.98;
+      letter-spacing: -0.045em;
+      font-weight: 900;
+    }
+    .pilot-card p {
+      margin-top: 18px;
+      max-width: 700px;
+      color: rgba(21,38,58,0.72);
+      font-size: 17px;
+      line-height: 1.62;
+    }
+
+    .footer {
+      padding: 32px 0 44px;
+      color: var(--muted);
+    }
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: center;
+      padding-top: 22px;
+      border-top: 1px solid rgba(21,38,58,0.12);
+    }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 14px;
+      font-size: 13px;
+      font-weight: 750;
+    }
+    .footer a { color: var(--navy-deep); }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    @media (max-width: 1020px) {
+      .nav-shell { grid-template-columns: 1fr; }
+      .nav-links { justify-content: flex-start; }
+      .nav-actions { justify-content: flex-start; }
+      .hero { grid-template-columns: 1fr; padding-top: 64px; }
+      .preview-frame { max-width: 720px; }
+      .section-grid,
+      .capability-head,
+      .pilot-card { grid-template-columns: 1fr; }
+      .capability-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 720px) {
+      .shell { width: min(100% - 22px, var(--max)); }
+      .site-header { top: 10px; margin-top: 10px; }
+      .nav-shell { border-radius: 22px; }
+      .nav-actions { width: 100%; }
+      .nav-actions .btn { flex: 1 1 auto; padding-inline: 12px; }
+      .hero { padding: 52px 0 28px; gap: 28px; }
+      .hero h1 { font-size: clamp(46px, 15vw, 70px); }
+      .hero-proof { grid-template-columns: 1fr; }
+      .preview-frame { padding: 10px; border-radius: 24px; }
+      .mock-topbar,
+      .preview-cta { align-items: flex-start; flex-direction: column; }
+      .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); padding-inline: 12px; }
+      .opportunity-stack,
+      .preview-cta { padding-inline: 12px; }
+      .section,
+      .capabilities,
+      .pilot { padding: 70px 0; }
+      .capabilities { border-radius: 26px; }
+      .capability-grid { grid-template-columns: 1fr; }
+      .capability-card { min-height: 0; }
+      .footer-inner { align-items: flex-start; flex-direction: column; }
+      .footer-links { justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header shell">
+    <div class="nav-shell">
+      <a class="brand" href="./index.html" aria-label="ProcessEd Intelligence home">
+        <svg viewBox="0 0 64 64" role="img" aria-label="ProcessEd mark">
+          <rect x="7" y="9" width="36" height="40" rx="4" fill="none" stroke="#15263A" stroke-width="5"/>
+          <path d="M15 45 46 14h10v10L25 55H15z" fill="#F4B247"/>
+          <path d="M46 14h10v10" fill="none" stroke="#1EAFA4" stroke-width="7" stroke-linecap="square"/>
+          <path d="M13 27h32M31 8v46M45 33h14M44 49h16" stroke="#15263A" stroke-width="3" stroke-linecap="square"/>
+        </svg>
+        <span>Process<span>Ed</span></span>
+      </a>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="#how-it-works">How it works</a>
+        <a href="#capabilities">Capabilities</a>
+        <a href="#get-access">Get access</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="btn btn-secondary" href="mailto:info@processedcivils.com?subject=ProcessEd%20Pilot%20Access%20Request">Request demo</a>
+        <a class="btn btn-primary" href="dashboard.html">Sign in</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero shell">
+      <div>
+        <h1>Win contracts before the <strong>ITT drops.</strong></h1>
+        <p class="hero-copy">ProcessEd monitors public procurement feeds, scores tender signals, and surfaces timing-ready opportunities for construction and infrastructure teams.</p>
+        <div class="hero-actions">
+          <a class="btn btn-amber" href="mailto:info@processedcivils.com?subject=ProcessEd%20Pilot%20Access%20Request">Request early access</a>
+          <a class="btn btn-secondary" href="#how-it-works">See how it works</a>
+        </div>
+        <div class="hero-proof" aria-label="Live demo metrics">
+          <div class="proof-tile"><div class="proof-value">50</div><div class="proof-label">TenderNed tenders</div></div>
+          <div class="proof-tile"><div class="proof-value">21</div><div class="proof-label">Shortlisted</div></div>
+          <div class="proof-tile"><div class="proof-value">45</div><div class="proof-label">Buyers tracked</div></div>
+        </div>
+      </div>
+
+      <aside class="preview-frame" aria-label="Dashboard preview">
+        <div class="dashboard-mock">
+          <div class="mock-topbar">
+            <div>
+              <div class="micro-label">Hostinger static demo</div>
+              <div class="mock-title">Tender timing cockpit</div>
+            </div>
+            <div class="mock-status">Live export loaded</div>
+          </div>
+          <div class="metric-grid">
+            <div class="metric"><div class="metric-label">Tenders</div><div class="metric-value">50</div></div>
+            <div class="metric"><div class="metric-label">Shortlist</div><div class="metric-value">21</div></div>
+            <div class="metric"><div class="metric-label">Hot outreach</div><div class="metric-value">5</div></div>
+            <div class="metric"><div class="metric-label">Avg fit score</div><div class="metric-value">16%</div></div>
+            <div class="metric"><div class="metric-label">Warm buyers</div><div class="metric-value">19</div></div>
+            <div class="metric"><div class="metric-label">Timing-ready</div><div class="metric-value">7</div></div>
+            <div class="metric"><div class="metric-label">Buyers tracked</div><div class="metric-value">45</div></div>
+            <div class="metric"><div class="metric-label">Pipeline runs</div><div class="metric-value">1</div></div>
+          </div>
+          <div class="opportunity-stack">
+            <article class="opportunity-card">
+              <div>
+                <div class="opportunity-name">Gemeente Helmond</div>
+                <div class="opportunity-meta">Dutch public-sector opportunity. Classified as review based on construction and civils fit signals.</div>
+              </div>
+              <div class="score-pill">55</div>
+            </article>
+            <article class="opportunity-card">
+              <div>
+                <div class="opportunity-name">Gemeente Lelystad</div>
+                <div class="opportunity-meta">Timing-ready buyer signal with relevant public infrastructure metadata.</div>
+              </div>
+              <div class="score-pill">55</div>
+            </article>
+            <article class="opportunity-card">
+              <div>
+                <div class="opportunity-name">Stichting BOOR</div>
+                <div class="opportunity-meta">Education-sector buyer surfaced for review and outreach readiness.</div>
+              </div>
+              <div class="score-pill">45</div>
+            </article>
+          </div>
+          <div class="preview-cta">
+            <p>Open the working static dashboard export with live TenderNed metadata.</p>
+            <a class="btn btn-primary" href="dashboard.html">Open live dashboard</a>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <div class="shell">
+      <div class="ticker" aria-label="Live demo ticker">
+        <div class="ticker-track">
+          <span class="ticker-item">TenderNed JSON live</span>
+          <span class="ticker-item">21 shortlisted</span>
+          <span class="ticker-item">45 buyers tracked</span>
+          <span class="ticker-item">Hostinger static demo live</span>
+          <span class="ticker-item">VPS verification pending</span>
+          <span class="ticker-item">TenderNed JSON live</span>
+          <span class="ticker-item">21 shortlisted</span>
+          <span class="ticker-item">45 buyers tracked</span>
+          <span class="ticker-item">Hostinger static demo live</span>
+          <span class="ticker-item">VPS verification pending</span>
+        </div>
+      </div>
+    </div>
+
+    <section class="section shell" id="how-it-works">
+      <div class="section-grid">
+        <div>
+          <div class="micro-label">How it works</div>
+          <h2>Your team is doing intelligence work manually.</h2>
+          <p class="section-intro">ProcessEd turns repeated tender-monitoring work into a structured intelligence flow, so teams can see what is relevant, who is active, and when outreach is worth prioritising.</p>
+        </div>
+        <div class="manual-list">
+          <article class="manual-row">
+            <span class="row-number">01</span>
+            <div><h3>Portal monitoring</h3><p>Public procurement feeds are monitored for new notices and metadata changes.</p></div>
+          </article>
+          <article class="manual-row">
+            <span class="row-number">02</span>
+            <div><h3>Deduplication</h3><p>Repeated or overlapping notices are normalised into a cleaner opportunity stream.</p></div>
+          </article>
+          <article class="manual-row">
+            <span class="row-number">03</span>
+            <div><h3>Tender relevance filtering</h3><p>Signals are scored against construction, civils, infrastructure, services, and timing cues.</p></div>
+          </article>
+          <article class="manual-row">
+            <span class="row-number">04</span>
+            <div><h3>Buyer pattern tracking</h3><p>Buyer activity is grouped so recurring demand and warm accounts become easier to spot.</p></div>
+          </article>
+          <article class="manual-row">
+            <span class="row-number">05</span>
+            <div><h3>Timing signals</h3><p>Deadline windows and fit scores are combined to surface actionable opportunities.</p></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="capabilities" id="capabilities">
+      <div class="shell">
+        <div class="capability-head">
+          <div>
+            <div class="micro-label">Capabilities</div>
+            <h2>Procurement intelligence without the spreadsheet drag.</h2>
+          </div>
+          <p class="section-intro">A static Hostinger dashboard is already rendering live Dutch TenderNed metadata, with the public demo shaped around evidence, timing, and outreach readiness.</p>
+        </div>
+        <div class="capability-grid">
+          <article class="capability-card">
+            <div class="capability-icon">01</div>
+            <h3>Tender flow</h3>
+            <p>Bring notices into one canonical opportunity stream with clean IDs, titles, buyers, dates, and links.</p>
+          </article>
+          <article class="capability-card">
+            <div class="capability-icon">02</div>
+            <h3>Buyer intelligence</h3>
+            <p>Track public buyers by relevance, recurrence, and warm-account potential.</p>
+          </article>
+          <article class="capability-card">
+            <div class="capability-icon">03</div>
+            <h3>Timing radar</h3>
+            <p>Highlight future-deadline opportunities that are ready for review and outreach.</p>
+          </article>
+          <article class="capability-card">
+            <div class="capability-icon">04</div>
+            <h3>Outreach readiness</h3>
+            <p>Separate hot outreach from watchlist activity using fit score, buyer, and deadline context.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="pilot shell" id="get-access">
+      <div class="pilot-card">
+        <div>
+          <div class="micro-label">2-week pilot</div>
+          <h2>Review live signals before scaling the workflow.</h2>
+          <p>Current public demo uses TenderNed JSON metadata and a Hostinger static dashboard export. The pilot review is designed to inspect fit scoring, buyer relevance, timing readiness, and the practical next steps for a construction or infrastructure team.</p>
+        </div>
+        <a class="btn btn-amber" href="mailto:info@processedcivils.com?subject=ProcessEd%202-Week%20Pilot%20Review">Book pilot review</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer shell" id="contact">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-label">ProcessEd Intelligence</div>
+        <p>processedcivils.com</p>
+        <p>Production VPS pipeline verification pending.</p>
+      </div>
+      <div class="footer-links">
+        <a href="dashboard.html">Open dashboard</a>
+        <a href="mailto:info@processedcivils.com?subject=ProcessEd%20Pilot%20Access%20Request">Request access</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
