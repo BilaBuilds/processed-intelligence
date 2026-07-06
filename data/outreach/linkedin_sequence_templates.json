@@ -1,0 +1,17 @@
+{
+  "version": "2026-07-06",
+  "mode": "manual_copy_paste_only",
+  "notes": [
+    "Do not automate sending.",
+    "Do not claim guaranteed tender wins.",
+    "Do not claim paying clients exist.",
+    "Mention that the Hostinger dashboard is live and the VPS production pipeline is unverified where appropriate."
+  ],
+  "templates": {
+    "connection_message": "Hi {first_name}, I am testing a tender intelligence dashboard for construction and civils bid teams. It helps spot shortlisted opportunities, buyer patterns, and timing signals. Thought it may be relevant to your role.",
+    "follow_up_1": "Thanks for connecting, {first_name}. I am running a small 2-week validation pilot for ProcessEd. The live demo is a Hostinger dashboard using TenderNed metadata, with 50 tenders loaded, 21 shortlisted, and 45 buyers tracked.",
+    "follow_up_2": "The idea is simple: reduce manual portal scanning by turning tender metadata into a shortlist, buyer watchlist, and timing-ready opportunity view. It is not automated bid submission or a promise of tender wins. It is a faster review layer for human bid judgement.",
+    "demo_ask": "Would a 15-20 minute walkthrough be useful? I can show the live dashboard, the top opportunities, and how a 2-week pilot would measure relevance, time saved, and buyer insight usefulness.",
+    "soft_close": "No pressure if this is not a current priority. I can either leave it here or send a short example of the weekly summary format so you can judge whether it is useful later."
+  }
+}
