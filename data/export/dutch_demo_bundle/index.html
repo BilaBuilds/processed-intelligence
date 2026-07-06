@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ProcessEd Netherlands Demo Dashboard</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #16202a;
+      --muted: #637083;
+      --line: #d9e1e8;
+      --paper: #f6f8fa;
+      --panel: #ffffff;
+      --accent: #0b6e69;
+      --accent-2: #b24a3b;
+      --accent-3: #2f5f9f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+    }
+    header {
+      padding: 28px clamp(16px, 4vw, 48px) 18px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
+    }
+    h1 { margin: 0 0 8px; font-size: clamp(28px, 4vw, 44px); letter-spacing: 0; }
+    h2 { margin: 0 0 14px; font-size: 22px; letter-spacing: 0; }
+    p { color: var(--muted); line-height: 1.45; }
+    main { padding: 24px clamp(16px, 4vw, 48px) 48px; }
+    .notice {
+      max-width: 960px;
+      margin: 0;
+      color: #6f3f12;
+      font-weight: 700;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .kpi, .card, .source, .segment {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .kpi strong { display: block; font-size: 28px; color: var(--accent); }
+    .kpi span, .meta { color: var(--muted); font-size: 13px; }
+    .section { margin-top: 30px; }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+    }
+    .card h3 { margin: 0 0 8px; font-size: 18px; }
+    .pillrow { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+    .pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 12px;
+      color: var(--muted);
+      background: #fbfcfd;
+    }
+    .score {
+      color: #fff;
+      background: var(--accent);
+      border-radius: 6px;
+      padding: 5px 8px;
+      font-weight: 700;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+    .urgent-high { border-left: 5px solid var(--accent-2); }
+    .urgent-medium { border-left: 5px solid var(--accent-3); }
+    .urgent-low { border-left: 5px solid var(--accent); }
+    .sources, .segments {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+    }
+    a { color: var(--accent-3); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Netherlands Demo Dashboard</h1>
+    <p class="notice">Sample/demo data only. This dashboard is not verified live tender coverage.</p>
+  </header>
+  <main>
+    <section class="grid" id="kpis"></section>
+    <section class="section">
+      <h2>Opportunity Cards</h2>
+      <div class="cards" id="opportunities"></div>
+    </section>
+    <section class="section">
+      <h2>Source Coverage</h2>
+      <div class="sources" id="sources"></div>
+    </section>
+    <section class="section">
+      <h2>Outreach Segments</h2>
+      <div class="segments" id="segments"></div>
+    </section>
+  </main>
+  <script src="dutch_dashboard_data.js"></script>
+  <script>
+    const data = window.DUTCH_DASHBOARD_DATA;
+    const fmt = new Intl.NumberFormat("en-GB");
+    const money = new Intl.NumberFormat("en-GB", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
+    const kpis = [
+      ["Total opportunities", data.kpis.total_opportunities],
+      ["Netherlands-specific", data.kpis.netherlands_specific],
+      ["EU/cross-border", data.kpis.cross_border_relevant],
+      ["Average fit score", data.kpis.average_fit_score],
+      ["High urgency", data.kpis.high_urgency],
+      ["Estimated value", money.format(data.kpis.total_estimated_value_eur)]
+    ];
+    document.getElementById("kpis").innerHTML = kpis.map(([label, value]) => `<div class="kpi"><strong>${value}</strong><span>${label}</span></div>`).join("");
+    document.getElementById("opportunities").innerHTML = data.opportunities.map((item) => `
+      <article class="card urgent-${item.urgency}">
+        <span class="score">${item.fit_score} fit</span>
+        <h3>${item.title}</h3>
+        <div class="meta">${item.buyer} | ${item.region} | ${item.deadline}</div>
+        <p>${item.summary_en}</p>
+        <div class="pillrow">
+          <span class="pill">${item.category}</span>
+          <span class="pill">${item.source}</span>
+          <span class="pill">${money.format(item.estimated_value_eur)}</span>
+        </div>
+        <p><strong>Action:</strong> ${item.recommended_action}</p>
+        <p class="meta">${item.data_status}</p>
+      </article>
+    `).join("");
+    document.getElementById("sources").innerHTML = data.source_coverage.map((item) => `
+      <article class="source">
+        <h3>${item.source}</h3>
+        <p>${fmt.format(item.sample_records)} sample records</p>
+        <p class="meta">${item.access_status}</p>
+      </article>
+    `).join("");
+    document.getElementById("segments").innerHTML = data.outreach_segments.map((item) => `
+      <article class="segment">
+        <h3>${item.segment_name}</h3>
+        <p>${item.positioning}</p>
+        <div class="pillrow">
+          <span class="pill">${item.priority}</span>
+          <span class="pill">${item.cpv_focus}</span>
+        </div>
+      </article>
+    `).join("");
+  </script>
+</body>
+</html>
