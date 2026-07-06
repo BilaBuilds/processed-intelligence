@@ -1,0 +1,1032 @@
+From 3e2cab6019cb83aec96923fa23425e8c087cd699 Mon Sep 17 00:00:00 2001
+From: Bilal <bila.li@live.com>
+Date: Mon, 6 Jul 2026 01:05:17 +0100
+Subject: [PATCH] Add pilot validation and outreach pack
+
+---
+ .../outreach/linkedin_sequence_templates.json |  17 ++
+ data/outreach/ranked_buyers_TEMPLATE.csv      |   2 +
+ data/pilot/pilot_tracker_TEMPLATE.csv         |   2 +
+ docs/DEMO_SCRIPT.md                           |  87 ++++++++
+ docs/LINKEDIN_OUTREACH_PLAYBOOK.md            |  75 +++++++
+ docs/PILOT_CONVERSION_EMAILS.md               | 103 +++++++++
+ docs/PILOT_SUCCESS_METRICS.md                 | 126 +++++++++++
+ docs/PILOT_VALIDATION_FRAMEWORK.md            |  98 +++++++++
+ scripts/linkedin_outreach_prep.py             | 207 ++++++++++++++++++
+ tests/test_linkedin_outreach_prep.py          | 114 ++++++++++
+ tests/test_pilot_docs_exist.py                | 102 +++++++++
+ 11 files changed, 933 insertions(+)
+ create mode 100644 data/outreach/linkedin_sequence_templates.json
+ create mode 100644 data/outreach/ranked_buyers_TEMPLATE.csv
+ create mode 100644 data/pilot/pilot_tracker_TEMPLATE.csv
+ create mode 100644 docs/DEMO_SCRIPT.md
+ create mode 100644 docs/LINKEDIN_OUTREACH_PLAYBOOK.md
+ create mode 100644 docs/PILOT_CONVERSION_EMAILS.md
+ create mode 100644 docs/PILOT_SUCCESS_METRICS.md
+ create mode 100644 docs/PILOT_VALIDATION_FRAMEWORK.md
+ create mode 100644 scripts/linkedin_outreach_prep.py
+ create mode 100644 tests/test_linkedin_outreach_prep.py
+ create mode 100644 tests/test_pilot_docs_exist.py
+
+diff --git a/data/outreach/linkedin_sequence_templates.json b/data/outreach/linkedin_sequence_templates.json
+new file mode 100644
+index 0000000..c2a497a
+--- /dev/null
++++ b/data/outreach/linkedin_sequence_templates.json
+@@ -0,0 +1,17 @@
++{
++  "version": "2026-07-06",
++  "mode": "manual_copy_paste_only",
++  "notes": [
++    "Do not automate sending.",
++    "Do not claim guaranteed tender wins.",
++    "Do not claim paying clients exist.",
++    "Mention that the Hostinger dashboard is live and the VPS production pipeline is unverified where appropriate."
++  ],
++  "templates": {
++    "connection_message": "Hi {first_name}, I am testing a tender intelligence dashboard for construction and civils bid teams. It helps spot shortlisted opportunities, buyer patterns, and timing signals. Thought it may be relevant to your role.",
++    "follow_up_1": "Thanks for connecting, {first_name}. I am running a small 2-week validation pilot for ProcessEd. The live demo is a Hostinger dashboard using TenderNed metadata, with 50 tenders loaded, 21 shortlisted, and 45 buyers tracked.",
++    "follow_up_2": "The idea is simple: reduce manual portal scanning by turning tender metadata into a shortlist, buyer watchlist, and timing-ready opportunity view. It is not automated bid submission or a promise of tender wins. It is a faster review layer for human bid judgement.",
++    "demo_ask": "Would a 15-20 minute walkthrough be useful? I can show the live dashboard, the top opportunities, and how a 2-week pilot would measure relevance, time saved, and buyer insight usefulness.",
++    "soft_close": "No pressure if this is not a current priority. I can either leave it here or send a short example of the weekly summary format so you can judge whether it is useful later."
++  }
++}
+diff --git a/data/outreach/ranked_buyers_TEMPLATE.csv b/data/outreach/ranked_buyers_TEMPLATE.csv
+new file mode 100644
+index 0000000..48501d0
+--- /dev/null
++++ b/data/outreach/ranked_buyers_TEMPLATE.csv
+@@ -0,0 +1,2 @@
++name,first_name,last_name,company,title,linkedin_url,email,sector,region,buyer_score,notes
++Alex Morgan,Alex,Morgan,Example Civils Ltd,Bid Manager,https://www.linkedin.com/in/example,alex@example.com,civils,UK,75,Template row only; replace before outreach.
+diff --git a/data/pilot/pilot_tracker_TEMPLATE.csv b/data/pilot/pilot_tracker_TEMPLATE.csv
+new file mode 100644
+index 0000000..9e82b1b
+--- /dev/null
++++ b/data/pilot/pilot_tracker_TEMPLATE.csv
+@@ -0,0 +1,2 @@
++pilot_id,company,contact_name,title,email,linkedin_url,country,sector,region,persona,pilot_start,pilot_end,demo_completed,weekly_summary_sent,tenders_reviewed,relevant_tenders,maybe_relevant_tenders,irrelevant_tenders,buyers_tracked,timing_ready_reviewed,hot_outreach_reviewed,time_saved_hours,buyer_insight_score,opportunity_quality_score,demo_to_pilot_status,pilot_to_paid_status,next_action,notes
++PILOT-001,Example Civils Ltd,Alex Morgan,Bid Manager,alex@example.com,https://www.linkedin.com/in/example,UK,civils,London,Bid Manager,2026-07-06,2026-07-20,no,no,0,0,0,0,0,0,0,0,0,0,invited,not_started,book demo,Template row only
+diff --git a/docs/DEMO_SCRIPT.md b/docs/DEMO_SCRIPT.md
+new file mode 100644
+index 0000000..a33d6cf
+--- /dev/null
++++ b/docs/DEMO_SCRIPT.md
+@@ -0,0 +1,87 @@
++# 10-Minute Demo Script
++
++## 0:00-1:00 - Set The Problem
++
++"Bid teams rarely lose time because one portal is impossible to search. They lose time because timing signals, buyer patterns, and fit signals are scattered. The result is late discovery, noisy shortlists, and too much manual triage before anyone can decide whether an opportunity is worth action."
++
++"This demo shows a live Hostinger static dashboard using TenderNed JSON metadata. It is designed to validate whether ProcessEd can help a construction or civils team review public-sector opportunities faster. It is not an automated bid submission tool, and the VPS production pipeline is still unverified."
++
++## 1:00-2:00 - Frame The Live Demo
++
++"The dashboard is live on Hostinger, with no VPS, Flask, or DuckDB dependency for this demo. The current dataset is Dutch TenderNed metadata. The UK production pipeline is not part of this pilot unless verified later."
++
++Point out:
++
++- 50 Dutch tenders loaded.
++- 21 shortlisted opportunities.
++- 45 buyers tracked.
++- Average fit score: 16 percent.
++
++## 2:00-4:00 - Show The Dashboard
++
++Walk through the main dashboard KPIs:
++
++- Total tenders loaded.
++- Shortlist count.
++- Buyer count.
++- Hot outreach items.
++- Warm buyers.
++- Timing-ready opportunities.
++
++Talk track:
++
++"This is the first-pass triage layer. The aim is not to replace bid judgement. The aim is to remove the first hour of hunting, filtering, and asking 'is there anything here worth looking at?'"
++
++## 4:00-5:30 - Show Top Opportunities
++
++Open the top opportunities area and explain:
++
++- Opportunity title.
++- Buyer.
++- Deadline/timing.
++- Fit score.
++- Summary.
++- Practical next step.
++
++Talk track:
++
++"The useful part is not just that a tender exists. It is the short explanation of why it may be relevant, what buyer is attached, and whether the timing is worth attention now."
++
++## 5:30-6:45 - Show Hot Outreach And Timing-Ready Signals
++
++Show:
++
++- 5 hot outreach items.
++- 7 timing-ready opportunities.
++- Buyer warmth where available.
++
++Talk track:
++
++"For business development and framework teams, this is where the system becomes more interesting. It highlights where buyer timing or repeat activity may justify a human-reviewed contact or internal review."
++
++## 6:45-8:15 - Ask Discovery Questions
++
++Ask five questions:
++
++1. Which sectors and work types should be included or excluded for your team?
++2. Which regions or buyers matter most over the next quarter?
++3. How do you currently decide whether a tender is worth review?
++4. Where do timing signals usually get missed today?
++5. What would a useful weekly summary need to contain for you to keep using it?
++
++## 8:15-9:30 - Pilot Ask
++
++"The sensible next step is a 2-week validation pilot. We use the live dashboard as the review surface, agree your target sectors and buyer types, and send a short weekly summary. The goal is to measure relevance, time saved, buyer insight usefulness, and whether the shortlist creates enough value to justify a paid continuation."
++
++## 9:30-10:00 - Close
++
++"If this looks useful, I suggest we pick one niche, one geography, and a small target buyer list. I will prepare the pilot tracker and first weekly review. At the end of two weeks, we decide from evidence whether it is worth continuing."
++
++## Guardrails
++
++- Do not claim guaranteed wins.
++- Do not claim automated bid submission.
++- Do not claim paying clients exist.
++- Mention that the Hostinger dashboard is live.
++- Mention that TenderNed JSON metadata is working.
++- Mention that the VPS production pipeline is still unverified.
+diff --git a/docs/LINKEDIN_OUTREACH_PLAYBOOK.md b/docs/LINKEDIN_OUTREACH_PLAYBOOK.md
+new file mode 100644
+index 0000000..a03f648
+--- /dev/null
++++ b/docs/LINKEDIN_OUTREACH_PLAYBOOK.md
+@@ -0,0 +1,75 @@
++# LinkedIn Outreach Playbook
++
++## Purpose
++
++Use LinkedIn manually to start relevant conversations with bid, preconstruction, commercial, framework, and business development leaders in UK/NL construction, civils, infrastructure, and public-sector supplier teams.
++
++This playbook is for copy-paste outreach only. It does not automate sending, does not require Apollo, does not require internet access, and does not claim guaranteed tender wins.
++
++## Positioning
++
++Lead with a practical problem:
++
++Bid teams miss useful timing signals and buyer patterns because public-sector opportunity data is scattered across portals, buyer pages, and spreadsheets.
++
++Then introduce the demo:
++
++ProcessEd has a live Hostinger static dashboard using TenderNed JSON metadata. The demo currently has 50 Dutch tenders loaded, 21 shortlisted, 45 buyers tracked, 5 hot outreach items, 19 warm buyers, and 7 timing-ready opportunities.
++
++Important caveat:
++
++The VPS production pipeline is still unverified. The UK production pipeline is not part of this pilot unless verified later.
++
++## Target Personas
++
++- Bid Manager
++- Preconstruction Lead
++- Commercial Director
++- Framework Manager
++- Business Development Director
++
++## Manual Sequence
++
++### 1. Connection Request Under 300 Characters
++
++Hi {{first_name}}, I am testing a tender intelligence dashboard for construction and civils bid teams. It helps spot shortlisted opportunities, buyer patterns, and timing signals. Thought it may be relevant to your role.
++
++### 2. Follow-Up After Acceptance
++
++Thanks for connecting, {{first_name}}. I am running a small 2-week validation pilot for ProcessEd. The live demo is a Hostinger dashboard using TenderNed metadata, with 50 tenders loaded, 21 shortlisted, and 45 buyers tracked.
++
++### 3. Value Message
++
++The idea is simple: reduce manual portal scanning by turning tender metadata into a shortlist, buyer watchlist, and timing-ready opportunity view. It is not automated bid submission or a promise of tender wins. It is a faster review layer for human bid judgement.
++
++### 4. Demo Ask
++
++Would a 15-20 minute walkthrough be useful? I can show the live dashboard, the top opportunities, and how a 2-week pilot would measure relevance, time saved, and buyer insight usefulness.
++
++### 5. Soft Close
++
++No pressure if this is not a current priority. I can either leave it here or send a short example of the weekly summary format so you can judge whether it is useful later.
++
++## Qualification Notes
++
++Good-fit signals:
++
++- Mentions bids, tenders, preconstruction, frameworks, public sector, infrastructure, civils, highways, drainage, housing, utilities, or procurement.
++- Works in UK/NL construction or adjacent infrastructure.
++- Responsible for finding, qualifying, or winning public-sector work.
++
++Weak-fit signals:
++
++- Pure private-sector sales role with no tender responsibility.
++- Consultancy, software, HR, legal, catering, cleaning, or security unless there is a clear infrastructure angle.
++- Individual consumer profile or no business relevance.
++
++## Compliance Guardrails
++
++- Send manually only.
++- Personalise lightly from public profile context.
++- Do not scrape private data.
++- Do not imply a relationship that does not exist.
++- Do not claim paying clients exist.
++- Do not promise tender wins.
++- Do not claim the VPS pipeline is verified.
+diff --git a/docs/PILOT_CONVERSION_EMAILS.md b/docs/PILOT_CONVERSION_EMAILS.md
+new file mode 100644
+index 0000000..e87983d
+--- /dev/null
++++ b/docs/PILOT_CONVERSION_EMAILS.md
+@@ -0,0 +1,103 @@
++# Pilot Conversion Email Templates
++
++These templates are for manual, human-reviewed outreach only. They do not claim guaranteed tender wins, automated bid submission, or traction that has not been evidenced.
++
++## 1. Pilot Invitation Email
++
++Subject: 2-week tender intelligence pilot for your bid team
++
++Hi {{first_name}},
++
++I am running a small 2-week validation pilot for ProcessEd, a tender intelligence dashboard for construction, civils, infrastructure, and public-sector bid teams.
++
++The live demo is a Hostinger static dashboard using TenderNed JSON metadata. It currently shows 50 Dutch tenders, 21 shortlisted opportunities, 45 tracked buyers, 5 hot outreach items, and 7 timing-ready opportunities.
++
++The pilot is simple: we review the dashboard against your target sectors and regions, track useful buyers, and send a short weekly summary of the opportunities worth looking at.
++
++It is not automated bid submission, legal/procurement advice, or a guarantee of tender wins. The VPS production pipeline is still unverified, and UK production ingestion is not part of this pilot unless verified later.
++
++Would a 20-minute walkthrough be useful next week?
++
++Best,
++Bilal
++
++## 2. Post-Demo Follow-Up
++
++Subject: ProcessEd pilot next steps
++
++Hi {{first_name}},
++
++Thanks for taking a look at the ProcessEd dashboard.
++
++Based on the demo, the sensible pilot would be:
++
++- confirm your target work types and exclusion rules
++- review shortlisted opportunities from the live Hostinger dashboard
++- track relevant buyers and timing-ready opportunities
++- send one concise weekly summary
++- review after two weeks whether the signal is strong enough to continue
++
++The current demo uses TenderNed JSON metadata. The Hostinger static dashboard is live; the VPS production pipeline remains unverified.
++
++If useful, I can set up a lightweight pilot tracker and start with one sector/region focus.
++
++Best,
++Bilal
++
++## 3. Mid-Pilot Check-In
++
++Subject: Quick pilot check-in
++
++Hi {{first_name}},
++
++Quick check-in on the ProcessEd pilot.
++
++Could you score the latest shortlist against three things?
++
++- Relevance: were the opportunities close enough to your target work?
++- Timing: did any items deserve review sooner than you would normally catch them?
++- Buyer insight: were any buyers worth tracking or researching further?
++
++No need for a long response. A few comments on what to include, exclude, or reweight will help tune the next summary.
++
++Best,
++Bilal
++
++## 4. End-Of-Pilot Conversion Email
++
++Subject: ProcessEd pilot review
++
++Hi {{first_name}},
++
++We have reached the end of the 2-week ProcessEd validation pilot.
++
++The decision point is whether the dashboard and weekly summary created enough value to justify continuing as a paid intelligence workflow.
++
++The main things to review are:
++
++- how many shortlisted tenders were genuinely relevant
++- whether the dashboard saved manual scanning time
++- whether buyer tracking was useful
++- whether timing-ready opportunities changed follow-up priority
++- what would need to be added before this becomes part of your weekly process
++
++If the signal is strong, I suggest we agree a narrow paid continuation around one sector, one region, and a weekly review pack. If it is not strong enough yet, I will capture the gaps and close the pilot cleanly.
++
++Best,
++Bilal
++
++## 5. Soft No-Response Follow-Up
++
++Subject: Close the loop?
++
++Hi {{first_name}},
++
++Just closing the loop on the ProcessEd pilot idea.
++
++The current demo is best suited to teams that want faster tender triage, buyer tracking, and timing signals from public-sector opportunity data. If that is not a priority right now, no problem.
++
++Should I leave this for now, or would it still be useful to send a short example dashboard summary?
++
++Best,
++Bilal
++
+diff --git a/docs/PILOT_SUCCESS_METRICS.md b/docs/PILOT_SUCCESS_METRICS.md
+new file mode 100644
+index 0000000..366b6ac
+--- /dev/null
++++ b/docs/PILOT_SUCCESS_METRICS.md
+@@ -0,0 +1,126 @@
++# Pilot Success Metrics
++
++## Measurement Goal
++
++The 2-week pilot should answer one question: does the live Hostinger TenderNed dashboard help a construction, civils, infrastructure, or public-sector bid team make better opportunity decisions with less manual scanning?
++
++The dashboard demo is live on Hostinger and currently uses TenderNed JSON metadata. The VPS production pipeline is still unverified, and the UK production pipeline is not part of this pilot unless verified later.
++
++## Baseline Demo Metrics
++
++- Tenders loaded: 50
++- Shortlisted: 21
++- Buyers tracked: 45
++- Hot outreach items: 5
++- Warm buyers: 19
++- Timing-ready opportunities: 7
++- Average fit score: 16 percent
++
++These are demo baseline numbers, not production service-level guarantees.
++
++## Metric 1 - Tender Relevance
++
++Definition: percentage of shortlisted opportunities the pilot participant considers worth at least a quick review.
++
++Target:
++
++- Strong signal: 50 percent or more are relevant enough for review.
++- Weak signal: below 25 percent are relevant after exclusion rules are applied.
++
++Evidence to capture:
++
++- Relevant / maybe / irrelevant classification.
++- Reason for rejection.
++- Missing sector, region, value, buyer, or timing criteria.
++
++## Metric 2 - Time Saved
++
++Definition: estimated time saved compared with manually scanning portals and buyer pages.
++
++Target:
++
++- Strong signal: at least 1-2 hours saved per week for a small bid or BD team.
++- Weak signal: dashboard does not reduce manual scanning or decision time.
++
++Evidence to capture:
++
++- Current manual process.
++- Time spent reviewing ProcessEd summary.
++- Time normally spent finding equivalent opportunities.
++
++## Metric 3 - Buyer Insight Usefulness
++
++Definition: whether buyer tracking, warm buyer identification, and repeat buyer context help commercial decisions.
++
++Target:
++
++- Strong signal: participant identifies at least 3 buyers worth tracking.
++- Weak signal: buyer context does not affect action or prioritisation.
++
++Evidence to capture:
++
++- Buyers marked warm, strategic, or ignore.
++- Buyer notes requested by the participant.
++- Any buyer pattern that changes follow-up priority.
++
++## Metric 4 - Opportunity Discovery Quality
++
++Definition: whether the pilot surfaces opportunities that are timely, actionable, and not obvious noise.
++
++Target:
++
++- Strong signal: at least 3 timing-ready opportunities or useful buyer signals in two weeks.
++- Weak signal: opportunities are too generic, too late, or outside the participant's market.
++
++Evidence to capture:
++
++- Timing-ready opportunities reviewed.
++- Opportunity selected for action.
++- Opportunity rejected because deadline, scope, or location did not fit.
++
++## Metric 5 - Demo-To-Pilot Conversion
++
++Definition: percentage of qualified demos that become a 2-week pilot.
++
++Target:
++
++- Early validation target: 20-30 percent of qualified demos convert to pilot.
++
++Notes:
++
++- This is a validation target only.
++- Do not describe it as current achieved performance unless measured later.
++
++## Metric 6 - Pilot-To-Paid Conversion
++
++Definition: percentage of completed pilots that become a paid subscription, paid report, or paid weekly intelligence workflow.
++
++Target:
++
++- Early validation target: 25-50 percent of completed pilots where relevance and time saved are strong.
++
++Notes:
++
++- Do not claim paying clients exist.
++- Record reasons for no-conversion: relevance, budget, timing, trust, missing UK data, missing workflow integration, or unclear ROI.
++
++## Pass / Continue / Stop Decision
++
++Pass:
++
++- Shortlist relevance is credible.
++- At least one meaningful buyer or timing insight is found.
++- The participant says the weekly summary would save time.
++- There is a specific paid continuation path.
++
++Continue:
++
++- Feedback is positive but targeting needs refinement.
++- Participant wants UK data verification before paid use.
++- Buyer tracking is useful, but opportunity scoring needs tuning.
++
++Stop:
++
++- Shortlists are irrelevant after tuning.
++- Timing and buyer signals do not change decisions.
++- Participant does not see a workflow where this saves time or improves action.
+diff --git a/docs/PILOT_VALIDATION_FRAMEWORK.md b/docs/PILOT_VALIDATION_FRAMEWORK.md
+new file mode 100644
+index 0000000..030785d
+--- /dev/null
++++ b/docs/PILOT_VALIDATION_FRAMEWORK.md
+@@ -0,0 +1,98 @@
++# ProcessEd 2-Week Pilot Validation Framework
++
++## Objective
++
++Validate whether the live ProcessEd Hostinger TenderNed dashboard can help UK/NL construction, civils, infrastructure, and public-sector bid teams find relevant tender opportunities faster, understand buyer timing signals earlier, and decide which opportunities deserve follow-up.
++
++This is a demo-led pilot, not a claim of production automation. The current demo uses TenderNed JSON metadata, the Hostinger static dashboard is live, and the VPS production pipeline is still unverified. The UK production pipeline is not part of this pilot unless it is verified later and explicitly added to scope.
++
++## Ideal Customer Profile
++
++The pilot is designed for:
++
++- UK/NL construction contractors
++- Civils and infrastructure firms
++- Public-sector bid teams
++- Preconstruction teams
++- Framework and business development teams tracking public buyers
++
++Best-fit companies already monitor public-sector opportunities and want a faster way to spot timing, fit, buyer patterns, and early engagement opportunities.
++
++## Buyer Personas
++
++- Bid Manager: needs faster bid/no-bid triage and fewer missed deadlines.
++- Preconstruction Lead: needs early visibility of work that fits capability and region.
++- Commercial Director: wants a short list of credible opportunities without dashboard noise.
++- Framework Manager: tracks buyers, frameworks, repeat patterns, and route-to-market clues.
++- Business Development Director: wants warm buyer signals and timely reasons to start a conversation.
++
++## What The Pilot Delivers
++
++- Live tender dashboard review using the Hostinger static dashboard.
++- Review of the current TenderNed demo data: 50 Dutch tenders loaded, 21 shortlisted, and 45 buyers tracked.
++- Shortlisted opportunities with scores, summaries, and practical next-step notes.
++- Buyer tracking for repeat or warm public-sector buyers.
++- Timing-ready opportunity list for tenders where deadline or recency makes action sensible.
++- Weekly summary/report covering relevance, buyer insight, timing, and next actions.
++- Manual outreach support material for human-reviewed follow-up.
++
++## Current Demo Evidence
++
++- Hostinger dashboard is live.
++- TenderNed JSON data is working.
++- 50 Dutch tenders are loaded.
++- 21 opportunities are shortlisted.
++- 45 buyers are tracked.
++- 5 hot outreach items are visible.
++- 19 warm buyers are visible.
++- 7 timing-ready opportunities are visible.
++- Average fit score is currently 16 percent.
++- Top opportunities are scored and summarised.
++- There is no VPS, Flask, or DuckDB dependency for the live static demo.
++
++## Out Of Scope
++
++- No automated bid submission.
++- No guaranteed tender wins.
++- No legal advice or procurement advice.
++- No full CRM integration yet.
++- No automated LinkedIn sending.
++- No automated email sending without human review.
++- No claim that UK production ingestion is active in this pilot.
++- No reliance on VPS production pipeline until separately verified.
++
++## Pilot Structure
++
++Week 1:
++
++- 30-minute onboarding and discovery call.
++- Confirm target sectors, regions, buyer types, and exclusion criteria.
++- Review the live dashboard and explain the TenderNed metadata basis.
++- Select example opportunities and buyer patterns to validate.
++- Deliver the first short summary with relevance and timing observations.
++
++Week 2:
++
++- Review the second batch of findings.
++- Capture feedback on relevance, time saved, buyer usefulness, and missed categories.
++- Refine fit rules manually from feedback.
++- Agree whether a paid continuation is justified.
++
++## Validation Questions
++
++- Did the dashboard surface tenders the team would otherwise have missed?
++- Were shortlisted opportunities relevant enough to review?
++- Did buyer tracking reveal useful patterns?
++- Did timing-ready signals make outreach or bid review easier?
++- Did the weekly summary save meaningful manual scanning time?
++- What would need to be true for this to become a paid workflow?
++
++## Compliance And Positioning Guardrails
++
++- Present this as a 2-week validation pilot, not a mature procurement automation platform.
++- Say the Hostinger static dashboard is live.
++- Say TenderNed JSON metadata is working.
++- Say the VPS production pipeline is still unverified.
++- Do not claim paying clients exist.
++- Do not promise tender outcomes.
++- Do not imply the system submits bids or gives procurement/legal advice.
+diff --git a/scripts/linkedin_outreach_prep.py b/scripts/linkedin_outreach_prep.py
+new file mode 100644
+index 0000000..4bd54b7
+--- /dev/null
++++ b/scripts/linkedin_outreach_prep.py
+@@ -0,0 +1,207 @@
++from __future__ import annotations
++
++import argparse
++import csv
++import json
++from pathlib import Path
++from typing import Any
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++DEFAULT_INPUT = REPO_ROOT / "data" / "outreach" / "ranked_buyers.csv"
++DEFAULT_OUTPUT = REPO_ROOT / "data" / "outreach" / "linkedin_manual_queue.csv"
++DEFAULT_TEMPLATE = REPO_ROOT / "data" / "outreach" / "ranked_buyers_TEMPLATE.csv"
++TEMPLATE_JSON = REPO_ROOT / "data" / "outreach" / "linkedin_sequence_templates.json"
++
++INPUT_COLUMNS = [
++    "name",
++    "first_name",
++    "last_name",
++    "company",
++    "title",
++    "linkedin_url",
++    "email",
++    "sector",
++    "region",
++    "buyer_score",
++    "notes",
++]
++
++OUTPUT_COLUMNS = [
++    *INPUT_COLUMNS,
++    "priority",
++    "connection_message",
++    "follow_up_1",
++    "follow_up_2",
++    "demo_ask",
++    "soft_close",
++]
++
++BLOCKED_CLAIMS = (
++    "guaranteed win",
++    "guaranteed wins",
++    "guarantee tender wins",
++    "guaranteed tender wins",
++    "paying clients",
++    "automated sending",
++)
++
++
++def build_parser() -> argparse.ArgumentParser:
++    parser = argparse.ArgumentParser(
++        description=(
++            "Prepare a manual LinkedIn outreach queue. This script does not send "
++            "messages, does not use Apollo, and does not require internet access."
++        )
++    )
++    parser.add_argument(
++        "--input",
++        type=Path,
++        default=DEFAULT_INPUT,
++        help="Ranked buyer CSV. If missing, a ranked_buyers_TEMPLATE.csv is created.",
++    )
++    parser.add_argument(
++        "--output",
++        type=Path,
++        default=DEFAULT_OUTPUT,
++        help="Manual LinkedIn queue CSV to write when input exists.",
++    )
++    return parser
++
++
++def main() -> int:
++    args = build_parser().parse_args()
++    input_path = resolve_path(args.input)
++    output_path = resolve_path(args.output)
++
++    if not input_path.exists():
++        template_path = DEFAULT_TEMPLATE
++        write_ranked_buyers_template(template_path)
++        print(f"Input CSV not found. Created template: {template_path}")
++        return 0
++
++    rows = read_rows(input_path)
++    templates = load_templates(TEMPLATE_JSON)
++    output_rows = [build_queue_row(row, templates) for row in rows]
++    assert_no_blocked_claims(output_rows)
++
++    output_path.parent.mkdir(parents=True, exist_ok=True)
++    with output_path.open("w", encoding="utf-8", newline="") as output_file:
++        writer = csv.DictWriter(output_file, fieldnames=OUTPUT_COLUMNS)
++        writer.writeheader()
++        writer.writerows(output_rows)
++
++    print(f"Wrote manual LinkedIn queue: {output_path}")
++    print("Manual copy-paste only. No messages were sent.")
++    return 0
++
++
++def resolve_path(path: Path) -> Path:
++    if path.is_absolute():
++        return path
++    return REPO_ROOT / path
++
++
++def write_ranked_buyers_template(path: Path) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    if path.exists():
++        return
++    with path.open("w", encoding="utf-8", newline="") as template_file:
++        writer = csv.DictWriter(template_file, fieldnames=INPUT_COLUMNS)
++        writer.writeheader()
++        writer.writerow(
++            {
++                "name": "Alex Morgan",
++                "first_name": "Alex",
++                "last_name": "Morgan",
++                "company": "Example Civils Ltd",
++                "title": "Bid Manager",
++                "linkedin_url": "https://www.linkedin.com/in/example",
++                "email": "alex@example.com",
++                "sector": "civils",
++                "region": "UK",
++                "buyer_score": "75",
++                "notes": "Template row only; replace before outreach.",
++            }
++        )
++
++
++def read_rows(path: Path) -> list[dict[str, str]]:
++    with path.open("r", encoding="utf-8-sig", newline="") as input_file:
++        reader = csv.DictReader(input_file)
++        return [{column: (row.get(column) or "").strip() for column in INPUT_COLUMNS} for row in reader]
++
++
++def load_templates(path: Path) -> dict[str, str]:
++    with path.open("r", encoding="utf-8") as template_file:
++        payload = json.load(template_file)
++    templates = payload.get("templates", {})
++    if not isinstance(templates, dict):
++        raise ValueError("linkedin_sequence_templates.json missing templates object")
++    required = {"connection_message", "follow_up_1", "follow_up_2", "demo_ask", "soft_close"}
++    missing = required - set(templates)
++    if missing:
++        raise ValueError(f"LinkedIn templates missing: {', '.join(sorted(missing))}")
++    return {key: str(value) for key, value in templates.items()}
++
++
++def build_queue_row(row: dict[str, str], templates: dict[str, str]) -> dict[str, str]:
++    first_name = first_name_for(row)
++    values: dict[str, Any] = {
++        **row,
++        "first_name": first_name,
++        "company": row.get("company") or "your team",
++        "title": row.get("title") or "your role",
++        "sector": row.get("sector") or "construction",
++        "region": row.get("region") or "UK/NL",
++    }
++    return {
++        **row,
++        "first_name": first_name,
++        "priority": priority_for(row.get("buyer_score", "")),
++        "connection_message": templates["connection_message"].format(**values),
++        "follow_up_1": templates["follow_up_1"].format(**values),
++        "follow_up_2": templates["follow_up_2"].format(**values),
++        "demo_ask": templates["demo_ask"].format(**values),
++        "soft_close": templates["soft_close"].format(**values),
++    }
++
++
++def first_name_for(row: dict[str, str]) -> str:
++    if row.get("first_name"):
++        return row["first_name"]
++    name = row.get("name", "").strip()
++    if name:
++        return name.split()[0]
++    email = row.get("email", "")
++    if "@" in email:
++        return email.split("@", maxsplit=1)[0].split(".", maxsplit=1)[0].title()
++    return "there"
++
++
++def priority_for(value: str) -> str:
++    try:
++        score = float(value)
++    except ValueError:
++        return "P3"
++    if score >= 80:
++        return "P1"
++    if score >= 60:
++        return "P2"
++    return "P3"
++
++
++def assert_no_blocked_claims(rows: list[dict[str, str]]) -> None:
++    text = "\n".join(
++        str(value).casefold()
++        for row in rows
++        for key, value in row.items()
++        if key in {"connection_message", "follow_up_1", "follow_up_2", "demo_ask", "soft_close"}
++    )
++    blocked = [claim for claim in BLOCKED_CLAIMS if claim in text]
++    if blocked:
++        raise ValueError(f"Generated messages include blocked claims: {', '.join(blocked)}")
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/test_linkedin_outreach_prep.py b/tests/test_linkedin_outreach_prep.py
+new file mode 100644
+index 0000000..099f685
+--- /dev/null
++++ b/tests/test_linkedin_outreach_prep.py
+@@ -0,0 +1,114 @@
++from __future__ import annotations
++
++import csv
++import subprocess
++import sys
++from pathlib import Path
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++SCRIPT = REPO_ROOT / "scripts" / "linkedin_outreach_prep.py"
++
++
++def test_script_creates_ranked_buyers_template_if_input_missing(tmp_path: Path) -> None:
++    missing_input = tmp_path / "missing_ranked_buyers.csv"
++
++    result = subprocess.run(
++        [sys.executable, str(SCRIPT), "--input", str(missing_input)],
++        cwd=REPO_ROOT,
++        text=True,
++        capture_output=True,
++        check=True,
++    )
++
++    template = REPO_ROOT / "data" / "outreach" / "ranked_buyers_TEMPLATE.csv"
++    assert template.exists()
++    assert "Created template" in result.stdout or "Input CSV not found" in result.stdout
++
++    with template.open("r", encoding="utf-8", newline="") as csv_file:
++        reader = csv.DictReader(csv_file)
++        fieldnames = set(reader.fieldnames or [])
++
++    assert {
++        "name",
++        "first_name",
++        "last_name",
++        "company",
++        "title",
++        "linkedin_url",
++        "email",
++        "sector",
++        "region",
++        "buyer_score",
++        "notes",
++    }.issubset(fieldnames)
++
++
++def test_script_generates_manual_queue_without_blocked_claims(tmp_path: Path) -> None:
++    input_path = tmp_path / "ranked_buyers.csv"
++    output_path = tmp_path / "linkedin_manual_queue.csv"
++    input_path.write_text(
++        "\n".join(
++            [
++                "name,first_name,last_name,company,title,linkedin_url,email,sector,region,buyer_score,notes",
++                "Jane Smith,Jane,Smith,Example Civils Ltd,Bid Manager,https://linkedin.test/jane,jane@example.com,civils,NL,85,Good fit",
++            ]
++        )
++        + "\n",
++        encoding="utf-8",
++    )
++
++    subprocess.run(
++        [
++            sys.executable,
++            str(SCRIPT),
++            "--input",
++            str(input_path),
++            "--output",
++            str(output_path),
++        ],
++        cwd=REPO_ROOT,
++        text=True,
++        capture_output=True,
++        check=True,
++    )
++
++    with output_path.open("r", encoding="utf-8", newline="") as output_file:
++        rows = list(csv.DictReader(output_file))
++
++    assert len(rows) == 1
++    row = rows[0]
++    assert row["priority"] == "P1"
++    assert row["connection_message"]
++    assert row["follow_up_1"]
++    assert row["follow_up_2"]
++    assert row["demo_ask"]
++    assert row["soft_close"]
++
++    generated = " ".join(
++        row[column]
++        for column in [
++            "connection_message",
++            "follow_up_1",
++            "follow_up_2",
++            "demo_ask",
++            "soft_close",
++        ]
++    ).casefold()
++    assert "guaranteed win" not in generated
++    assert "guaranteed wins" not in generated
++    assert "guaranteed tender wins" not in generated
++    assert "paying clients" not in generated
++    assert "no messages were sent" not in generated
++
++
++def test_script_help_runs() -> None:
++    result = subprocess.run(
++        [sys.executable, str(SCRIPT), "--help"],
++        cwd=REPO_ROOT,
++        text=True,
++        capture_output=True,
++        check=True,
++    )
++
++    assert "manual LinkedIn outreach queue" in result.stdout
+diff --git a/tests/test_pilot_docs_exist.py b/tests/test_pilot_docs_exist.py
+new file mode 100644
+index 0000000..c553302
+--- /dev/null
++++ b/tests/test_pilot_docs_exist.py
+@@ -0,0 +1,102 @@
++from __future__ import annotations
++
++import csv
++import json
++from pathlib import Path
++
++
++REPO_ROOT = Path(__file__).resolve().parents[1]
++
++DOCS = [
++    "docs/PILOT_VALIDATION_FRAMEWORK.md",
++    "docs/DEMO_SCRIPT.md",
++    "docs/PILOT_SUCCESS_METRICS.md",
++    "docs/PILOT_CONVERSION_EMAILS.md",
++    "docs/LINKEDIN_OUTREACH_PLAYBOOK.md",
++]
++
++
++def read(path: str) -> str:
++    return (REPO_ROOT / path).read_text(encoding="utf-8")
++
++
++def test_all_pilot_docs_exist() -> None:
++    for path in DOCS:
++        assert (REPO_ROOT / path).exists(), path
++
++
++def test_pilot_csv_template_has_required_columns() -> None:
++    path = REPO_ROOT / "data" / "pilot" / "pilot_tracker_TEMPLATE.csv"
++
++    with path.open("r", encoding="utf-8", newline="") as csv_file:
++        reader = csv.DictReader(csv_file)
++        fieldnames = set(reader.fieldnames or [])
++
++    required = {
++        "pilot_id",
++        "company",
++        "contact_name",
++        "persona",
++        "demo_completed",
++        "tenders_reviewed",
++        "relevant_tenders",
++        "buyers_tracked",
++        "timing_ready_reviewed",
++        "time_saved_hours",
++        "buyer_insight_score",
++        "opportunity_quality_score",
++        "demo_to_pilot_status",
++        "pilot_to_paid_status",
++        "next_action",
++    }
++    assert required.issubset(fieldnames)
++
++
++def test_linkedin_templates_exist() -> None:
++    path = REPO_ROOT / "data" / "outreach" / "linkedin_sequence_templates.json"
++    payload = json.loads(path.read_text(encoding="utf-8"))
++
++    assert payload["mode"] == "manual_copy_paste_only"
++    assert {
++        "connection_message",
++        "follow_up_1",
++        "follow_up_2",
++        "demo_ask",
++        "soft_close",
++    }.issubset(payload["templates"])
++
++
++def test_docs_mention_hostinger_live_and_vps_unverified() -> None:
++    combined = "\n".join(read(path) for path in DOCS).casefold()
++
++    assert "hostinger" in combined
++    assert "dashboard is live" in combined
++    assert "vps production pipeline is still unverified" in combined
++
++
++def test_docs_do_not_claim_paying_clients_exist() -> None:
++    combined = "\n".join(read(path) for path in DOCS).casefold()
++
++    forbidden_positive_claims = [
++        "we have paying clients",
++        "existing paying clients",
++        "current paying clients",
++        "our paying clients",
++        "paid customers already",
++    ]
++    for claim in forbidden_positive_claims:
++        assert claim not in combined
++
++
++def test_docs_do_not_claim_guaranteed_wins() -> None:
++    combined = "\n".join(read(path) for path in DOCS).casefold()
++
++    forbidden_positive_claims = [
++        "we guarantee tender wins",
++        "processed guarantees tender wins",
++        "this guarantees tender wins",
++        "will win tenders",
++        "will win contracts",
++    ]
++    for claim in forbidden_positive_claims:
++        assert claim not in combined
+-- 
+2.54.0.windows.1
+
