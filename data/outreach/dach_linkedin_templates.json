@@ -1,0 +1,10 @@
+{
+  "english_connection_note": "Hi {name}, I am testing a DACH procurement intelligence pilot for construction and civils teams. The current demo uses fixture/sample DACH data, and I would value feedback from {company} in {country}. Demo link: {demo_link}",
+  "german_connection_note": "Hallo {name}, ich teste einen DACH Procurement-Intelligence-Pilot fuer Bau- und Tiefbau-Teams. Die Demo nutzt aktuell Beispiel-/Fixture-Daten. Ich wuerde mich ueber Feedback von {company} in {country} freuen. Demo-Link: {demo_link}",
+  "english_followup": "Thanks for connecting, {name}. ProcessEd is exploring ranked opportunities, buyer watchlists, and timing-ready review actions for construction/civils teams. The DACH demo is fixture/sample data, not live coverage. Would {company} in {country} be open to 15 minutes? {demo_link}",
+  "german_followup": "Danke fuers Vernetzen, {name}. ProcessEd prueft priorisierte Chancen, Buyer-Watchlists und Timing-Signale fuer Bau- und Tiefbau-Teams. Die DACH-Demo ist Beispiel-/Fixture-Daten, keine Live-Abdeckung. Haette {company} in {country} 15 Minuten fuer Feedback? {demo_link}",
+  "swiss_variant": "Hi {name}, I am testing a Switzerland-focused angle inside a DACH procurement intelligence pilot for civil engineering, infrastructure, and utility suppliers. The demo is fixture/sample data only. Would {company} in {country} be open to a short feedback call? {demo_link}",
+  "demo_invite": "Hi {name}, would you be open to a 15-minute walkthrough of a fixture-only DACH procurement intelligence demo for {company} in {country}? I am looking for feedback from construction, civils, bid, and commercial teams. {demo_link}",
+  "followup_1": "Hi {name}, quick follow-up on the DACH procurement intelligence pilot. The fixture/sample demo shows ranked tender shortlists, buyer watchlists, and timing signals. Could this be useful for {company} in {country}? {demo_link}",
+  "followup_2": "Hi {name}, final note from me. If procurement intelligence for construction/civils is relevant for {company} in {country}, I would value a short feedback call. This is pilot/discovery stage with fixture/sample data. {demo_link}"
+}
