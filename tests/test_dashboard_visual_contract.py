@@ -90,6 +90,19 @@ def test_dashboard_uses_stronger_static_login_hashes() -> None:
     assert "04f8996da763b7a969b1028ee3007569eaf3a635486ddab211d512c85b9df8fb" not in html
 
 
+def test_buyer_intelligence_table_uses_public_demo_language() -> None:
+    html = read_dashboard()
+
+    assert "Public-sector buyer watchlist built from the current TenderNed demo export" in html
+    assert "No scored opportunity linked yet" in html
+    assert "TenderNed public data" in html
+    assert "No dossier path available" not in html
+    assert "No quick actions available" not in html
+    assert "Fit 0%" not in html
+    assert "Action state" not in html
+    assert "Admin" not in html
+
+
 def test_hostinger_bundle_dashboard_matches_source_dashboard() -> None:
     assert BUNDLE_DASHBOARD.exists()
     assert BUNDLE_DASHBOARD.read_text(encoding="utf-8") == read_dashboard()

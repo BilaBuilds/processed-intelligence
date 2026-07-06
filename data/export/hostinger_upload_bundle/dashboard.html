@@ -1557,7 +1557,7 @@
         <div class="section-header">
           <div>
             <div class="section-title">Buyer intelligence</div>
-            <div style="font-size:13px;color:var(--muted);margin-top:4px;">Watchlist with timing, action state, dossiers, and operator next steps</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;">Public-sector buyer watchlist built from the current TenderNed demo export.</div>
           </div>
           <button class="btn secondary" id="export-buyers-btn">Export CSV</button>
         </div>
@@ -1568,11 +1568,10 @@
             <thead>
               <tr>
                 <th>Buyer</th>
-                <th style="width:190px;">Timing / priority</th>
-                <th style="width:150px;">Action state</th>
-                <th style="width:170px;">Next action</th>
-                <th style="width:260px;">Dossier</th>
-                <th style="width:210px;">Quick actions</th>
+                <th style="width:190px;">Signal</th>
+                <th>Related opportunity</th>
+                <th style="width:180px;">Review status</th>
+                <th style="width:180px;">Source</th>
               </tr>
             </thead>
             <tbody id="buyers-body"></tbody>
@@ -2087,7 +2086,7 @@
       if (state === 'drafted') return { text: 'Note created', cls: 'drafted' };
       if (state === 'sent') return { text: 'Reviewed', cls: 'sent' };
       if (state === 'ignored') return { text: '🚫 Ignored', cls: 'ignored' };
-      return { text: '⬜ Not started', cls: 'not_started' };
+      return { text: 'Watch only', cls: 'not_started' };
     }
 
     function dossierMeta(buyer) {
@@ -2101,7 +2100,7 @@
     function renderDossierLinks(buyer) {
       const dossier = dossierMeta(buyer);
       if (!dossier.path) {
-        return '<div class="micro-note">No dossier path available</div>';
+        return '<div class="micro-note">No scored opportunity linked yet</div>';
       }
       const openLink = dossier.exists && dossier.uri
         ? `<a class="mini-link" href="${escapeHtml(dossier.uri)}">Open dossier</a>`
@@ -2122,7 +2121,7 @@
         { label: 'Ignore', value: buyer.cli_mark_ignored || '' }
       ].filter(c => c.value);
       if (commands.length === 0) {
-        return '<div class="micro-note">No quick actions available</div>';
+        return '<div class="micro-note">Review related notices</div>';
       }
       return `
         <div class="cmd-chip-row">
@@ -2245,7 +2244,7 @@
       };
       const title = titles[state.page] || 'Dashboard';
 
-      const isAdmin = state.viewMode === 'admin';
+      const isDemoMode = state.viewMode === 'admin';
       const clientOptions = [{ id: 'all', display_name: 'All clients' }].concat((data.latestRun || {}).clients || []);
       const manifest = (data.latestRun || {}).manifest || {};
       const latestRun = data.latestRun || {};
@@ -2280,9 +2279,9 @@
           <a class="btn secondary" href="${MAILBOX_WEBMAIL_URL}" target="_blank" rel="noopener">Mailbox</a>
           <div class="toggle-group">
             <button class="toggle-btn ${state.viewMode === 'buyer' ? 'active' : ''}" onclick="state.viewMode='buyer'; render();">Buyer view</button>
-            <button class="toggle-btn ${state.viewMode === 'admin' ? 'active' : ''}" onclick="state.viewMode='admin'; render();">Admin</button>
+            <button class="toggle-btn ${state.viewMode === 'admin' ? 'active' : ''}" onclick="state.viewMode='admin'; render();">Demo mode</button>
           </div>
-          ${isAdmin ? `<select class="select-client" onchange="state.selectedClient=this.value; render();">${clientOptions.map(c => `<option value="${escapeHtml(c.id)}" ${state.selectedClient === c.id ? 'selected' : ''}>${escapeHtml(c.display_name || c.id)}</option>`).join('')}</select>` : ''}
+          ${isDemoMode ? `<select class="select-client" onchange="state.selectedClient=this.value; render();">${clientOptions.map(c => `<option value="${escapeHtml(c.id)}" ${state.selectedClient === c.id ? 'selected' : ''}>${escapeHtml(c.display_name || c.id)}</option>`).join('')}</select>` : ''}
         </div>
       `;
     }
@@ -2386,8 +2385,8 @@
           <div class="kpi-sub">Public buyer signals</div>
         </div>
         <div class="kpi-card is-accent">
-          <div class="kpi-label">Avg fit score</div>
-          <div class="kpi-value">${avgFit}%</div>
+          <div class="kpi-label">Signal coverage</div>
+          <div class="kpi-value">${avgFit > 0 ? `${avgFit}%` : 'Tracking'}</div>
           <div class="kpi-sub">${active90d === 0 ? 'Historical activity scoring pending for TenderNed demo.' : `<strong>${active90d}</strong> TenderNed demo activity`}</div>
         </div>
         <div class="kpi-card">
@@ -2615,6 +2614,58 @@
       }
     }
 
+    function normalizeBuyerName(value) {
+      return String(value || '')
+        .toLowerCase()
+        .replace(/&/g, 'and')
+        .replace(/[^a-z0-9]+/g, ' ')
+        .trim()
+        .replace(/\s+/g, ' ');
+    }
+
+    function opportunityBuyerName(opportunity) {
+      return opportunity.buyer_name || opportunity.buyer || opportunity.authority || opportunity.organisation || opportunity.organization || '';
+    }
+
+    function opportunityScore(opportunity) {
+      const raw = Number(opportunity.score ?? opportunity.fit_score ?? opportunity.commercial_score ?? 0);
+      if (!Number.isFinite(raw) || raw <= 0) return 0;
+      return raw <= 1 ? Math.round(raw * 100) : Math.round(raw);
+    }
+
+    function opportunityTitle(opportunity) {
+      return opportunity.title || opportunity.name || opportunity.notice_title || opportunity.contract_title || '';
+    }
+
+    function findBuyerOpportunity(buyer) {
+      const target = normalizeBuyerName(buyer.name || buyer.buyer_name);
+      if (!target) return null;
+      const latestRun = data.latestRun || {};
+      const opportunities = [
+        ...(latestRun.opportunities || []),
+        ...(latestRun.tenders || [])
+      ].filter(Boolean);
+      const matches = opportunities.filter(opp => {
+        const oppBuyer = normalizeBuyerName(opportunityBuyerName(opp));
+        return oppBuyer && (oppBuyer === target || oppBuyer.includes(target) || target.includes(oppBuyer));
+      });
+      if (!matches.length) return null;
+      return matches.sort((a, b) => opportunityScore(b) - opportunityScore(a))[0];
+    }
+
+    function buyerPublicSignal(buyer, opportunity) {
+      const score = opportunity ? opportunityScore(opportunity) : 0;
+      const timing = String(buyer.timing_label || '').toLowerCase();
+      const priority = String(buyer.outreach_priority || '').toLowerCase();
+      if (opportunity && (timing.includes('actionable') || timing.includes('timing') || buyer.predicted_next_start)) {
+        return score > 0 ? `Timing-ready (${score}%)` : 'Timing-ready';
+      }
+      if (opportunity && (priority === 'hot' || priority === 'warm' || score > 0)) {
+        return score > 0 ? `High-signal (${score}%)` : 'High-signal';
+      }
+      return 'Tracking';
+    }
+
     function renderBuyerIntel() {
       const buyers = (data.latestRun || {}).buyerCards || [];
       let filtered = buyers;
@@ -2666,10 +2717,11 @@
           <div class="kpi-card">
             <div class="kpi-label">Recent buyer activity</div>
             <div class="kpi-value">${active90d}</div>
+            <div class="kpi-sub">Historical activity scoring is not enabled in this public TenderNed demo.</div>
           </div>
           <div class="kpi-card">
-            <div class="kpi-label">Avg fit</div>
-            <div class="kpi-value">${avgFit}%</div>
+            <div class="kpi-label">Signal coverage</div>
+            <div class="kpi-value">${avgFit > 0 ? `${avgFit}%` : 'Tracking'}</div>
           </div>
           <div class="kpi-card">
             <div class="kpi-label">Timing-ready</div>
@@ -2692,43 +2744,21 @@
 
       const tbody = document.getElementById('buyers-body');
       tbody.innerHTML = filtered.map(b => {
-        const fit = buyerFitScore(b);
-        const priority = outreachPriority(b);
-        const priorityColor = priorityLabel(b);
-        const timingLabel = b.timing_label || 'Tracking';
-        const visibility = b.timing_visibility || 'visible';
-        const isHidden = visibility === 'hidden';
-        const isLimited = visibility === 'limited';
-        const actionState = actionStateMeta(b);
-
-        let windowText = '—';
-        if (!isHidden && b.predicted_next_start) {
-          const start = formatDate(b.predicted_next_start);
-          const end = b.predicted_next_end ? formatDate(b.predicted_next_end) : '';
-          windowText = end ? `${start} – ${end}` : start;
-        }
+        const opportunity = findBuyerOpportunity(b);
+        const signal = buyerPublicSignal(b, opportunity);
+        const relatedOpportunity = opportunityTitle(opportunity) || 'No scored opportunity linked yet';
+        const reviewStatus = opportunity ? 'Review related notice' : 'Watch only';
 
         return `
-          <tr ${isHidden ? 'class="timing-row-hidden"' : isLimited ? 'class="timing-row-limited"' : ''}>
+          <tr>
             <td>
               <div style="font-weight:600;color:var(--navy-dark);">${escapeHtml(b.name || 'Unknown buyer')}</div>
               ${b.buyer_intel_summary ? `<div class="buyer-intel-note">${escapeHtml(b.buyer_intel_summary)}</div>` : ''}
             </td>
-            <td>
-              <div class="action-stack">
-                <div><span class="label-badge ${timingLabel}">${timingLabel}</span> <span class="badge ${priorityColor}">${priority}</span></div>
-                <div class="micro-note">${isHidden ? 'Tracking only' : isLimited ? 'Some signal' : escapeHtml(windowText)}</div>
-                <div class="micro-note">Fit ${fit}% • ${escapeHtml(confidenceLabel(b.timing_confidence || '—'))}</div>
-              </div>
-            </td>
-            <td>
-              <div class="action-state-line">
-                <span class="badge ${actionState.cls}">${actionState.text}</span>
-              </div>
-            </td>
-            <td><div class="next-action">${escapeHtml(b.next_action || 'Review dossier')}</div></td>
-            <td>${renderDossierLinks(b)}</td>
-            <td>${renderCommandChips(b)}</td>
+            <td><span class="label-badge Tracking">${escapeHtml(signal)}</span></td>
+            <td><div class="next-action">${escapeHtml(relatedOpportunity)}</div></td>
+            <td><span class="badge not_started">${escapeHtml(reviewStatus)}</span></td>
+            <td><div class="micro-note">TenderNed public data</div></td>
           </tr>
         `;
       }).join('');
@@ -2744,8 +2774,9 @@
           Window_Start: b.predicted_next_start || '',
           Window_End: b.predicted_next_end || '',
           Priority: outreachPriority(b),
-          Action_State: b.action_state_label || 'Not started',
-          Next_Action: b.next_action || 'Review dossier',
+          Review_Status: findBuyerOpportunity(b) ? 'Review related notice' : 'Watch only',
+          Related_Opportunity: opportunityTitle(findBuyerOpportunity(b)) || 'No scored opportunity linked yet',
+          Source: 'TenderNed public data',
           Dossier_Path: b.dossier_path || '',
           CLI_Draft: b.cli_mark_drafted || '',
           CLI_Sent: b.cli_mark_sent || '',
@@ -2944,8 +2975,8 @@
           Confidence: confidenceLabel(b.timing_confidence),
           Fit_Score: safePct(b.fit_to_client),
           Priority: b.outreach_priority,
-          Action_State: b.action_state_label || 'Not started',
-          Next_Action: b.next_action || 'Review dossier',
+          Review_Status: b.action_state_label || 'Watch only',
+          Next_Action: b.next_action || 'Review related notices',
           Action_Note: b.action_note || '',
           Window_Start: b.predicted_next_start || '',
           Window_End: b.predicted_next_end || '',
@@ -3003,7 +3034,7 @@
             </div>
             <div class="radar-action-strip">
               <span class="badge ${actionState.cls}">${actionState.text}</span>
-              <span class="next-action">${escapeHtml(b.next_action || 'Review dossier')}</span>
+              <span class="next-action">${escapeHtml(b.next_action || 'Review related notices')}</span>
             </div>
             ${windowStr ? `<div class="radar-focus-card-window">${windowStr}</div>` : ''}
             ${b.action_note ? `<div class="radar-focus-card-action">${b.action_note}</div>` : ''}
@@ -3022,7 +3053,7 @@
             <div class="radar-row-meta">${safePct(b.fit_to_client)} fit • ${confidenceLabel(b.timing_confidence)} conf</div>
             <div class="radar-action-strip">
               <span class="badge ${actionState.cls}">${actionState.text}</span>
-              <span class="micro-note">${escapeHtml(b.next_action || 'Review dossier')}</span>
+              <span class="micro-note">${escapeHtml(b.next_action || 'Review related notices')}</span>
             </div>
             ${b.dossier_uri && b.dossier_exists ? `<div><a class="mini-link" href="${escapeHtml(b.dossier_uri)}">Open dossier</a></div>` : b.dossier_path ? `<div class="mono-path">${escapeHtml(b.dossier_path)}</div>` : ''}
           </div>

@@ -60,6 +60,18 @@ The public static login no longer supports the weak `admin/admin` or `user/user`
 
 This remains a static front-end gate. No backend, data schema, pipeline, or Hostinger architecture changes were introduced.
 
+## Buyer Intelligence Public Demo Table
+
+The Buyer intelligence page was tightened again for public Hostinger demos so unfinished internal workflow states do not appear as broken product features.
+
+- the page subtitle now says `Public-sector buyer watchlist built from the current TenderNed demo export`
+- the buyer table now uses `Buyer`, `Signal`, `Related opportunity`, `Review status`, and `Source`
+- missing buyer/dossier links now show `No scored opportunity linked yet`
+- source copy now uses `TenderNed public data`
+- rows with no scored linked opportunity show `Tracking` and `Watch only`
+- the topbar demo toggle is labelled `Demo mode` rather than `Admin`
+- weak internal strings such as `No dossier path available`, `No quick actions available`, `Fit 0%`, `Not started`, and `Action state` were removed from the public dashboard source
+
 ## Data Compatibility Preserved
 
 The dashboard still reads:
