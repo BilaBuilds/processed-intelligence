@@ -2171,11 +2171,11 @@
         outreach: getOutreachRecords().length,
         history: (data.runHistory || []).length || 0
       };
+      // Public demo hides client surfaces until real client feeds are connected.
       const pages = [
         { id: 'dashboard', label: 'Overview', caption: 'Command view', icon: '⬢' },
         { id: 'opportunities', label: 'Opportunities', caption: 'Tender flow', icon: '◫', count: counts.opportunities },
         { id: 'products', label: 'Products', caption: 'Filter rails', icon: '◧', count: counts.products },
-        { id: 'clients', label: 'Pilot clients', caption: 'Operator feeds', icon: '◩', count: counts.clients },
         { id: 'buyers', label: 'Buyer intelligence', caption: 'Accounts', icon: '◎', count: counts.buyers },
         { id: 'timing', label: 'Timing signals', caption: 'Cadence', icon: '◔', count: counts.timing },
         { id: 'radar', label: 'Market radar', caption: 'Focus', icon: '◉', count: counts.radar },
@@ -2183,6 +2183,9 @@
         { id: 'mailbox', label: 'Mailbox', caption: 'Webmail', icon: '@' },
         { id: 'history', label: 'Pipeline history', caption: 'Runs', icon: '⋯', count: counts.history }
       ];
+      if (counts.clients > 0) {
+        pages.splice(3, 0, { id: 'clients', label: 'Pilot clients', caption: 'Operator feeds', icon: '◩', count: counts.clients });
+      }
 
       nav.innerHTML = pages.map(p => `
         <a href="#" class="nav-item ${state.page === p.id ? 'active' : ''}" onclick="event.preventDefault(); state.page='${p.id}'; render();">
@@ -2219,10 +2222,12 @@
               <div class="sidebar-footer-stat-label">Buyers</div>
               <div class="sidebar-footer-stat-value">${(latestRun.buyerCards || []).length || 0}</div>
             </div>
-            <div class="sidebar-footer-stat">
-              <div class="sidebar-footer-stat-label">Pilot clients</div>
-              <div class="sidebar-footer-stat-value">${(latestRun.clients || []).length || 0}</div>
-            </div>
+            ${counts.clients > 0 ? `
+              <div class="sidebar-footer-stat">
+                <div class="sidebar-footer-stat-label">Pilot clients</div>
+                <div class="sidebar-footer-stat-value">${counts.clients}</div>
+              </div>
+            ` : ''}
           </div>
         </div>
       `;
@@ -2244,10 +2249,11 @@
       };
       const title = titles[state.page] || 'Dashboard';
 
-      const isDemoMode = state.viewMode === 'admin';
-      const clientOptions = [{ id: 'all', display_name: 'All clients' }].concat((data.latestRun || {}).clients || []);
       const manifest = (data.latestRun || {}).manifest || {};
       const latestRun = data.latestRun || {};
+      const clientList = latestRun.clients || [];
+      const isDemoMode = state.viewMode === 'admin';
+      const clientOptions = clientList.length > 0 ? [{ id: 'all', display_name: 'All connected accounts' }].concat(clientList) : [];
       const runStatus = latestRun.status || manifest.status || 'ready';
       const pageCounts = {
         dashboard: `${manifest.shortlist_count || 0} shortlisted`,
@@ -2281,7 +2287,7 @@
             <button class="toggle-btn ${state.viewMode === 'buyer' ? 'active' : ''}" onclick="state.viewMode='buyer'; render();">Buyer view</button>
             <button class="toggle-btn ${state.viewMode === 'admin' ? 'active' : ''}" onclick="state.viewMode='admin'; render();">Demo mode</button>
           </div>
-          ${isDemoMode ? `<select class="select-client" onchange="state.selectedClient=this.value; render();">${clientOptions.map(c => `<option value="${escapeHtml(c.id)}" ${state.selectedClient === c.id ? 'selected' : ''}>${escapeHtml(c.display_name || c.id)}</option>`).join('')}</select>` : ''}
+          ${isDemoMode && clientOptions.length > 0 ? `<select class="select-client" onchange="state.selectedClient=this.value; render();">${clientOptions.map(c => `<option value="${escapeHtml(c.id)}" ${state.selectedClient === c.id ? 'selected' : ''}>${escapeHtml(c.display_name || c.id)}</option>`).join('')}</select>` : ''}
         </div>
       `;
     }
@@ -2341,11 +2347,13 @@
                 <div class="overview-signal-value">${products.length}</div>
                 <div class="overview-signal-note">Configured surfaces</div>
               </div>
-              <div class="overview-signal">
-                <div class="overview-signal-label">Pilot clients</div>
-                <div class="overview-signal-value">${clients.length}</div>
-                <div class="overview-signal-note">${clients.length === 0 ? 'Not connected in public demo.' : 'Subscribed feeds'}</div>
-              </div>
+              ${clients.length > 0 ? `
+                <div class="overview-signal">
+                  <div class="overview-signal-label">Pilot clients</div>
+                  <div class="overview-signal-value">${clients.length}</div>
+                  <div class="overview-signal-note">Subscribed feeds</div>
+                </div>
+              ` : ''}
               <div class="overview-signal">
                 <div class="overview-signal-label">Tracked buyers</div>
                 <div class="overview-signal-value">${displayWarmCount}</div>

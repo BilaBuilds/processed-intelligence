@@ -86,6 +86,15 @@ The Overview page system-status section was polished for public demo use while k
 - `static_hostinger_export` is rendered publicly as `Static Hostinger export completed`
 - the fatal loop-step footnote was removed from the public dashboard source
 
+## Inactive Client Surfaces Hidden
+
+The public Hostinger demo now hides client/client-count wording until real client feeds are connected.
+
+- `All clients` is no longer rendered as a default selector option
+- the Overview client card is only rendered when connected clients exist
+- the `Pilot clients` navigation item and sidebar client count are only rendered when connected clients exist
+- Products, Buyer intelligence, Opportunities, Timing signals, Market radar, and Buyer watchlist remain visible
+
 ## Data Compatibility Preserved
 
 The dashboard still reads:

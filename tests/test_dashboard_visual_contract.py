@@ -117,6 +117,21 @@ def test_overview_system_status_uses_public_demo_language() -> None:
     assert "Non-fatal steps" not in html
 
 
+def test_public_demo_hides_inactive_client_surfaces() -> None:
+    html = read_dashboard()
+
+    assert "All clients" not in html
+    assert "Pilot clients 0" not in html
+    assert "Public demo hides client surfaces until real client feeds are connected" in html
+    assert "Procurement intelligence summary" in html
+    assert "Products" in html
+    assert "Buyer intelligence" in html
+    assert "Opportunities" in html
+    assert "Timing signals" in html
+    assert "Market radar" in html
+    assert "Buyer watchlist" in html
+
+
 def test_hostinger_bundle_dashboard_matches_source_dashboard() -> None:
     assert BUNDLE_DASHBOARD.exists()
     assert BUNDLE_DASHBOARD.read_text(encoding="utf-8") == read_dashboard()
