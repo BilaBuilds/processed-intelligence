@@ -1,0 +1,3 @@
+#!/bin/sh
+set -eu
+python .githooks/pre_commit_secret_scan.py

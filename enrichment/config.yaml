@@ -1,0 +1,38 @@
+log_path: enrichment.log
+
+cache:
+  enabled: true
+  path: enrichment_cache.sqlite3
+  ttl_days: 30
+  not_found_ttl_days: 7
+
+providers:
+  - companies_house
+  - website_scrape
+  - hunter_io
+  - pattern_guess
+
+companies_house:
+  timeout_seconds: 30
+  max_retries: 3
+  backoff_seconds: 1
+
+website_scrape:
+  timeout_seconds: 5
+  max_pages: 4
+  user_agent: enrichment-bot/1.0
+
+hunter:
+  timeout_seconds: 15
+  limit: 10
+
+smtp:
+  enabled: false
+  timeout_seconds: 3
+
+waterfall:
+  confidence_threshold: 0.7
+  enrich_full: false
+  max_provider_calls: 3
+  max_latency_seconds: 15
+  require_contact_route_for_fast_stop: true

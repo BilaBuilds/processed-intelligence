@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "enrichment"
+version = "0.1.0"
+description = "Waterfall contact enrichment for UK sales lead research."
+requires-python = ">=3.11"
+dependencies = [
+  "requests",
+  "beautifulsoup4",
+  "pyyaml",
+  "python-dotenv",
+  "dnspython",
+  "pydantic",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
+]
+
+[project.scripts]
+enrichment = "enrichment.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["enrichment*"]
