@@ -78,12 +78,16 @@ def test_dashboard_hides_avatar_builder_from_visible_navigation() -> None:
     assert 'label: "Avatar builder"' not in html
 
 
-def test_dashboard_login_hashes_remain_present() -> None:
+def test_dashboard_uses_stronger_static_login_hashes() -> None:
     html = read_dashboard()
 
     assert "SHA-256 credentials" in html
     assert "async function sha256" in html
     assert "crypto.subtle.digest" in html
+    assert "0ac07aee36b54773b9bc20c3a309943b10ba5aad0e4ccf380e27ec915913f69a" in html
+    assert "a37bc73934a121f27264bc8513222184cd1bab8bb228016cce8f93fbf3bb0a83" in html
+    assert "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918" not in html
+    assert "04f8996da763b7a969b1028ee3007569eaf3a635486ddab211d512c85b9df8fb" not in html
 
 
 def test_hostinger_bundle_dashboard_matches_source_dashboard() -> None:

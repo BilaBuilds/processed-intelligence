@@ -54,6 +54,12 @@ The overview page and navigation were also tightened for public demo use so the 
 - execution truth now states that delivery is currently via static Hostinger export for the public demo
 - the visible navigation no longer exposes `Avatar builder`
 
+## Static Demo Credentials
+
+The public static login no longer supports the weak `admin/admin` or `user/user` demo credentials. The Hostinger HTML keeps only SHA-256 password hashes for the `demo` and `bilal` accounts.
+
+This remains a static front-end gate. No backend, data schema, pipeline, or Hostinger architecture changes were introduced.
+
 ## Data Compatibility Preserved
 
 The dashboard still reads:
