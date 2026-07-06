@@ -1,0 +1,39 @@
+{
+  "founder_post": "I am testing a Netherlands expansion for ProcessEd Intelligence, focused on construction, civils, roads, drainage, water, maintenance, public works, and infrastructure opportunities from Dutch and EU procurement sources. The current demo is sample data, not verified live coverage. It shows source coverage, ranked opportunities, buyer signal, urgency, recommended action, and a weekly-review style dashboard. I am looking for practical feedback from Dutch contractors and suppliers, UK/DACH firms exploring the Netherlands, and teams that already watch TenderNed or TED/EU notices.",
+  "connection_messages": [
+    "Hi {name}, I am testing a sample/demo Netherlands procurement intelligence workflow for civils, water, public works, and infrastructure teams. I would value practical feedback from {company}. Open to connecting?",
+    "Hi {name}, ProcessEd is exploring Dutch/EU tender intelligence for construction and infrastructure teams. The current Netherlands demo is sample data, not live coverage. Could I connect and ask for feedback?",
+    "Hi {name}, I am mapping whether Dutch public works suppliers need ranked procurement intelligence rather than another raw tender feed. Current pack is demo/sample only. Open to a quick connection?",
+    "Hi {name}, I am testing a Netherlands procurement demo around TenderNed/TED-style opportunity ranking. No live coverage claim yet; I am looking for source validation. May I connect?",
+    "Hi {name}, I am looking for feedback from contractors and suppliers with Netherlands/EU procurement experience. The ProcessEd demo is sample data only, but the workflow is ready to review. Open to connecting?"
+  ],
+  "follow_up_messages": [
+    "Thanks for connecting, {name}. The Netherlands demo shows sample opportunities ranked by fit, urgency, buyer signal, and recommended action. It is not live verified coverage yet. Would you be open to a 15-minute feedback call?",
+    "Quick follow-up, {name}. I am trying to validate whether a buyer-aware Dutch/EU procurement shortlist would save bid teams time. The current data is sample/demo only. Could I send the dashboard for review?",
+    "Hi {name}, one thing I am testing is whether water, drainage, roads, and public works suppliers need earlier source validation around TenderNed and TED notices. Would {company} be a good feedback partner?",
+    "Thanks again for connecting. The useful critique for me is simple: which sources, CPVs, or buyer categories would make this Netherlands pilot credible enough to trial?",
+    "Final note from me, {name}. If Netherlands procurement intelligence is relevant, I would value a short review. If not, a pointer to the right bid/commercial person would also help."
+  ],
+  "email_subjects": [
+    "Feedback on a Netherlands procurement intelligence demo",
+    "Dutch public works opportunity ranking - quick feedback?",
+    "Testing a Netherlands/TED procurement shortlist",
+    "Source validation for a Netherlands infrastructure pilot",
+    "Could ProcessEd help with Dutch/EU tender qualification?"
+  ],
+  "email_templates": {
+    "blunt_feedback_ask": "Hi {name},\n\nI am testing a Netherlands expansion for ProcessEd Intelligence.\n\nThe demo uses sample data, not verified live coverage. It shows the workflow: Dutch/EU source coverage, ranked infrastructure opportunities, buyer signal, urgency, and recommended action.\n\nCould I get 15 minutes of blunt feedback from {company}? I am trying to learn whether this would save real qualification time, or whether the source/ranking logic is still too thin.\n\nBest,\nBilal",
+    "pilot_conversation_ask": "Hi {name},\n\nProcessEd is exploring a focused Netherlands procurement intelligence pilot for construction, civils, water, roads, maintenance, and public works teams.\n\nThe current pack is sample/demo data only. The proposed pilot would use verified source checks around agreed CPVs, buyer categories, and regions, then produce a weekly ranked shortlist with buyer signal and recommended action.\n\nWould {company} be open to a short conversation about whether a four-week pilot would be useful?\n\nBest,\nBilal",
+    "source_validation_ask": "Hi {name},\n\nI am validating the source assumptions behind a Netherlands procurement intelligence demo.\n\nThe current data is sample/demo only. Before making any live coverage claims, I want feedback on whether TenderNed, TED/EU notices, EU procurement data, Dutch buyer categories, and CPV filters are the right starting points.\n\nWould you be open to a 15-minute source validation call, or point me to someone who owns tender monitoring at {company}?\n\nBest,\nBilal"
+  },
+  "segment_specific_messages": {
+    "dutch_contractors": "I am testing a sample/demo Netherlands procurement intelligence workflow for Dutch civils and infrastructure contractors. The goal is to turn public works notices into ranked opportunities with buyer signal and recommended action. I would value feedback before claiming live coverage.",
+    "uk_dach_expansion": "I am testing whether UK and DACH contractors exploring the Netherlands need a buyer-aware procurement shortlist across Dutch and EU sources. The current dashboard is sample/demo only, but it shows the workflow for source validation and pilot scoping.",
+    "public_works_water_infrastructure_suppliers": "I am testing a Netherlands public works and water infrastructure procurement demo. It ranks sample opportunities by fit, urgency, buyer signal, and action so suppliers can decide whether to qualify, partner, monitor, or ignore."
+  },
+  "disclaimers": [
+    "The Netherlands pack is sample/demo data and not verified live coverage.",
+    "Target accounts are placeholders or research queues unless separately verified.",
+    "No personal contacts, private data, credentials, or API keys are included."
+  ]
+}
