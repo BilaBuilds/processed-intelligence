@@ -1,0 +1,16 @@
+{
+  "total_tenders": 9,
+  "countries": [
+    "Austria",
+    "Germany",
+    "Switzerland"
+  ],
+  "count_by_country": {
+    "Austria": 3,
+    "Germany": 3,
+    "Switzerland": 3
+  },
+  "source": "dach_demo_fixture",
+  "generated_at": "2026-07-06T14:47:12.769454+00:00",
+  "disclaimer": "DACH demo generated from fixture data. No live scraping performed."
+}

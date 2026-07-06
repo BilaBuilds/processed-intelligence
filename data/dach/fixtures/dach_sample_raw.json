@@ -1,0 +1,58 @@
+[
+  {
+    "notice_id": "DE-DEMO-001",
+    "title": "Demo road maintenance package",
+    "buyer": "Demo German municipal roads team",
+    "country": "Germany",
+    "region": "North Rhine-Westphalia",
+    "deadline": "2026-09-15",
+    "value": "1250000",
+    "currency": "EUR",
+    "cpv": [
+      "45233141",
+      "45233142"
+    ],
+    "url": "fixture://dach/germany/road-maintenance",
+    "source": "dach_demo_fixture",
+    "published_at": "2026-07-01",
+    "description": "Fixture-only road maintenance notice for DACH adapter testing.",
+    "procurement_stage": "open"
+  },
+  {
+    "notice_id": "AT-DEMO-001",
+    "title": "Demo school refurbishment works",
+    "buyer": "Demo Austrian school estate team",
+    "country": "Austria",
+    "region": "Vienna",
+    "deadline": "2026-09-30",
+    "value": "980000",
+    "currency": "EUR",
+    "cpv": [
+      "45453100"
+    ],
+    "url": "fixture://dach/austria/school-refurbishment",
+    "source": "dach_demo_fixture",
+    "published_at": "2026-07-04",
+    "description": "Fixture-only school refurbishment notice for DACH adapter testing.",
+    "procurement_stage": "open"
+  },
+  {
+    "notice_id": "CH-DEMO-001",
+    "title": "Demo wastewater infrastructure works",
+    "buyer": "Demo Swiss wastewater infrastructure team",
+    "country": "Switzerland",
+    "region": "Zurich",
+    "language": "de",
+    "deadline": "2026-10-20",
+    "value": "2100000",
+    "currency": "CHF",
+    "cpv": [
+      "45232420"
+    ],
+    "url": "fixture://dach/switzerland/wastewater-infrastructure",
+    "source": "dach_demo_fixture",
+    "published_at": "2026-07-07",
+    "description": "Fixture-only wastewater infrastructure notice for DACH adapter testing.",
+    "procurement_stage": "open"
+  }
+]
