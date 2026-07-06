@@ -1,0 +1,99 @@
+# Dashboard Restyle - 2026-07-06
+
+## Summary
+
+The Hostinger static dashboard was restyled to sit closer to the ProcessEd landing-page direction while preserving the working static JSON/JS data architecture.
+
+The dashboard remains a single static HTML file that reads `dashboard_data.js`. No Flask, VPS, DuckDB, React, Next.js, or `run_pipeline.py` changes were introduced.
+
+## Files Changed
+
+- `hostinger_upload/dashboard.html`
+- `data/export/hostinger_upload_bundle/dashboard.html`
+- `tests/test_dashboard_visual_contract.py`
+- `docs/DASHBOARD_RESTYLE_2026_07_06.md`
+
+Timestamped backups were created before editing:
+
+- `local_backups/dashboard_restyle_20260706_012142/hostinger_upload_dashboard.html.bak_20260706_012142`
+- `local_backups/dashboard_restyle_20260706_012142/bundle_dashboard.html.bak_20260706_012142`
+
+## Visual Changes
+
+- Replaced the dark vertical sidebar treatment with a light translucent top navigation shell.
+- Added mist/ice page backgrounds using `#EDF1F2` and `#E5EAEC`.
+- Updated primary navy and amber tokens to `#172A3E`, `#15263A`, `#F4B247`, and `#F2A93B`.
+- Added glass-style dashboard cards with subtle borders, blur, and amber left accents.
+- Strengthened KPI cards and table hover states without changing their data bindings.
+- Styled intelligence and radar sections as dark navy blocks for stronger contrast.
+- Added responsive rules to prevent horizontal page overflow on mobile while preserving scrollable data tables.
+
+## Data Compatibility Preserved
+
+The dashboard still reads:
+
+- `window.PROCESSED_DASHBOARD_DATA`
+- `window.dashboardData`
+- `window.DASHBOARD_DATA`
+
+The existing frontend bindings remain present for:
+
+- `hot_outreach`
+- `warm_buyers`
+- `timing_ready`
+- `avg_fit_score`
+- `pipeline_model`
+- `supplier_source`
+- `notifier_channels`
+
+## Files To Upload To Hostinger
+
+Upload these files from `data/export/hostinger_upload_bundle/`:
+
+- `dashboard.html`
+- `dashboard_data.js`
+- `dashboard_data.json`
+- `tenderned_latest.json`
+
+For this restyle, the required changed upload file is:
+
+- `data/export/hostinger_upload_bundle/dashboard.html`
+
+## Browser Verification Checklist
+
+After uploading, hard refresh the Hostinger dashboard and check:
+
+- The page opens with a light mist background.
+- The navigation is a translucent top bar, not a dark vertical sidebar.
+- KPI cards still show the live counts and amber accents.
+- Hot outreach, warm buyers, timing ready, average fit score, supplier source, and notifier channels still show the confirmed values.
+- Top opportunities and summaries still render.
+- Mobile width has no full-page horizontal overflow.
+
+Optional console check:
+
+```js
+const d = window.PROCESSED_DASHBOARD_DATA || window.dashboardData || window.DASHBOARD_DATA;
+({
+  hot: d.hot_outreach?.length,
+  warm: d.warm_buyers?.length,
+  timing: d.timing_ready?.length,
+  avg: d.avg_fit_score,
+  loop: d.pipeline_model?.loop_steps,
+  supplier: d.pipeline_model?.supplier_source,
+  channels: d.pipeline_model?.notifier_channels
+})
+```
+
+## Local Verification Completed
+
+- `python -m pytest tests/test_dashboard_visual_contract.py -q` passed.
+- Headless Chrome opened `hostinger_upload/dashboard.html` locally.
+- The rendered page title started with `ProcessEd`.
+- The restyle block and `dashboard_data.js` script were present.
+- Desktop render width matched client width at 1440px, so no full-page horizontal overflow was detected at that viewport.
+
+## Not Verified
+
+- VPS sync is not verified in this local-only session.
+- Hostinger production upload is not performed from this environment.
