@@ -1584,7 +1584,7 @@
       <section id="page-timing" class="page">
         <div class="section-header">
           <div>
-            <div class="section-title">Timing intelligence</div>
+            <div class="section-title">Timing signals</div>
             <div style="font-size:13px;color:var(--muted);margin-top:4px;">Forecast windows with cadence confidence and actionability</div>
           </div>
           <button class="btn secondary" id="export-timing-btn">Export CSV</button>
@@ -1614,7 +1614,7 @@
       <section id="page-radar" class="page">
         <div class="section-header">
           <div>
-            <div class="section-title">Commercial radar</div>
+            <div class="section-title">Market radar</div>
             <div style="font-size:13px;color:var(--muted);margin-top:4px;">Decision-ready buyer intelligence — who to chase, who to watch, who to ignore</div>
           </div>
           <button class="btn secondary" id="export-radar-btn">Export focus list CSV</button>
@@ -1713,11 +1713,11 @@
         </div>
       </section>
 
-      <!-- Clients -->
+      <!-- Pilot Clients -->
       <section id="page-clients" class="page">
         <div class="section-header">
           <div>
-            <div class="section-title">Clients</div>
+            <div class="section-title">Pilot clients</div>
             <div style="font-size:13px;color:var(--muted);margin-top:4px;">Per-client filtered shortlists, novelty, and notification state</div>
           </div>
         </div>
@@ -2176,14 +2176,13 @@
         { id: 'dashboard', label: 'Overview', caption: 'Command view', icon: '⬢' },
         { id: 'opportunities', label: 'Opportunities', caption: 'Tender flow', icon: '◫', count: counts.opportunities },
         { id: 'products', label: 'Products', caption: 'Filter rails', icon: '◧', count: counts.products },
-        { id: 'clients', label: 'Clients', caption: 'Operator feeds', icon: '◩', count: counts.clients },
+        { id: 'clients', label: 'Pilot clients', caption: 'Operator feeds', icon: '◩', count: counts.clients },
         { id: 'buyers', label: 'Buyer intelligence', caption: 'Accounts', icon: '◎', count: counts.buyers },
-        { id: 'timing', label: 'Timing intelligence', caption: 'Cadence', icon: '◔', count: counts.timing },
-        { id: 'radar', label: 'Commercial radar', caption: 'Focus', icon: '◉', count: counts.radar },
+        { id: 'timing', label: 'Timing signals', caption: 'Cadence', icon: '◔', count: counts.timing },
+        { id: 'radar', label: 'Market radar', caption: 'Focus', icon: '◉', count: counts.radar },
         { id: 'outreach', label: 'Buyer watchlist', caption: 'Tracking', icon: '✦', count: counts.outreach },
         { id: 'mailbox', label: 'Mailbox', caption: 'Webmail', icon: '@' },
-        { id: 'history', label: 'Pipeline history', caption: 'Runs', icon: '⋯', count: counts.history },
-        { id: 'avatar', label: 'Avatar builder', caption: 'Profile', icon: '◈' }
+        { id: 'history', label: 'Pipeline history', caption: 'Runs', icon: '⋯', count: counts.history }
       ];
 
       nav.innerHTML = pages.map(p => `
@@ -2196,7 +2195,7 @@
                 <span class="nav-caption">${p.caption}</span>
               </span>
             </span>
-            ${typeof p.count === 'number' ? `<span class="nav-pill">${p.count}</span>` : ''}
+            ${(typeof p.count === 'number' && !((p.id === 'timing' || p.id === 'radar') && p.count === 0)) ? `<span class="nav-pill">${p.count}</span>` : ''}
           </span>
         </a>
       `).join('') + '<div class="nav-divider" style="margin-top:20px;"></div>';
@@ -2222,7 +2221,7 @@
               <div class="sidebar-footer-stat-value">${(latestRun.buyerCards || []).length || 0}</div>
             </div>
             <div class="sidebar-footer-stat">
-              <div class="sidebar-footer-stat-label">Clients</div>
+              <div class="sidebar-footer-stat-label">Pilot clients</div>
               <div class="sidebar-footer-stat-value">${(latestRun.clients || []).length || 0}</div>
             </div>
           </div>
@@ -2237,13 +2236,12 @@
         opportunities: 'All opportunities',
         products: 'Products',
         buyers: 'Buyer intelligence',
-        timing: 'Timing intelligence',
-        radar: 'Commercial radar',
+        timing: 'Timing signals',
+        radar: 'Market radar',
         outreach: 'Buyer watchlist',
         mailbox: 'Mailbox',
         history: 'Pipeline history',
-        clients: 'Clients',
-        avatar: 'Avatar builder'
+        clients: 'Pilot clients'
       };
       const title = titles[state.page] || 'Dashboard';
 
@@ -2258,11 +2256,11 @@
         products: `${(latestRun.products || []).length || 0} product feeds`,
         buyers: `${(latestRun.buyerCards || []).length || 0} buyers tracked`,
         timing: `${((latestRun.buyerTiming || {}).signals || []).length || 0} timing signals`,
-        radar: `${((latestRun.commercialRadar || {}).focus_summary || []).length || 0} focus buyers`,
+        radar: `${((latestRun.commercialRadar || {}).focus_summary || []).length || 0} market signals`,
         outreach: `${getOutreachRecords().length} buyer accounts tracked`,
         mailbox: MAILBOX_EMAIL,
         history: `${(data.runHistory || []).length || 0} logged runs`,
-        clients: `${(latestRun.clients || []).length || 0} active client feeds`,
+        clients: `${(latestRun.clients || []).length || 0} pilot client feeds`,
         avatar: 'Design your profile'
       };
       topbar.innerHTML = `
@@ -2308,14 +2306,14 @@
       const newClientCount = clients.reduce((sum, client) => sum + Number(client.new_count || 0), 0);
       const shortlisted = manifest.shortlist_count || 0;
       const nextMove = displayActionableCount > 0
-        ? 'Move on timing-ready buyers before the next notice cycle.'
+        ? 'Review timing-ready public opportunities before the next notice cycle.'
         : newClientCount > 0
           ? 'Open client feeds and triage newly matched tenders.'
           : displayHotCount > 0
-            ? 'Work the hot outreach queue and refresh dossiers.'
+            ? 'Review high-signal buyer accounts and refresh dossiers.'
             : shortlisted > 0
               ? 'Review the shortlist and push the strongest dossiers forward.'
-              : 'Quiet run. Monitor timing signals and keep the workspace ready.';
+              : 'Quiet run. Monitor public-sector buyer signals and keep the workspace ready.';
       const posture = shortlisted > 0 || displayActionableCount > 0 || displayHotCount > 0 ? 'Active cycle' : 'Quiet cycle';
       document.getElementById('overview-banner').innerHTML = `
         <div class="overview-banner-grid">
@@ -2327,14 +2325,14 @@
             </div>
             <div class="hero-actions">
               <span class="hero-chip">Shortlist ${shortlisted}</span>
-              <span class="hero-chip">Client novelty ${newClientCount}</span>
-              <span class="hero-chip">Hot outreach ${displayHotCount}</span>
-              <span class="hero-chip">Timing ready ${displayActionableCount}</span>
+              <span class="hero-chip">New buyer signals ${newClientCount}</span>
+              <span class="hero-chip">High-signal buyers ${displayHotCount}</span>
+              <span class="hero-chip">Timing-ready ${displayActionableCount}</span>
             </div>
           </div>
           <div class="overview-side">
             <div class="overview-side-card">
-              <div class="overview-side-label">Next operator move</div>
+              <div class="overview-side-label">Next review action</div>
               <div class="overview-side-value">${escapeHtml(nextMove)}</div>
               <div class="overview-side-note">This summary is derived from the current run only. No hidden ranking, no manual override.</div>
             </div>
@@ -2345,19 +2343,19 @@
                 <div class="overview-signal-note">Configured surfaces</div>
               </div>
               <div class="overview-signal">
-                <div class="overview-signal-label">Clients</div>
+                <div class="overview-signal-label">Pilot clients</div>
                 <div class="overview-signal-value">${clients.length}</div>
-                <div class="overview-signal-note">Subscribed feeds</div>
+                <div class="overview-signal-note">${clients.length === 0 ? 'Not connected in public demo.' : 'Subscribed feeds'}</div>
               </div>
               <div class="overview-signal">
-                <div class="overview-signal-label">Warm buyers</div>
+                <div class="overview-signal-label">Tracked buyers</div>
                 <div class="overview-signal-value">${displayWarmCount}</div>
-                <div class="overview-signal-note">Watchlist momentum</div>
+                <div class="overview-signal-note">Buyer watchlist</div>
               </div>
               <div class="overview-signal">
-                <div class="overview-signal-label">Active 90d</div>
+                <div class="overview-signal-label">Recent buyer activity</div>
                 <div class="overview-signal-value">${active90d}</div>
-                <div class="overview-signal-note">Live buyer activity</div>
+                <div class="overview-signal-note">${active90d === 0 ? 'Historical activity scoring pending for TenderNed demo.' : 'TenderNed demo activity'}</div>
               </div>
             </div>
           </div>
@@ -2383,19 +2381,19 @@
           <div class="kpi-sub">In watchlist</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-label">Hot outreach</div>
+          <div class="kpi-label">High-signal buyers</div>
           <div class="kpi-value">${displayHotCount}</div>
-          <div class="kpi-sub">Immediate priority</div>
+          <div class="kpi-sub">Public buyer signals</div>
         </div>
         <div class="kpi-card is-accent">
           <div class="kpi-label">Avg fit score</div>
           <div class="kpi-value">${avgFit}%</div>
-          <div class="kpi-sub"><strong>${active90d}</strong> buyers active in the last 90d</div>
+          <div class="kpi-sub">${active90d === 0 ? 'Historical activity scoring pending for TenderNed demo.' : `<strong>${active90d}</strong> TenderNed demo activity`}</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-label">Actionable now</div>
+          <div class="kpi-label">Timing-ready</div>
           <div class="kpi-value">${displayActionableCount}</div>
-          <div class="kpi-sub">Timing ready</div>
+          <div class="kpi-sub">Review queue</div>
         </div>
       `;
 
@@ -2469,7 +2467,7 @@
             <div class="ops-card-head">
               <div>
                 <div class="ops-card-title">Live integrations</div>
-                <div class="ops-card-subtitle">Supplier matching is embedded in the main loop, and delivery is still Discord-first.</div>
+                <div class="ops-card-subtitle">Supplier/source matching is represented in the current demo export, and delivery is currently via static Hostinger export for the public demo.</div>
               </div>
               <span class="badge ${supplierDemo ? 'amber' : 'green'}">${supplierDemo ? 'Demo supplier source' : 'Runtime verified'}</span>
             </div>
@@ -2658,15 +2656,15 @@
             <div class="kpi-value">${buyers.length}</div>
           </div>
           <div class="kpi-card">
-            <div class="kpi-label">Hot outreach</div>
+            <div class="kpi-label">High-signal buyers</div>
             <div class="kpi-value">${displayHotCount}</div>
           </div>
           <div class="kpi-card">
-            <div class="kpi-label">Warm</div>
+            <div class="kpi-label">Tracked buyers</div>
             <div class="kpi-value">${displayWarmCount}</div>
           </div>
           <div class="kpi-card">
-            <div class="kpi-label">Active 90d</div>
+            <div class="kpi-label">Recent buyer activity</div>
             <div class="kpi-value">${active90d}</div>
           </div>
           <div class="kpi-card">
@@ -2674,7 +2672,7 @@
             <div class="kpi-value">${avgFit}%</div>
           </div>
           <div class="kpi-card">
-            <div class="kpi-label">Actionable now</div>
+            <div class="kpi-label">Timing-ready</div>
             <div class="kpi-value">${displayActionableCount}</div>
           </div>
         </div>

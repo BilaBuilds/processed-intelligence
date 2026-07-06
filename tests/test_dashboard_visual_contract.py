@@ -61,10 +61,21 @@ def test_dashboard_clarifies_buyer_watchlist_not_sales_outreach() -> None:
     html = read_dashboard()
 
     assert "Buyer watchlist" in html
+    assert "High-signal buyers" in html
     assert "public-sector buyer accounts" in html
     assert "client sales prospects" in html
     assert "Tracked public buyers" in html
+    assert "Review timing-ready public opportunities" in html
+    assert "delivery is currently via static Hostinger export" in html
     assert "Outreach queue" not in html
+    assert "Discord-first" not in html
+
+
+def test_dashboard_hides_avatar_builder_from_visible_navigation() -> None:
+    html = read_dashboard()
+
+    assert "label: 'Avatar builder'" not in html
+    assert 'label: "Avatar builder"' not in html
 
 
 def test_dashboard_login_hashes_remain_present() -> None:

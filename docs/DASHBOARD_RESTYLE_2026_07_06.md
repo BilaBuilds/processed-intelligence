@@ -43,6 +43,17 @@ Copy and UI mappings were updated:
 
 This change only affects static dashboard presentation. It does not modify `run_pipeline.py`, `dashboard_data.json`, the dashboard data schema, or Hostinger upload architecture.
 
+## Public Demo Copy Polish
+
+The overview page and navigation were also tightened for public demo use so the dashboard reads as a credible static intelligence portal rather than a fully live commercial operations console.
+
+- `Move on timing-ready buyers...` is now `Review timing-ready public opportunities...`
+- `Next operator move` is now `Next review action`
+- overview and buyer KPI labels now use buyer-signal language such as `High-signal buyers`, `Tracked buyers`, `Timing-ready`, and `Recent buyer activity`
+- zero-state client and historical-activity areas now explain the public demo limitation instead of looking broken
+- execution truth now states that delivery is currently via static Hostinger export for the public demo
+- the visible navigation no longer exposes `Avatar builder`
+
 ## Data Compatibility Preserved
 
 The dashboard still reads:
