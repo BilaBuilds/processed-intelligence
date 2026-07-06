@@ -6,15 +6,15 @@
     "Switzerland": 3
   },
   "count_by_priority": {
-    "HIGH": 0,
-    "LOW": 9,
-    "MEDIUM": 0,
-    "MONITOR": 0
+    "HIGH": 4,
+    "LOW": 1,
+    "MEDIUM": 3,
+    "MONITOR": 1
   },
-  "average_fit_score": 41.0,
-  "high_signal_count": 0,
-  "timing_ready_count": 0,
-  "generated_at": "2026-07-06T14:50:35.332749+00:00",
-  "scoring_version": "dach_fixture_scoring_v0_1",
+  "average_fit_score": 67.22,
+  "high_signal_count": 4,
+  "timing_ready_count": 3,
+  "generated_at": "2026-07-06T14:56:50.334974+00:00",
+  "scoring_version": "dach_fixture_scoring_v0_2",
   "disclaimer": "DACH scoring demo generated from fixture data. No live scraping performed. Not bid advice."
 }

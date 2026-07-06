@@ -17,15 +17,19 @@ The output remains local fixture-only demo data.
 
 ## Heuristic Signals
 
-Positive construction/civils signals include drainage, road, bridge, groundworks, civil engineering, concrete, maintenance, refurbishment, public building, school refurbishment, utilities, wastewater, framework, term contract, infrastructure, repair, construction, and building works.
+Scoring version `dach_fixture_scoring_v0_2` separates major infrastructure/civils signals from construction/building works signals so the fixture demo can show a realistic priority spread without implying live DACH coverage.
+
+Major infrastructure/civils signals include drainage, road, bridge, groundworks, civil engineering, utilities, wastewater, and infrastructure. These add stronger positive weight because they are closest to the construction/civils use case.
+
+Construction/building works signals include concrete, maintenance, refurbishment, public building, school, school refurbishment, framework, term contract, repair, construction, and building works.
 
 Negative or non-core signals include pure IT, software only, office supplies, consulting only, vehicles only, medical equipment, legal services, catering, and cleaning only.
 
 ## Timing Rules
 
 - Expired or stale notices are marked `MONITOR` with the reason `Expired/stale notice` and next action `Monitor only`.
-- Deadlines within 14 days receive `Urgent deadline`.
-- Deadlines 15-45 days away receive `Timing-ready review window`.
+- Deadlines within 14 days receive `Urgent deadline` and a smaller urgency boost.
+- Deadlines 15-45 days away receive `Timing-ready review window` and the strongest timing boost.
 - Deadlines beyond 45 days receive `Watchlist timing`.
 
 ## Value Rules

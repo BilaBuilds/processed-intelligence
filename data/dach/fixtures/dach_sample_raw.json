@@ -1,12 +1,12 @@
 [
   {
     "notice_id": "DE-DEMO-001",
-    "title": "Demo road maintenance package",
+    "title": "Demo road maintenance framework",
     "buyer": "Demo German municipal roads team",
     "country": "Germany",
     "region": "North Rhine-Westphalia",
-    "deadline": "2026-09-15",
-    "value": "1250000",
+    "deadline": "2026-08-12",
+    "value": "1800000",
     "currency": "EUR",
     "cpv": [
       "45233141",
@@ -15,7 +15,7 @@
     "url": "fixture://dach/germany/road-maintenance",
     "source": "dach_demo_fixture",
     "published_at": "2026-07-01",
-    "description": "Fixture-only road maintenance notice for DACH adapter testing.",
+    "description": "Fixture-only road infrastructure term contract for recurring maintenance and construction repair testing.",
     "procurement_stage": "open"
   },
   {
@@ -24,7 +24,7 @@
     "buyer": "Demo Austrian school estate team",
     "country": "Austria",
     "region": "Vienna",
-    "deadline": "2026-09-30",
+    "deadline": "2026-08-05",
     "value": "980000",
     "currency": "EUR",
     "cpv": [
@@ -33,7 +33,7 @@
     "url": "fixture://dach/austria/school-refurbishment",
     "source": "dach_demo_fixture",
     "published_at": "2026-07-04",
-    "description": "Fixture-only school refurbishment notice for DACH adapter testing.",
+    "description": "Fixture-only school refurbishment and building works notice for DACH adapter testing.",
     "procurement_stage": "open"
   },
   {
@@ -43,7 +43,7 @@
     "country": "Switzerland",
     "region": "Zurich",
     "language": "de",
-    "deadline": "2026-10-20",
+    "deadline": "2026-08-15",
     "value": "2100000",
     "currency": "CHF",
     "cpv": [
@@ -52,7 +52,7 @@
     "url": "fixture://dach/switzerland/wastewater-infrastructure",
     "source": "dach_demo_fixture",
     "published_at": "2026-07-07",
-    "description": "Fixture-only wastewater infrastructure notice for DACH adapter testing.",
+    "description": "Fixture-only wastewater and drainage infrastructure construction works notice for DACH adapter testing.",
     "procurement_stage": "open"
   }
 ]

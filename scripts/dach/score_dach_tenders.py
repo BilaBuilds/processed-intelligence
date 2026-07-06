@@ -17,28 +17,32 @@ INPUT_PATH = ROOT / "data" / "dach" / "demo" / "dach_demo_tenders.json"
 SCORED_PATH = ROOT / "data" / "dach" / "demo" / "dach_demo_scored.json"
 SUMMARY_PATH = ROOT / "data" / "dach" / "demo" / "dach_demo_score_summary.json"
 
-SCORING_VERSION = "dach_fixture_scoring_v0_1"
+SCORING_VERSION = "dach_fixture_scoring_v0_2"
 DISCLAIMER = (
     "DACH scoring demo generated from fixture data. No live scraping performed. "
     "Not bid advice."
 )
 
-POSITIVE_SIGNALS = [
+MAJOR_CIVILS_SIGNALS = [
     "drainage",
     "road",
     "bridge",
     "groundworks",
     "civil engineering",
+    "utilities",
+    "wastewater",
+    "infrastructure",
+]
+
+CONSTRUCTION_WORKS_SIGNALS = [
     "concrete",
     "maintenance",
     "refurbishment",
     "public building",
+    "school",
     "school refurbishment",
-    "utilities",
-    "wastewater",
     "framework",
     "term contract",
-    "infrastructure",
     "repair",
     "construction",
     "building works",
@@ -104,11 +108,11 @@ def score_value(value: Any, reasons: list[str]) -> int:
 
     if numeric_value >= 1_000_000:
         reasons.append("High-value opportunity")
-        return 15
+        return 10
 
     if numeric_value >= 250_000:
         reasons.append("Material contract value")
-        return 10
+        return 6
 
     reasons.append("Relevant smaller works")
     return 5
@@ -127,11 +131,11 @@ def deadline_reasons(deadline: Any, now: datetime, reasons: list[str]) -> tuple[
 
     if days_until_deadline <= 14:
         reasons.append("Urgent deadline")
-        return 10, False
+        return 8, False
 
     if days_until_deadline <= 45:
         reasons.append("Timing-ready review window")
-        return 15, False
+        return 10, False
 
     reasons.append("Watchlist timing")
     return 5, False
@@ -139,18 +143,33 @@ def deadline_reasons(deadline: Any, now: datetime, reasons: list[str]) -> tuple[
 
 def signal_score(tender: dict[str, Any], reasons: list[str]) -> int:
     text = combined_text(tender)
-    positives = [signal for signal in POSITIVE_SIGNALS if signal in text]
+    major_signals = [signal for signal in MAJOR_CIVILS_SIGNALS if signal in text]
+    works_signals = [signal for signal in CONSTRUCTION_WORKS_SIGNALS if signal in text]
     negatives = [signal for signal in NEGATIVE_SIGNALS if signal in text]
 
-    if positives:
+    if major_signals:
         reasons.append(
-            "Construction/civils signal: " + ", ".join(sorted(set(positives))[:4])
+            "Infrastructure/civils signal: "
+            + ", ".join(sorted(set(major_signals))[:4])
+        )
+
+    if "drainage" in major_signals or "wastewater" in major_signals:
+        reasons.append("Drainage or wastewater works")
+
+    recurring_signals = {"framework", "term contract", "maintenance"} & set(works_signals)
+    if recurring_signals:
+        reasons.append("Framework or recurring maintenance signal")
+
+    if works_signals:
+        reasons.append(
+            "Construction/building works signal: "
+            + ", ".join(sorted(set(works_signals))[:4])
         )
 
     if negatives:
         reasons.append("Non-core signal: " + ", ".join(sorted(set(negatives))[:3]))
 
-    score = min(70, len(set(positives)) * 12)
+    score = min(70, len(set(major_signals)) * 20 + len(set(works_signals)) * 12)
     score -= min(50, len(set(negatives)) * 20)
     return max(0, score)
 
@@ -177,7 +196,7 @@ def next_action_for(priority: str) -> str:
 
 def score_tender(tender: dict[str, Any], now: datetime | None = None) -> dict[str, Any]:
     now = now or datetime.now(timezone.utc)
-    reasons: list[str] = []
+    reasons: list[str] = ["Fixture-only demo record"]
 
     score = signal_score(tender, reasons)
     score += score_value(tender.get("value"), reasons)

@@ -62,13 +62,29 @@ def test_every_scored_tender_has_required_scoring_fields():
     run_demo_export_and_scoring()
     scored = json.loads(SCORED_PATH.read_text(encoding="utf-8"))
 
+    assert len(scored) == 9
     for tender in scored:
         assert isinstance(tender["fit_score"], int)
         assert 0 <= tender["fit_score"] <= 100
         assert tender["priority"] in VALID_PRIORITIES
         assert isinstance(tender["reasons"], list)
+        assert tender["reasons"]
+        assert "Fixture-only demo record" in tender["reasons"]
         assert tender["next_action"]
-        assert tender["scoring_version"] == SCORING_VERSION
+        assert tender["scoring_version"] == "dach_fixture_scoring_v0_2"
+        assert "Act now" not in tender["next_action"]
+
+
+def test_scoring_distribution_is_demo_ready():
+    run_demo_export_and_scoring()
+    summary = json.loads(SUMMARY_PATH.read_text(encoding="utf-8"))
+    count_by_priority = summary["count_by_priority"]
+
+    assert summary["scoring_version"] == "dach_fixture_scoring_v0_2"
+    assert count_by_priority["HIGH"] >= 2
+    assert count_by_priority["MEDIUM"] >= 3
+    assert count_by_priority["LOW"] + count_by_priority["MONITOR"] >= 1
+    assert 50 <= summary["average_fit_score"] <= 75
 
 
 def test_construction_civils_examples_score_above_non_core_examples():
@@ -113,6 +129,16 @@ def test_expired_stale_notices_are_monitor_only():
     assert expired["next_action"] == "Monitor only"
     assert "Act now" not in expired["next_action"]
     assert "Expired/stale notice" in expired["reasons"]
+
+
+def test_expired_fixture_records_are_monitor_if_present():
+    run_demo_export_and_scoring()
+    scored = json.loads(SCORED_PATH.read_text(encoding="utf-8"))
+
+    for tender in scored:
+        if "Expired/stale notice" in tender["reasons"]:
+            assert tender["priority"] == "MONITOR"
+            assert tender["next_action"] == "Monitor only"
 
 
 def test_summary_disclaimer_and_docs_language():
