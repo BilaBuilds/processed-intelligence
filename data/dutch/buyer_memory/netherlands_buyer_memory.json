@@ -1,0 +1,268 @@
+{
+  "buyers": [
+    {
+      "buyer_id": "nl-buyer-cross-border-transport-authority-sample",
+      "buyer_name": "Cross-border transport authority sample",
+      "buyer_type": "port_or_logistics_authority_sample",
+      "categories": [
+        "public works"
+      ],
+      "caveat": "sample_demo research_needed not_verified; derived from demo opportunities, not verified live buyer coverage",
+      "country": "EU cross-border",
+      "data_status": "sample_demo_research_needed_not_verified_live_coverage",
+      "likely_supplier_fit": "Dutch civils contractors; UK/DACH contractors with possible Netherlands/EU interest",
+      "observed_opportunity_count": 1,
+      "procurement_theme": "municipal public works, civils, and public realm delivery",
+      "recommended_watch_action": "Use as a buyer-memory seed, then validate via TenderNed/TED before commercial claims.",
+      "region": "Rhine corridor",
+      "relationship_angle": "Use Cross-border transport authority sample as a sample buyer pattern until live source coverage is verified.",
+      "sample_sources": [
+        "TED/EU notices sample"
+      ],
+      "timing_signal": "near-term sample opportunity pressure; manually verify dates before action"
+    },
+    {
+      "buyer_id": "nl-buyer-eu-public-procurement-data-space-sample-analytics",
+      "buyer_name": "EU Public Procurement Data Space sample analytics",
+      "buyer_type": "eu_or_cross_border_sample",
+      "categories": [
+        "maintenance"
+      ],
+      "caveat": "sample_demo research_needed not_verified; derived from demo opportunities, not verified live buyer coverage",
+      "country": "EU dataset",
+      "data_status": "sample_demo_research_needed_not_verified_live_coverage",
+      "likely_supplier_fit": "maintenance/framework contractors; UK/DACH contractors with possible Netherlands/EU interest",
+      "observed_opportunity_count": 1,
+      "procurement_theme": "roads, maintenance frameworks, surfacing, and asset repair",
+      "recommended_watch_action": "Use as a buyer-memory seed, then validate via TenderNed/TED before commercial claims.",
+      "region": "Netherlands",
+      "relationship_angle": "Use EU Public Procurement Data Space sample analytics as a sample buyer pattern until live source coverage is verified.",
+      "sample_sources": [
+        "EU Public Procurement Data Space sample"
+      ],
+      "timing_signal": "sample deadlines range around 2026-11-20 to 2026-11-20; not live verified"
+    },
+    {
+      "buyer_id": "nl-buyer-eu-ted-contracting-authorities-consortium",
+      "buyer_name": "EU/TED contracting authorities consortium",
+      "buyer_type": "eu_or_cross_border_sample",
+      "categories": [
+        "water"
+      ],
+      "caveat": "sample_demo research_needed not_verified; derived from demo opportunities, not verified live buyer coverage",
+      "country": "EU cross-border",
+      "data_status": "sample_demo_research_needed_not_verified_live_coverage",
+      "likely_supplier_fit": "water/public works suppliers; UK/DACH contractors with possible Netherlands/EU interest",
+      "observed_opportunity_count": 1,
+      "procurement_theme": "water, drainage, flood resilience, and civil infrastructure",
+      "recommended_watch_action": "Use as a buyer-memory seed, then validate via TenderNed/TED before commercial claims.",
+      "region": "Benelux",
+      "relationship_angle": "Use EU/TED contracting authorities consortium as a sample buyer pattern until live source coverage is verified.",
+      "sample_sources": [
+        "TED/EU notices sample"
+      ],
+      "timing_signal": "near-term sample opportunity pressure; manually verify dates before action"
+    },
+    {
+      "buyer_id": "nl-buyer-gemeente-eindhoven",
+      "buyer_name": "Gemeente Eindhoven",
+      "buyer_type": "municipality",
+      "categories": [
+        "civils"
+      ],
+      "caveat": "sample_demo research_needed not_verified; derived from demo opportunities, not verified live buyer coverage",
+      "country": "Netherlands",
+      "data_status": "sample_demo_research_needed_not_verified_live_coverage",
+      "likely_supplier_fit": "Dutch civils contractors; UK/DACH contractors with possible Netherlands/EU interest",
+      "observed_opportunity_count": 1,
+      "procurement_theme": "municipal public works, civils, and public realm delivery",
+      "recommended_watch_action": "Use as a buyer-memory seed, then validate via TenderNed/TED before commercial claims.",
+      "region": "North Brabant",
+      "relationship_angle": "Track Gemeente Eindhoven as a municipal public works buyer and validate recurring CPV patterns.",
+      "sample_sources": [
+        "TenderNed sample"
+      ],
+      "timing_signal": "sample deadlines range around 2026-09-11 to 2026-09-11; not live verified"
+    },
+    {
+      "buyer_id": "nl-buyer-gemeente-haarlemmermeer",
+      "buyer_name": "Gemeente Haarlemmermeer",
+      "buyer_type": "municipality",
+      "categories": [
+        "drainage"
+      ],
+      "caveat": "sample_demo research_needed not_verified; derived from demo opportunities, not verified live buyer coverage",
+      "country": "Netherlands",
+      "data_status": "sample_demo_research_needed_not_verified_live_coverage",
+      "likely_supplier_fit": "water/public works suppliers; UK/DACH contractors with possible Netherlands/EU interest",
+      "observed_opportunity_count": 1,
+      "procurement_theme": "water, drainage, flood resilience, and civil infrastructure",
+      "recommended_watch_action": "Use as a buyer-memory seed, then validate via TenderNed/TED before commercial claims.",
+      "region": "North Holland",
+      "relationship_angle": "Track Gemeente Haarlemmermeer as a municipal public works buyer and validate recurring CPV patterns.",
+      "sample_sources": [
+        "TenderNed sample"
+      ],
+      "timing_signal": "near-term sample opportunity pressure; manually verify dates before action"
+    },
+    {
+      "buyer_id": "nl-buyer-gemeente-rotterdam",
+      "buyer_name": "Gemeente Rotterdam",
+      "buyer_type": "municipality",
+      "categories": [
+        "public works"
+      ],
+      "caveat": "sample_demo research_needed not_verified; derived from demo opportunities, not verified live buyer coverage",
+      "country": "Netherlands",
+      "data_status": "sample_demo_research_needed_not_verified_live_coverage",
+      "likely_supplier_fit": "Dutch civils contractors; UK/DACH contractors with possible Netherlands/EU interest",
+      "observed_opportunity_count": 1,
+      "procurement_theme": "water, drainage, flood resilience, and civil infrastructure",
+      "recommended_watch_action": "Use as a buyer-memory seed, then validate via TenderNed/TED before commercial claims.",
+      "region": "South Holland",
+      "relationship_angle": "Track Gemeente Rotterdam as a municipal public works buyer and validate recurring CPV patterns.",
+      "sample_sources": [
+        "TenderNed sample"
+      ],
+      "timing_signal": "near-term sample opportunity pressure; manually verify dates before action"
+    },
+    {
+      "buyer_id": "nl-buyer-gemeente-utrecht",
+      "buyer_name": "Gemeente Utrecht",
+      "buyer_type": "municipality",
+      "categories": [
+        "roads"
+      ],
+      "caveat": "sample_demo research_needed not_verified; derived from demo opportunities, not verified live buyer coverage",
+      "country": "Netherlands",
+      "data_status": "sample_demo_research_needed_not_verified_live_coverage",
+      "likely_supplier_fit": "maintenance/framework contractors; UK/DACH contractors with possible Netherlands/EU interest",
+      "observed_opportunity_count": 1,
+      "procurement_theme": "roads, maintenance frameworks, surfacing, and asset repair",
+      "recommended_watch_action": "Use as a buyer-memory seed, then validate via TenderNed/TED before commercial claims.",
+      "region": "Utrecht",
+      "relationship_angle": "Track Gemeente Utrecht as a municipal public works buyer and validate recurring CPV patterns.",
+      "sample_sources": [
+        "TenderNed sample"
+      ],
+      "timing_signal": "sample deadlines range around 2026-09-04 to 2026-09-04; not live verified"
+    },
+    {
+      "buyer_id": "nl-buyer-port-infrastructure-contracting-authority",
+      "buyer_name": "Port infrastructure contracting authority",
+      "buyer_type": "port_or_logistics_authority_sample",
+      "categories": [
+        "infrastructure"
+      ],
+      "caveat": "sample_demo research_needed not_verified; derived from demo opportunities, not verified live buyer coverage",
+      "country": "EU cross-border",
+      "data_status": "sample_demo_research_needed_not_verified_live_coverage",
+      "likely_supplier_fit": "Dutch infrastructure contractors; UK/DACH contractors with possible Netherlands/EU interest",
+      "observed_opportunity_count": 1,
+      "procurement_theme": "major infrastructure, ports, utilities, and transport works",
+      "recommended_watch_action": "Use as a buyer-memory seed, then validate via TenderNed/TED before commercial claims.",
+      "region": "North Sea corridor",
+      "relationship_angle": "Use Port infrastructure contracting authority as a sample buyer pattern until live source coverage is verified.",
+      "sample_sources": [
+        "TED/EU notices sample"
+      ],
+      "timing_signal": "sample deadlines range around 2026-10-09 to 2026-10-09; not live verified"
+    },
+    {
+      "buyer_id": "nl-buyer-provincie-flevoland",
+      "buyer_name": "Provincie Flevoland",
+      "buyer_type": "province",
+      "categories": [
+        "roads"
+      ],
+      "caveat": "sample_demo research_needed not_verified; derived from demo opportunities, not verified live buyer coverage",
+      "country": "Netherlands",
+      "data_status": "sample_demo_research_needed_not_verified_live_coverage",
+      "likely_supplier_fit": "maintenance/framework contractors; UK/DACH contractors with possible Netherlands/EU interest",
+      "observed_opportunity_count": 1,
+      "procurement_theme": "water, drainage, flood resilience, and civil infrastructure",
+      "recommended_watch_action": "Use as a buyer-memory seed, then validate via TenderNed/TED before commercial claims.",
+      "region": "Flevoland",
+      "relationship_angle": "Watch Provincie Flevoland for roads, structures, and maintenance framework patterns.",
+      "sample_sources": [
+        "TenderNed sample"
+      ],
+      "timing_signal": "sample deadlines range around 2026-11-06 to 2026-11-06; not live verified"
+    },
+    {
+      "buyer_id": "nl-buyer-provincie-zeeland",
+      "buyer_name": "Provincie Zeeland",
+      "buyer_type": "province",
+      "categories": [
+        "maintenance"
+      ],
+      "caveat": "sample_demo research_needed not_verified; derived from demo opportunities, not verified live buyer coverage",
+      "country": "Netherlands",
+      "data_status": "sample_demo_research_needed_not_verified_live_coverage",
+      "likely_supplier_fit": "maintenance/framework contractors; UK/DACH contractors with possible Netherlands/EU interest",
+      "observed_opportunity_count": 1,
+      "procurement_theme": "roads, maintenance frameworks, surfacing, and asset repair",
+      "recommended_watch_action": "Use as a buyer-memory seed, then validate via TenderNed/TED before commercial claims.",
+      "region": "Zeeland",
+      "relationship_angle": "Watch Provincie Zeeland for roads, structures, and maintenance framework patterns.",
+      "sample_sources": [
+        "TenderNed sample"
+      ],
+      "timing_signal": "sample deadlines range around 2026-10-02 to 2026-10-02; not live verified"
+    },
+    {
+      "buyer_id": "nl-buyer-rijkswaterstaat",
+      "buyer_name": "Rijkswaterstaat",
+      "buyer_type": "national_infrastructure_agency",
+      "categories": [
+        "infrastructure"
+      ],
+      "caveat": "sample_demo research_needed not_verified; derived from demo opportunities, not verified live buyer coverage",
+      "country": "Netherlands",
+      "data_status": "sample_demo_research_needed_not_verified_live_coverage",
+      "likely_supplier_fit": "Dutch infrastructure contractors; UK/DACH contractors with possible Netherlands/EU interest",
+      "observed_opportunity_count": 1,
+      "procurement_theme": "major infrastructure, ports, utilities, and transport works",
+      "recommended_watch_action": "Use as a buyer-memory seed, then validate via TenderNed/TED before commercial claims.",
+      "region": "National waterways",
+      "relationship_angle": "Treat Rijkswaterstaat as a strategic infrastructure buyer requiring source and compliance validation.",
+      "sample_sources": [
+        "TenderNed sample"
+      ],
+      "timing_signal": "sample deadlines range around 2026-10-16 to 2026-10-16; not live verified"
+    },
+    {
+      "buyer_id": "nl-buyer-waterschap-noorderzijlvest",
+      "buyer_name": "Waterschap Noorderzijlvest",
+      "buyer_type": "water_authority",
+      "categories": [
+        "water"
+      ],
+      "caveat": "sample_demo research_needed not_verified; derived from demo opportunities, not verified live buyer coverage",
+      "country": "Netherlands",
+      "data_status": "sample_demo_research_needed_not_verified_live_coverage",
+      "likely_supplier_fit": "water/public works suppliers; UK/DACH contractors with possible Netherlands/EU interest",
+      "observed_opportunity_count": 1,
+      "procurement_theme": "water, drainage, flood resilience, and civil infrastructure",
+      "recommended_watch_action": "Use as a buyer-memory seed, then validate via TenderNed/TED before commercial claims.",
+      "region": "Groningen",
+      "relationship_angle": "Use Waterschap Noorderzijlvest as a water-resilience validation buyer for drainage, pumping, and treatment works.",
+      "sample_sources": [
+        "TenderNed sample"
+      ],
+      "timing_signal": "near-term sample opportunity pressure; manually verify dates before action"
+    }
+  ],
+  "metadata": {
+    "data_status": "sample_demo_research_needed_not_verified_live_coverage",
+    "generated_at": "2026-07-07T20:30:35+00:00",
+    "name": "Netherlands buyer memory",
+    "project": "configured_via_GOOGLE_CLOUD_PROJECT",
+    "record_count": 12,
+    "source_inputs": [
+      "data/dutch/demo/dutch_demo_opportunities.json",
+      "data/dutch/demo/dutch_demo_opportunities_enriched.json",
+      "data/outreach/netherlands_company_targets_enriched.json"
+    ]
+  }
+}
