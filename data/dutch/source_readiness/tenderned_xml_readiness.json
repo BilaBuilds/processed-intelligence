@@ -1,0 +1,18 @@
+{
+  "source": "TenderNed XML",
+  "source_id": "tenderned_xml",
+  "source_type": "official_api",
+  "access_type": "basic_auth",
+  "status": "ready_pending_credentials",
+  "country": "NL",
+  "coverage": "TenderNed public notices from 2018-04-04 onward, subject to API access",
+  "base_url": "https://www.tenderned.nl/papi/tenderned-rs-tns/v2",
+  "endpoint": "GET /publicaties/{publicatieId}/public-xml",
+  "credentials": [
+    "TENDERNED_XML_USERNAME",
+    "TENDERNED_XML_PASSWORD"
+  ],
+  "risk": "Credentials required and XML schema variation",
+  "fixture_mode": true,
+  "notes": "Live fetch is skipped until official TenderNed Basic Auth credentials are configured."
+}

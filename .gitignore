@@ -44,6 +44,12 @@ enrichment_cache.sqlite3
 
 # Business data, raw inputs, run outputs, and exports
 data/
+!data/
+data/*
+!data/dutch/
+data/dutch/*
+!data/dutch/source_readiness/
+!data/dutch/source_readiness/*.json
 warehouse/
 measurement_runs/
 exports/
