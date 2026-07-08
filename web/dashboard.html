@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ProcessEd Intelligence dashboard for ranked public procurement opportunities.">
+  <title>ProcessEd Intelligence Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --pe-navy: #25364A;
+      --pe-navy-mid: #34495F;
+      --pe-navy-soft: #52657A;
+      --pe-gold: #B98932;
+      --pe-gold-lt: #D8AC58;
+      --pe-gold-bg: #FAF0DC;
+      --pe-bg: #F4F1EA;
+      --pe-surface: #FFFDF8;
+      --pe-surface-2: #ECE7DC;
+      --pe-text: #161A1F;
+      --pe-text-2: #4A5360;
+      --pe-text-3: #7C8794;
+      --pe-border: #DDD6C8;
+      --pe-border-2: #C9C0AF;
+      --pe-border-navy: rgba(37, 54, 74, 0.12);
+      --pe-green: #0B7F61;
+      --pe-red: #C2412D;
+      --pe-amber: #B76E1D;
+      --pe-nav-text: rgba(255, 253, 248, 0.72);
+      --pe-nav-text-2: rgba(255, 253, 248, 0.46);
+      --pe-nav-border: rgba(255, 253, 248, 0.12);
+      --pe-nav-active: rgba(255, 253, 248, 0.08);
+      --pe-overlay: rgba(37, 54, 74, 0.62);
+      --pe-green-bg: #DFF3EA;
+      --pe-red-bg: #F6DDD7;
+      --pe-amber-bg: #F8EBCB;
+      --pe-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+      --pe-sans: 'Inter', 'Helvetica Now', -apple-system, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: var(--pe-bg);
+      color: var(--pe-text);
+      font-family: var(--pe-sans);
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    .mono, .metric-number, .metric-delta, .table td, .score-badge, .deadline, .market-badge, .updated, .meta-label, .score-large, .bar-value, .nav-section { font-family: var(--pe-mono); }
+
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 5000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: var(--pe-bg);
+    }
+    .login-overlay.hidden { display: none; }
+    .login-box {
+      width: min(100%, 380px);
+      padding: 28px;
+      background: var(--pe-surface);
+      border: 1px solid var(--pe-border-2);
+      border-radius: 4px;
+    }
+    .login-brand { color: var(--pe-navy); font-size: 20px; font-weight: 700; }
+    .login-brand::after { content: "."; color: var(--pe-gold); }
+    .login-title { margin: 4px 0 22px; color: var(--pe-text-3); font-size: 13px; }
+    .field { display: grid; gap: 6px; margin-top: 12px; }
+    .field label { color: var(--pe-text-3); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; }
+    .field input {
+      height: 40px;
+      border: 1px solid var(--pe-border-2);
+      border-radius: 2px;
+      padding: 0 12px;
+      background: var(--pe-surface);
+      color: var(--pe-text);
+    }
+    .login-error { min-height: 18px; margin-top: 10px; color: var(--pe-red); font-size: 12px; }
+    .login-button {
+      width: 100%;
+      height: 42px;
+      margin-top: 12px;
+      border: 0;
+      border-radius: 2px;
+      background: var(--pe-gold);
+      color: var(--pe-navy);
+      font-weight: 700;
+    }
+
+    .app {
+      height: 100vh;
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      overflow: hidden;
+    }
+    .sidebar {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--pe-navy-soft);
+      color: var(--pe-nav-text);
+      border-right: 1px solid var(--pe-nav-border);
+    }
+    .side-logo {
+      padding: 20px 20px 0;
+      color: var(--pe-surface);
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .side-logo::after { content: "."; color: var(--pe-gold); }
+    .nav-section {
+      margin: 24px 20px 8px;
+      color: var(--pe-nav-text-2);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+    }
+    .side-nav { display: grid; gap: 2px; }
+    .nav-item {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      border: 0;
+      border-left: 3px solid transparent;
+      padding: 0 20px 0 17px;
+      background: transparent;
+      color: var(--pe-nav-text);
+      font-size: 14px;
+      font-weight: 500;
+      text-align: left;
+    }
+    .nav-item:hover { color: var(--pe-surface); }
+    .nav-item.active {
+      color: var(--pe-surface);
+      border-left-color: var(--pe-gold);
+      background: var(--pe-nav-active);
+    }
+    .side-bottom { margin-top: auto; padding: 0 0 18px; }
+    .main {
+      min-width: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .topbar {
+      height: 56px;
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      background: var(--pe-surface);
+      border-bottom: 1px solid var(--pe-border);
+    }
+    .page-title { color: var(--pe-text); font-size: 16px; font-weight: 600; }
+    .top-actions { display: flex; align-items: center; gap: 10px; }
+    .updated { color: var(--pe-text-3); font-size: 12px; }
+    .icon-button {
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--pe-border);
+      border-radius: 2px;
+      background: var(--pe-surface);
+      color: var(--pe-navy);
+    }
+    .avatar {
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--pe-navy-soft);
+      color: var(--pe-surface);
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .content { flex: 1 1 auto; overflow: auto; background: var(--pe-bg); }
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-bottom: 1px solid var(--pe-border);
+      background: var(--pe-border);
+      gap: 1px;
+    }
+    .metric { padding: 20px 24px; background: var(--pe-surface); }
+    .metric-label { color: var(--pe-text-3); font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; }
+    .metric-number { margin-top: 8px; color: var(--pe-text); font-size: 36px; font-weight: 500; line-height: 1; }
+    .metric-delta { margin-top: 7px; color: var(--pe-green); font-size: 12px; }
+    .metric-delta.negative { color: var(--pe-red); }
+    .filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 12px 24px;
+      background: var(--pe-bg);
+      border-bottom: 1px solid var(--pe-border);
+    }
+    .filters input, .filters select {
+      height: 36px;
+      border: 1px solid var(--pe-border-2);
+      border-radius: 2px;
+      background: var(--pe-surface);
+      color: var(--pe-text);
+      font-family: var(--pe-mono);
+      font-size: 13px;
+      padding: 0 10px;
+    }
+    .filters input { flex: 1 1 220px; min-width: 220px; }
+    .filters select { min-width: 136px; }
+    .filters input:focus, .filters select:focus { outline: none; border-color: var(--pe-navy); }
+
+    .table-wrap { background: var(--pe-surface); }
+    .table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    .table th {
+      height: 38px;
+      padding: 0 12px;
+      border-bottom: 1px solid var(--pe-border);
+      color: var(--pe-text-3);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-align: left;
+      text-transform: uppercase;
+      background: var(--pe-surface);
+      user-select: none;
+    }
+    .table th.sortable { cursor: pointer; }
+    .table th.sortable:hover { color: var(--pe-navy); }
+    .table td {
+      height: 48px;
+      padding: 0 12px;
+      border-bottom: 1px solid var(--pe-border);
+      color: var(--pe-text);
+      font-size: 13px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .table tbody tr:hover { background: var(--pe-gold-bg); cursor: pointer; }
+    .col-score { width: 72px; }
+    .col-buyer { width: 200px; }
+    .col-value { width: 96px; text-align: right; }
+    .col-deadline { width: 96px; }
+    .col-market { width: 72px; }
+    .col-action { width: 48px; text-align: right; }
+    .cell-buyer { font-family: var(--pe-sans); color: var(--pe-text); font-size: 14px; font-weight: 600; }
+    .cell-title { font-family: var(--pe-sans); color: var(--pe-text-2); font-size: 13px; }
+    .score-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px 8px;
+      border-radius: 2px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .score-high { background: var(--pe-green-bg); color: var(--pe-green); }
+    .score-mid { background: var(--pe-amber-bg); color: var(--pe-amber); }
+    .score-review { background: var(--pe-surface-2); color: var(--pe-text-2); }
+    .score-low { background: var(--pe-red-bg); color: var(--pe-red); }
+    .deadline.urgent { color: var(--pe-red); }
+    .deadline.soon { color: var(--pe-amber); }
+    .deadline.later { color: var(--pe-text-3); }
+    .market-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 30px;
+      padding: 2px 6px;
+      border-radius: 2px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .market-uk { background: var(--pe-navy); color: var(--pe-surface); }
+    .market-nl { background: var(--pe-gold-bg); color: var(--pe-navy); }
+    .action-link { color: var(--pe-gold); font-size: 18px; }
+    .empty { display: none; padding: 28px; color: var(--pe-text-3); text-align: center; }
+    .market-notice {
+      display: none;
+      margin: 12px 24px 0;
+      padding: 10px 12px;
+      border: 1px solid var(--pe-border);
+      background: var(--pe-gold-bg);
+      color: var(--pe-text-2);
+      font-size: 13px;
+    }
+    .market-notice.visible { display: block; }
+    .buyer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      background: var(--pe-border);
+      border-top: 1px solid var(--pe-border);
+    }
+    .buyer-card {
+      min-height: 218px;
+      padding: 20px 24px;
+      background: var(--pe-surface);
+    }
+    .buyer-card h3 {
+      margin: 0 0 8px;
+      color: var(--pe-text);
+      font-size: 16px;
+      line-height: 1.35;
+    }
+    .buyer-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .buyer-chip {
+      padding: 2px 7px;
+      border: 1px solid var(--pe-border);
+      color: var(--pe-text-2);
+      font-family: var(--pe-mono);
+      font-size: 11px;
+    }
+    .buyer-stat {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--pe-border);
+      color: var(--pe-text-2);
+      font-size: 13px;
+    }
+    .buyer-stat strong {
+      color: var(--pe-text);
+      font-family: var(--pe-mono);
+      font-weight: 500;
+    }
+    .buyer-action {
+      margin: 14px 0 0;
+      color: var(--pe-text-2);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .hamburger {
+      display: none;
+      position: fixed;
+      top: 8px;
+      left: 10px;
+      z-index: 1300;
+      width: 40px;
+      height: 40px;
+      border: 0;
+      border-radius: 2px;
+      background: var(--pe-navy-soft);
+      color: var(--pe-gold);
+      font-size: 22px;
+    }
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1150;
+      background: var(--pe-overlay);
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 3000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: var(--pe-overlay);
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      width: min(100%, 620px);
+      max-height: 90vh;
+      overflow-y: auto;
+      background: var(--pe-surface);
+      border: 1px solid var(--pe-border-2);
+      border-radius: 4px;
+    }
+    .modal-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 24px;
+      background: var(--pe-navy-soft);
+    }
+    .modal-title { margin: 0; color: var(--pe-surface); font-size: 16px; font-weight: 600; line-height: 1.4; }
+    .modal-close {
+      border: 0;
+      background: transparent;
+      color: var(--pe-nav-text);
+      font-size: 24px;
+      line-height: 1;
+    }
+    .modal-body { padding: 24px; }
+    .meta-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px 22px; }
+    .meta-label { color: var(--pe-text-3); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .meta-value { margin-top: 3px; color: var(--pe-text); font-family: var(--pe-mono); font-size: 14px; }
+    .modal-section { margin-top: 20px; }
+    .modal-section p { margin: 6px 0 0; color: var(--pe-text-2); font-size: 15px; line-height: 1.6; }
+    .score-head { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; }
+    .score-large { color: var(--pe-gold); font-size: 40px; font-weight: 500; line-height: 1; }
+    .bars { display: grid; gap: 12px; margin-top: 14px; }
+    .bar-row { display: grid; gap: 6px; }
+    .bar-line { display: flex; justify-content: space-between; color: var(--pe-text-2); font-size: 12px; }
+    .bar-value { color: var(--pe-text-3); }
+    .bar-track { height: 6px; background: var(--pe-bg); border-radius: 0; overflow: hidden; }
+    .bar-fill { height: 6px; width: 0; border-radius: 0; transition: width 0.45s ease; }
+    .modal-overlay.active .bar-fill { width: var(--bar-width); }
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 16px 24px;
+      border-top: 1px solid var(--pe-border);
+    }
+    .modal-button {
+      min-height: 40px;
+      border-radius: 2px;
+      padding: 10px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .modal-button.primary { border: 1px solid var(--pe-gold); background: var(--pe-gold); color: var(--pe-navy); }
+    .modal-button.secondary { border: 1px solid var(--pe-border-2); background: transparent; color: var(--pe-text-2); }
+
+    @media (max-width: 767px) {
+      body { overflow: hidden; }
+      .app { grid-template-columns: 1fr; }
+      .hamburger { display: inline-flex; align-items: center; justify-content: center; }
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 1200;
+        width: 220px;
+        transform: translateX(-100%);
+        transition: transform 0.2s ease;
+      }
+      body.sidebar-open .sidebar { transform: translateX(0); }
+      body.sidebar-open .overlay { display: block; }
+      .topbar { padding-left: 62px; }
+      .kpis { grid-template-columns: repeat(2, 1fr); }
+      .buyer-grid { grid-template-columns: 1fr; }
+      .filters { padding: 12px; }
+      .filters input, .filters select { width: 100%; min-width: 0; flex: 1 1 100%; }
+      .table, .table thead, .table tbody, .table tr, .table td { display: block; width: 100%; }
+      .table thead { display: none; }
+      .table tbody { display: grid; gap: 10px; padding: 12px; background: var(--pe-bg); }
+      .table tr {
+        display: grid;
+        gap: 8px;
+        padding: 12px;
+        background: var(--pe-surface);
+        border: 1px solid var(--pe-border);
+        border-radius: 4px;
+      }
+      .table td { height: auto; padding: 0; border: 0; white-space: normal; }
+      .table td::before {
+        display: block;
+        margin-bottom: 2px;
+        color: var(--pe-text-3);
+        font-family: var(--pe-mono);
+        font-size: 10px;
+        letter-spacing: 0.08em;
+      }
+      .td-score::before { content: "SCORE"; }
+      .td-buyer::before { content: "BUYER"; }
+      .td-title::before { content: "TITLE"; }
+      .td-value::before { content: "VALUE"; }
+      .td-deadline::before { content: "DEADLINE"; }
+      .td-market::before { content: "MARKET"; }
+      .td-action { display: none; }
+      .meta-grid { grid-template-columns: 1fr; }
+      .modal-overlay { align-items: flex-end; padding: 12px; }
+      .modal { width: 100%; max-height: 90vh; }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-overlay" id="loginOverlay">
+    <form class="login-box" id="loginForm" aria-label="Dashboard login">
+      <div class="login-brand">ProcessEd</div>
+      <p class="login-title">Tender Intelligence Portal</p>
+      <div class="field">
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required>
+      </div>
+      <div class="login-error" id="loginError"></div>
+      <button class="login-button" type="submit">Sign in</button>
+    </form>
+  </div>
+
+  <button class="hamburger" id="hamburger" type="button" aria-label="Open navigation">≡</button>
+  <div class="overlay" id="sidebarOverlay"></div>
+
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="side-logo">ProcessEd</div>
+      <div class="nav-section">INTELLIGENCE</div>
+      <nav class="side-nav" aria-label="Dashboard navigation">
+        <button class="nav-item active" type="button" data-page="opportunities">Opportunities</button>
+        <button class="nav-item" type="button" data-page="buyers">Buyers</button>
+        <button class="nav-item" type="button" data-page="shortlist">Shortlist</button>
+        <button class="nav-item" type="button" data-page="reports">Reports</button>
+      </nav>
+      <div class="side-bottom">
+        <button class="nav-item" type="button" data-page="settings">Settings</button>
+        <button class="nav-item" type="button" id="logoutButton">Log out</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="page-title" id="pageTitle">Opportunities</div>
+        <div class="top-actions">
+          <span class="updated" id="updatedLabel">Last updated: calculating...</span>
+          <button class="icon-button" id="refreshButton" type="button" aria-label="Refresh data">↻</button>
+          <span class="avatar" aria-label="Signed in as Bilal">BI</span>
+        </div>
+      </header>
+
+      <section class="content">
+        <div class="kpis">
+          <div class="metric"><div class="metric-label">Tenders ingested</div><div class="metric-number" id="metricTenders">0</div><div class="metric-delta">↑ 12 this week</div></div>
+          <div class="metric"><div class="metric-label">ICP matched</div><div class="metric-number" id="metricMatched">0</div><div class="metric-delta">↑ 8 this week</div></div>
+          <div class="metric"><div class="metric-label">Shortlisted</div><div class="metric-number" id="metricShortlist">0</div><div class="metric-delta">↑ 4 this week</div></div>
+          <div class="metric"><div class="metric-label">Avg score</div><div class="metric-number" id="metricScore">0</div><div class="metric-delta negative">↓ 2 vs last run</div></div>
+        </div>
+
+        <div class="filters" aria-label="Tender filters">
+          <input id="searchInput" type="search" placeholder="Search buyer or title..." aria-label="Search buyer or title">
+          <select id="regionFilter" aria-label="Region filter">
+            <option value="all">All regions</option>
+            <option value="north">North</option>
+            <option value="midlands">Midlands</option>
+            <option value="south">South</option>
+            <option value="national">National</option>
+          </select>
+          <select id="valueFilter" aria-label="Value filter">
+            <option value="all">All values</option>
+            <option value="under-100k">Under £100k</option>
+            <option value="100k-500k">£100k–£500k</option>
+            <option value="500k-1m">£500k–£1m</option>
+            <option value="1m-plus">£1m+</option>
+          </select>
+          <select id="scoreFilter" aria-label="Score filter">
+            <option value="0">All scores</option>
+            <option value="70">70+</option>
+            <option value="80">80+</option>
+            <option value="90">90+</option>
+          </select>
+          <select id="marketFilter" aria-label="Market filter">
+            <option value="both">UK + NL</option>
+            <option value="uk">UK only</option>
+            <option value="nl">NL only</option>
+          </select>
+        </div>
+
+        <div class="market-notice" id="marketNotice">No UK records in this export</div>
+
+        <div class="table-wrap" id="tableWrap">
+          <table class="table" id="tenderTable" data-last-updated="2025-06-04">
+            <thead>
+              <tr>
+                <th class="col-score sortable" data-sort="score">Score</th>
+                <th class="col-buyer sortable" data-sort="buyer">Buyer</th>
+                <th class="sortable" data-sort="title">Title</th>
+                <th class="col-value sortable" data-sort="value">Value</th>
+                <th class="col-deadline sortable" data-sort="deadline">Deadline</th>
+                <th class="col-market sortable" data-sort="market">Market</th>
+                <th class="col-action">Action</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+          <div class="empty" id="emptyState">No matching opportunities.</div>
+        </div>
+        <section class="buyer-grid" id="buyerGrid" aria-label="Buyer intelligence" hidden></section>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle"></h2>
+        <button class="modal-close" id="modalClose" type="button" aria-label="Close tender detail">×</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-footer">
+        <button class="modal-button secondary" id="modalCloseFooter" type="button">Close</button>
+        <a class="modal-button primary" id="modalLink" href="#" target="_blank" rel="noopener">View full tender ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="dashboard_data.js" defer></script>
+  <script defer>
+    const DEMO_LOGIN_HASHES = { bilal: 'a37bc73934a121f27264bc8513222184cd1bab8bb228016cce8f93fbf3bb0a83' };
+    const SESSION_KEY = 'pe_auth';
+    const PORTAL_SESSION_KEY = 'processed_auth';
+    const PORTAL_DEMO_SESSION_VALUE = 'pc_portal_2026';
+    const SUPPRESSION_LIST_NOTICE = 'PECR suppression list references remain upstream in the delivery workflow.';
+
+    let tenders = [];
+    let buyers = [];
+    let filteredTenders = [];
+    let sortState = { key: 'score', dir: 'desc' };
+    let activePage = 'opportunities';
+    let activeTender = null;
+    let lastFocus = null;
+
+    const elements = {};
+
+    function qs(id) { return document.getElementById(id); }
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+    }
+    async function sha256(value) {
+      const bytes = new TextEncoder().encode(value);
+      const hash = await crypto.subtle.digest('SHA-256', bytes);
+      return Array.from(new Uint8Array(hash)).map(byte => byte.toString(16).padStart(2, '0')).join('');
+    }
+    function hasSession() {
+      return sessionStorage.getItem(SESSION_KEY) === '1' || sessionStorage.getItem(PORTAL_SESSION_KEY) === PORTAL_DEMO_SESSION_VALUE;
+    }
+    function unlock() {
+      sessionStorage.setItem(SESSION_KEY, '1');
+      sessionStorage.setItem(PORTAL_SESSION_KEY, PORTAL_DEMO_SESSION_VALUE);
+      elements.loginOverlay.classList.add('hidden');
+      render();
+    }
+    async function handleLogin(event) {
+      event.preventDefault();
+      const user = elements.username.value.trim().toLowerCase();
+      const pass = elements.password.value;
+      if (!user || !pass) return;
+      const hash = await sha256(pass);
+      if (DEMO_LOGIN_HASHES[user] === hash) {
+        unlock();
+      } else {
+        elements.loginError.textContent = 'Incorrect username or password.';
+        elements.password.value = '';
+      }
+    }
+    function dataRoot() {
+      return window.PROCESSED_DASHBOARD_DATA || window.DASHBOARD_DATA || window.dashboardData || {};
+    }
+    function normalizeTenders() {
+      const data = dataRoot();
+      const run = data.latestRun || {};
+      tenders = (run.tenders || data.tenders || []).map((item, index) => ({
+        id: item.id || `tender-${index}`,
+        buyer: item.buyer_name || item.buyer || item.authority || 'Unknown buyer',
+        title: item.title || item.name || item.notice_title || 'Untitled opportunity',
+        value: numericValue(item.value_amount ?? item.value),
+        rawValue: item.value_amount ?? item.value,
+        valueLabel: item.value_label || '',
+        deadline: item.deadline_at || item.deadline || '',
+        deadlineLabel: item.deadline_label || '',
+        region: item.region || 'National',
+        cpv: item.cpv || item.cpv_code || '—',
+        market: item.country || item.market || inferMarket(item),
+        source: item.source || 'unknown',
+        status: item.status || 'active',
+        icpMatch: Boolean(item.icp_match),
+        shortlist: Boolean(item.shortlist),
+        relevanceReason: item.relevance_reason || item.rationale || 'No relevance reason available.',
+        nextAction: item.next_action || item.next_step || 'Qualify buyer fit.',
+        score: normalizeScore(item.score ?? item.fit_score ?? item.commercial_score),
+        description: item.description || item.summary || item.rationale || 'No opportunity overview is available in the current feed.',
+        url: item.url || item.tender_url || item.notice_url || item.source_url || '#',
+        published: item.published_at || item.publication_date || item.published || ''
+      }));
+      buyers = run.buyers || run.buyer_intelligence || data.buyer_intelligence || [];
+    }
+    function numericValue(value) {
+      if (typeof value === 'number') return value;
+      const parsed = Number(String(value || '').replace(/[^0-9.]/g, ''));
+      return Number.isFinite(parsed) ? parsed : 0;
+    }
+    function normalizeScore(value) {
+      const raw = Number(value);
+      if (!Number.isFinite(raw)) return 0;
+      return Math.max(0, Math.min(100, Math.round(raw <= 1 ? raw * 100 : raw)));
+    }
+    function inferMarket(item) {
+      const text = `${item.market || ''} ${item.source || ''} ${item.region || ''} ${item.id || ''}`.toLowerCase();
+      return text.includes('netherlands') || text.includes('tenderned') || text.includes('nl') ? 'NL' : 'UK';
+    }
+    function formatValue(value) {
+      if (typeof value === 'string' && value.toLowerCase().includes('unknown')) return value;
+      const numeric = numericValue(value);
+      if (!numeric) return 'Value unknown';
+      if (numeric >= 1000000) return `£${(numeric / 1000000).toFixed(1)}m`;
+      if (numeric >= 1000) return `£${Math.round(numeric / 1000)}k`;
+      return `£${numeric}`;
+    }
+    function formatDate(value) {
+      if (!value) return 'Deadline unknown';
+      const date = new Date(value);
+      if (!Number.isFinite(date.getTime())) return 'Deadline unknown';
+      return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+    function daysUntil(value) {
+      if (!value) return 999;
+      const date = new Date(value);
+      if (!Number.isFinite(date.getTime())) return 999;
+      return Math.ceil((date.getTime() - Date.now()) / 86400000);
+    }
+    function scoreClass(score) {
+      if (score >= 75) return 'score-high';
+      if (score >= 55) return 'score-mid';
+      if (score >= 35) return 'score-review';
+      return 'score-low';
+    }
+    function scoreLabel(score) {
+      if (score >= 75) return `Hot ${score}`;
+      if (score >= 55) return `Warm ${score}`;
+      if (score >= 35) return `Review ${score}`;
+      return `Low ${score}`;
+    }
+    function deadlineClass(value) {
+      const days = daysUntil(value);
+      if (days < 0) return 'urgent';
+      if (days < 14) return 'urgent';
+      if (days <= 30) return 'soon';
+      return 'later';
+    }
+    function regionBucket(region) {
+      const value = String(region || '').toLowerCase();
+      if (value.includes('north') || value.includes('yorkshire') || value.includes('scotland')) return 'north';
+      if (value.includes('midland') || value.includes('birmingham')) return 'midlands';
+      if (value.includes('south') || value.includes('london') || value.includes('wales')) return 'south';
+      return 'national';
+    }
+    function valueBucket(value) {
+      if (!value) return 'all';
+      if (value < 100000) return 'under-100k';
+      if (value < 500000) return '100k-500k';
+      if (value < 1000000) return '500k-1m';
+      return '1m-plus';
+    }
+    function renderMetrics() {
+      const data = dataRoot();
+      const metrics = ((data.latestRun || {}).metrics) || {};
+      const activeRows = tenders.filter(tender => tender.status !== 'expired');
+      const matched = metrics.icp_matched ?? activeRows.filter(tender => tender.icpMatch).length;
+      const shortlist = metrics.shortlisted ?? activeRows.filter(tender => tender.shortlist).length;
+      const avg = metrics.avg_score ?? (activeRows.length ? Math.round(activeRows.reduce((sum, tender) => sum + tender.score, 0) / activeRows.length) : 0);
+      elements.metricTenders.textContent = metrics.tenders_ingested ?? tenders.length;
+      elements.metricMatched.textContent = matched;
+      elements.metricShortlist.textContent = Math.min(shortlist, matched);
+      elements.metricScore.textContent = avg;
+    }
+    function baseRows() {
+      const activeRows = tenders.filter(tender => tender.status !== 'expired');
+      if (activePage === 'shortlist') return activeRows.filter(tender => tender.shortlist);
+      return activeRows;
+    }
+    function passesFilters(tender) {
+      const query = elements.searchInput.value.trim().toLowerCase();
+      const region = elements.regionFilter.value;
+      const value = elements.valueFilter.value;
+      const score = Number(elements.scoreFilter.value || 0);
+      const market = elements.marketFilter.value;
+      const haystack = `${tender.buyer} ${tender.title}`.toLowerCase();
+      return (!query || haystack.includes(query) || String(tender.relevanceReason || '').toLowerCase().includes(query)) &&
+        (region === 'all' || regionBucket(tender.region) === region) &&
+        (value === 'all' || valueBucket(tender.value) === value) &&
+        (!score || tender.score >= score) &&
+        (market === 'both' || tender.market.toLowerCase() === market);
+    }
+    function sortTenders(rows) {
+      return [...rows].sort((a, b) => {
+        const dir = sortState.dir === 'asc' ? 1 : -1;
+        const key = sortState.key;
+        if (key === 'score' || key === 'value') return (a[key] - b[key]) * dir;
+        if (key === 'deadline') return ((new Date(a.deadline).getTime() || 0) - (new Date(b.deadline).getTime() || 0)) * dir;
+        return String(a[key] || '').localeCompare(String(b[key] || '')) * dir;
+      });
+    }
+    function renderTable() {
+      filteredTenders = sortTenders(baseRows().filter(passesFilters));
+      elements.tableBody.innerHTML = filteredTenders.map(tender => `
+        <tr data-id="${escapeHtml(tender.id)}" tabindex="0">
+          <td class="td-score"><span class="score-badge ${scoreClass(tender.score)}">${scoreLabel(tender.score)}</span></td>
+          <td class="td-buyer"><span class="cell-buyer">${escapeHtml(tender.buyer)}</span></td>
+          <td class="td-title"><span class="cell-title">${escapeHtml(tender.title)}</span></td>
+          <td class="td-value col-value">${escapeHtml(tender.valueLabel || formatValue(tender.rawValue))}</td>
+          <td class="td-deadline"><span class="deadline ${deadlineClass(tender.deadline)}">${escapeHtml(tender.deadlineLabel || formatDate(tender.deadline))}</span></td>
+          <td class="td-market"><span class="market-badge market-${tender.market.toLowerCase()}">${tender.market}</span></td>
+          <td class="td-action col-action"><span class="action-link">→</span></td>
+        </tr>
+      `).join('');
+      elements.emptyState.textContent = activePage === 'shortlist' ? 'No shortlisted active opportunities.' : 'No matching opportunities.';
+      elements.emptyState.style.display = filteredTenders.length ? 'none' : 'block';
+      renderMarketNotice();
+    }
+    function renderMarketNotice() {
+      const data = dataRoot();
+      const countryCounts = data.country_counts || {};
+      const hasNoUk = Number(countryCounts.UK || countryCounts.uk || 0) === 0;
+      const shouldShow = elements.marketFilter.value === 'both' && hasNoUk && activePage !== 'buyers';
+      elements.marketNotice.classList.toggle('visible', shouldShow);
+    }
+    function renderBuyers() {
+      const query = elements.searchInput.value.trim().toLowerCase();
+      const market = elements.marketFilter.value;
+      const rows = buyers.filter(buyer => {
+        const haystack = `${buyer.buyer || ''} ${buyer.region || ''} ${(buyer.top_categories || []).join(' ')}`.toLowerCase();
+        const buyerMarket = String(buyer.country || '').toLowerCase();
+        return (!query || haystack.includes(query)) && (market === 'both' || buyerMarket === market);
+      });
+      elements.buyerGrid.innerHTML = rows.map(buyer => `
+        <article class="buyer-card">
+          <h3>${escapeHtml(buyer.buyer || 'Unknown buyer')}</h3>
+          <div class="buyer-meta">
+            <span class="buyer-chip">${escapeHtml(buyer.country || 'UK')}</span>
+            <span class="buyer-chip">${escapeHtml(buyer.region || 'National')}</span>
+            <span class="buyer-chip">Avg ${escapeHtml(buyer.average_score ?? 0)}</span>
+          </div>
+          <div class="buyer-stat"><span>Opportunities</span><strong>${escapeHtml(buyer.opportunity_count ?? 0)}</strong></div>
+          <div class="buyer-stat"><span>Active</span><strong>${escapeHtml(buyer.active_opportunities ?? 0)}</strong></div>
+          <div class="buyer-stat"><span>Latest deadline</span><strong>${escapeHtml(buyer.latest_deadline_label || 'Deadline unknown')}</strong></div>
+          <div class="buyer-stat"><span>Signals</span><strong>${escapeHtml((buyer.top_categories || []).slice(0, 2).join(', ') || 'general')}</strong></div>
+          <p class="buyer-action">${escapeHtml(buyer.recommended_action || 'Monitor buyer activity.')}</p>
+        </article>
+      `).join('');
+      elements.emptyState.style.display = rows.length ? 'none' : 'block';
+      elements.emptyState.textContent = 'No matching buyers.';
+      elements.marketNotice.classList.toggle('visible', elements.marketFilter.value === 'both' && rows.every(row => String(row.country || '').toUpperCase() !== 'UK'));
+    }
+    function updateRefreshLabel() {
+      const data = dataRoot();
+      const generated = data.generated_at || data.generatedAt || ((data.latestRun || {}).generated_at);
+      const latest = new Date(generated || '2025-06-04T00:00:00Z');
+      elements.updatedLabel.textContent = Number.isFinite(latest.getTime())
+        ? `Last updated: ${latest.toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' })}`
+        : 'Last updated: unavailable';
+      elements.tenderTable.dataset.lastUpdated = Number.isFinite(latest.getTime()) ? latest.toISOString().slice(0, 10) : '2025-06-04';
+    }
+    function renderPage() {
+      const showBuyers = activePage === 'buyers';
+      elements.tableWrap.hidden = showBuyers;
+      elements.buyerGrid.hidden = !showBuyers;
+      if (showBuyers) {
+        renderBuyers();
+      } else {
+        renderTable();
+      }
+    }
+    function render() {
+      normalizeTenders();
+      renderMetrics();
+      renderPage();
+      updateRefreshLabel();
+    }
+    function handleSort(event) {
+      const key = event.currentTarget.dataset.sort;
+      if (!key) return;
+      sortState = sortState.key === key ? { key, dir: sortState.dir === 'asc' ? 'desc' : 'asc' } : { key, dir: 'asc' };
+      renderTable();
+    }
+    function scoreDimensions(tender) {
+      const base = tender.score || 0;
+      return [
+        ['Value band match', Math.min(100, Math.max(35, base + 10))],
+        ['Sector match', Math.min(100, Math.max(30, base + 4))],
+        ['Region match', Math.min(100, Math.max(40, base + 16))],
+        ['Buyer history', Math.min(100, Math.max(25, base - 6))]
+      ];
+    }
+    function barClass(score) {
+      if (score >= 80) return 'var(--pe-green)';
+      if (score >= 55) return 'var(--pe-amber)';
+      return 'var(--pe-red)';
+    }
+    function openModal(tender) {
+      activeTender = tender;
+      lastFocus = document.activeElement;
+      elements.modalTitle.textContent = tender.title;
+      elements.modalBody.innerHTML = `
+        <div class="meta-grid">
+          <div><div class="meta-label">Buyer</div><div class="meta-value">${escapeHtml(tender.buyer)}</div></div>
+          <div><div class="meta-label">Value</div><div class="meta-value">${escapeHtml(tender.valueLabel || formatValue(tender.rawValue))}</div></div>
+          <div><div class="meta-label">Deadline</div><div class="meta-value">${escapeHtml(tender.deadlineLabel || formatDate(tender.deadline))}</div></div>
+          <div><div class="meta-label">Region</div><div class="meta-value">${escapeHtml(tender.region)}</div></div>
+          <div><div class="meta-label">CPV</div><div class="meta-value">${escapeHtml(tender.cpv)}</div></div>
+          <div><div class="meta-label">Market</div><div class="meta-value">${tender.market}</div></div>
+          <div><div class="meta-label">Status</div><div class="meta-value">${escapeHtml(tender.status)}</div></div>
+        </div>
+        <div class="modal-section">
+          <div class="meta-label">Opportunity overview</div>
+          <p>${escapeHtml(tender.description)}</p>
+          <p><strong>${escapeHtml(tender.relevanceReason)}</strong></p>
+          <p>${escapeHtml(tender.nextAction)}</p>
+        </div>
+        <div class="modal-section">
+          <div class="score-head"><div class="meta-label">ICP fit score</div><div class="score-large">${tender.score}</div></div>
+          <div class="bars">
+            ${scoreDimensions(tender).map(([label, value]) => `
+              <div class="bar-row">
+                <div class="bar-line"><span>${escapeHtml(label)}</span><span class="bar-value">${value}</span></div>
+                <div class="bar-track"><div class="bar-fill" style="--bar-width:${value}%;background:${barClass(value)}"></div></div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+      elements.modalLink.href = tender.url || '#';
+      elements.modalOverlay.classList.add('active');
+      elements.modalClose.focus();
+    }
+    function closeModal() {
+      elements.modalOverlay.classList.remove('active');
+      if (lastFocus) lastFocus.focus();
+    }
+    function closeSidebar() { document.body.classList.remove('sidebar-open'); }
+    function bindEvents() {
+      elements.loginForm.addEventListener('submit', handleLogin);
+      elements.logoutButton.addEventListener('click', () => {
+        sessionStorage.removeItem(SESSION_KEY);
+        sessionStorage.removeItem(PORTAL_SESSION_KEY);
+        location.reload();
+      });
+      elements.hamburger.addEventListener('click', () => document.body.classList.add('sidebar-open'));
+      elements.sidebarOverlay.addEventListener('click', closeSidebar);
+      document.querySelectorAll('.nav-item[data-page]').forEach(button => {
+        button.addEventListener('click', () => {
+          document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+          button.classList.add('active');
+          activePage = button.dataset.page || 'opportunities';
+          elements.pageTitle.textContent = button.textContent;
+          renderPage();
+          closeSidebar();
+        });
+      });
+      [elements.searchInput, elements.regionFilter, elements.valueFilter, elements.scoreFilter, elements.marketFilter].forEach(control => control.addEventListener('input', renderPage));
+      document.querySelectorAll('th.sortable').forEach(header => header.addEventListener('click', handleSort));
+      elements.tableBody.addEventListener('click', event => {
+        const row = event.target.closest('tr[data-id]');
+        if (!row) return;
+        const tender = tenders.find(item => item.id === row.dataset.id);
+        if (tender) openModal(tender);
+      });
+      elements.tableBody.addEventListener('keydown', event => {
+        if (event.key !== 'Enter') return;
+        const row = event.target.closest('tr[data-id]');
+        if (!row) return;
+        const tender = tenders.find(item => item.id === row.dataset.id);
+        if (tender) openModal(tender);
+      });
+      elements.modalClose.addEventListener('click', closeModal);
+      elements.modalCloseFooter.addEventListener('click', closeModal);
+      elements.modalOverlay.addEventListener('click', event => { if (event.target === elements.modalOverlay) closeModal(); });
+      elements.refreshButton.addEventListener('click', () => {
+        elements.refreshButton.textContent = '⟳';
+        setTimeout(() => location.reload(), 800);
+      });
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') {
+          closeModal();
+          closeSidebar();
+        }
+        if (event.key === 'Tab' && elements.modalOverlay.classList.contains('active')) {
+          const focusables = Array.from(elements.modalOverlay.querySelectorAll('button, a[href]'));
+          const first = focusables[0];
+          const last = focusables[focusables.length - 1];
+          if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+          } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+          }
+        }
+      });
+    }
+    function init() {
+      [
+        'loginOverlay','loginForm','username','password','loginError','logoutButton','hamburger','sidebarOverlay',
+        'pageTitle','updatedLabel','refreshButton','metricTenders','metricMatched','metricShortlist','metricScore',
+        'searchInput','regionFilter','valueFilter','scoreFilter','marketFilter','marketNotice','tableWrap','tenderTable','tableBody','emptyState','buyerGrid',
+        'modalOverlay','modalTitle','modalBody','modalClose','modalCloseFooter','modalLink'
+      ].forEach(id => { elements[id] = qs(id); });
+      bindEvents();
+      if (hasSession()) elements.loginOverlay.classList.add('hidden');
+      if (hasSession()) render();
+    }
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
