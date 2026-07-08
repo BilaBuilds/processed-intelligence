@@ -7864,7 +7864,7 @@ window.PROCESSED_DASHBOARD_DATA = {
     "summary": {
       "total_available": 50,
       "included": 50,
-      "data_source": "C:\\Dev\\dutch_output\\dutch_tenders.json",
+      "data_source": "static_demo_export",
       "generated_at": "2026-07-05T23:30:26.808389Z",
       "countries": {
         "NL": 50
@@ -15801,7 +15801,7 @@ window.PROCESSED_DASHBOARD_DATA = {
   },
   "system_health": {
     "status": "ready",
-    "data_source": "C:\\Dev\\dutch_output\\dutch_tenders.json",
+    "data_source": "static_demo_export",
     "vps_verified": false,
     "hostinger_ready": true,
     "notes": [

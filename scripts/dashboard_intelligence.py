@@ -70,6 +70,8 @@ BUYER_SIGNAL_TERMS = {
 }
 
 SHORTLIST_THRESHOLD = 75
+LOCAL_PATH_RE = re.compile(r"^(?:[A-Za-z]:\\|/mnt/[a-z]/|/Users/|/home/|\\\\)")
+PUBLIC_DEMO_SOURCE = "static_demo_export"
 
 
 def load_dashboard_js(path: Path) -> dict[str, Any]:
@@ -116,6 +118,16 @@ def _first_json_object(text: str) -> str:
             if depth == 0:
                 return text[start : index + 1]
     raise ValueError("Dashboard JS object assignment is incomplete.")
+
+
+def scrub_local_paths(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {key: scrub_local_paths(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [scrub_local_paths(item) for item in value]
+    if isinstance(value, str) and LOCAL_PATH_RE.search(value.strip()):
+        return PUBLIC_DEMO_SOURCE
+    return value
 
 
 def normalize_text(value: Any) -> str:
@@ -350,7 +362,7 @@ def _buyer_action(avg_score: int, active_count: int) -> str:
 
 
 def build_dashboard_payload(data: dict[str, Any]) -> dict[str, Any]:
-    output = deepcopy(data)
+    output = scrub_local_paths(deepcopy(data))
     latest_run = output.setdefault("latestRun", {})
     generated_at = output.get("generated_at") or output.get("generatedAt") or latest_run.get("generated_at")
     export_dt = parse_datetime(generated_at) or datetime.now(timezone.utc)
