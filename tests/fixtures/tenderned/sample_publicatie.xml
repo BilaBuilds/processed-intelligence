@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic demo fixture only. This is not live TenderNed data. -->
+<tns:Publication xmlns:tns="urn:processed-intelligence:fixtures:tenderned">
+  <tns:PublicatieId>TN-XML-DEMO-0001</tns:PublicatieId>
+  <tns:NoticeType>Contract notice</tns:NoticeType>
+  <tns:ProcedureType>Open procedure</tns:ProcedureType>
+  <tns:PublicationDate>2026-06-15</tns:PublicationDate>
+  <tns:DeadlineDate>2026-08-01T12:00:00+02:00</tns:DeadlineDate>
+  <tns:Buyer>
+    <tns:OfficialName>Gemeente Voorbeeldstad</tns:OfficialName>
+  </tns:Buyer>
+  <tns:Title>Onderhoud openbare gebouwen Voorbeeldstad</tns:Title>
+  <tns:Description>Meerjarige opdracht voor bouwkundig onderhoud aan gemeentelijke gebouwen.</tns:Description>
+  <tns:MainCpvCode code="45453000">Overhaul and refurbishment work</tns:MainCpvCode>
+  <tns:EstimatedValue currencyID="EUR">1250000</tns:EstimatedValue>
+  <tns:Links>
+    <tns:Url>https://www.tenderned.nl/aankondigingen/overzicht/tn-xml-demo-0001</tns:Url>
+  </tns:Links>
+  <tns:Lots>
+    <tns:Lot>
+      <tns:Id>1</tns:Id>
+      <tns:Title>Noordelijke wijkgebouwen</tns:Title>
+      <tns:Description>Onderhoud aan wijkcentra in het noorden.</tns:Description>
+      <tns:CpvCode>45453100</tns:CpvCode>
+      <tns:Value currencyID="EUR">650000</tns:Value>
+    </tns:Lot>
+  </tns:Lots>
+</tns:Publication>
